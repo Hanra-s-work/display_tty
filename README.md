@@ -1,12 +1,14 @@
-# ask_question
+# Disp
 
 ## Description
 
-This is a python package I created in order to simplify the boiling process when asking the user a question via TTY.
+This is a python package I created in order to simplify the boiling process for displaying text in a geometrical shape drawn using characters.
+
+This README is under maintenance, the tutorial is thus not up to date.
 
 ## Table of Content
 
-1. [ask_question](#askquestion)
+1. [disp](#disp)
 2. [Description](#description)
 3. [Table of Content](#table-of-content)
 4. [Installation](#installation)
@@ -33,7 +35,7 @@ This is a python package I created in order to simplify the boiling process when
 ### Using pip
 
 ```sh
-pip install -U ask-question
+pip install -U disp
 ```
 
 ### Using python
@@ -41,13 +43,13 @@ pip install -U ask-question
 Under windows:
 
 ```bat
-py -m pip install -U ask-question
+py -m pip install -U disp
 ```
 
 Under Linux/Mac OS:
 
 ```sh
-python3 -m pip install -U ask-question
+python3 -m pip install -U disp
 ```
 
 ## Usage
@@ -55,7 +57,7 @@ python3 -m pip install -U ask-question
 ### Importing
 
 ```py
-import ask_question as aq
+import disp as IDISP
 ```
 
 ### Initialising
@@ -63,7 +65,7 @@ import ask_question as aq
 The generic class is: `AskQuestion(human_type:dict={}, illegal_characters_nb:str="")`
 
 ```py
-AQI = aq.AskQuestion()
+IDISP.title("Hello World")
 ```
 
 ### Calling the pause function
@@ -77,7 +79,7 @@ pause(self, pause_message:str="Press enter to continue...")
 The output is: None
 
 ```py
-AQI.pause("Press enter to continue ...")
+IDISP.pause("Press enter to continue ...")
 ```
 
 ### Asking a Question
@@ -85,7 +87,7 @@ AQI.pause("Press enter to continue ...")
 The generic function to ask a question is:
 
 ```py
-ask_question(self, question:str, answer_type:str)
+disp(self, question:str, answer_type:str)
 ```
 
 The outputs of this functions can be:
@@ -97,14 +99,14 @@ The outputs of this functions can be:
 #### Where do you live ?
 
 ```py
-answer = AQI.ask_question("Where are you from? ", "str")
+answer = IDISPI.disp("Where are you from? ", "str")
 print(f"You live in {answer}!")
 ```
 
 #### How old are you ?
 
 ```py
-answer = AQI.ask_question("How old are you?", "uint")
+answer = IDISPI.disp("How old are you?", "uint")
 ADD_S = ""
 if answer > 1:
     ADD_S = "s"
@@ -114,7 +116,7 @@ print(f"You are {answer} year{ADD_S} old !")
 #### Do you like sugar ?
 
 ```py
-answer = AQI.ask_question("Do you like sugar? [(Y)es/(n)o]: ", "bool")
+answer = IDISPI.disp("Do you like sugar? [(Y)es/(n)o]: ", "bool")
 if answer == True:
     print("You like sugar !")
 else:
@@ -146,10 +148,10 @@ When initialising the class it is possible to change the forbidden characters an
 ### changing the forbidden characters
 
 ```py
-import ask_question as aq
+import disp as IDISP
 illegal_characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \\t\\n\\r\\x0b\\x0c"
 illegal_characters = illegal_characters.replace("0123456789","")
-AQI = aq.AskQuestion(dict(), illegal_characters)
+IDISPI = IDISP.AskQuestion(dict(), illegal_characters)
 ```
 
 This initialisation has changed the characters that will be allowed for the number conversion in the 'int' and 'float' options.
@@ -157,7 +159,7 @@ This initialisation has changed the characters that will be allowed for the numb
 ### Changing the descriptions
 
 ```py
-import ask_question as aq
+import disp as IDISP
 human_type = {
     "int":"whole number (-1, 0, 1, 2, 3, etc...)",
     "float":"floating number (-1.2, 0.1, 1.2, etc...)",
@@ -173,7 +175,7 @@ human_type = {
     "ver":"version (numbers seperated by '.' characters)",
     "bool":"boolean (yes/True/1 or no/False/0 answer type)",
 }
-AQI = aq.AskQuestion(human_type)
+IDISPI = IDISP.AskQuestion(human_type)
 ```
 
 This initialisation has changed the descriptions for the types.
@@ -182,7 +184,7 @@ When the user will enter a wrong answer, the description displayed for the type 
 ### Changing both
 
 ```py
-import ask_question as aq
+import disp as IDISP
 illegal_characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!\"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \\t\\n\\r\\x0b\\x0c"
 illegal_characters = illegal_characters.replace("0123456789","")
 human_type = {
@@ -200,7 +202,7 @@ human_type = {
     "ver":"version (numbers seperated by '.' characters)",
     "bool":"boolean (yes/True/1 or no/False/0 answer type)",
 }
-AQI = aq.AskQuestion(human_type)
+IDISPI = IDISP.AskQuestion(human_type)
 ```
 
 You have now impacted the int and float typing as well as the 'type' descriptions.
@@ -213,7 +215,7 @@ Attributions are appreciated.
 Quick way (I assume you have already initialised the class):
 
 ```py
-print(f"AskQuestion is written by {AQI.author}")
+print(f"AskQuestion is written by {IDISPI.author}")
 ```
 
 ## Version
@@ -223,6 +225,6 @@ The current version is 1.0.0
 An easy way to display the version is:
 
 ```py
-import ask_question as aq
-print(f"Version : {aq.__Version__}")
+import disp as IDISP
+print(f"Version : {IDISP.__Version__}")
 ```
