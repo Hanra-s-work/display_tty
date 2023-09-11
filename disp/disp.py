@@ -12,6 +12,7 @@ class Disp:
 
     def __init__(self, toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
         self.toml_content = toml_content
+        self.author = "(c) Created by Henry Letellier"
         self.nb_chr = 40
         self.nb_side_walls = 2
         self.max_whitespace = self.nb_chr - self.nb_side_walls
