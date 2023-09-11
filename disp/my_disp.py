@@ -289,7 +289,7 @@ if __name__ == "__main__":
     }
     DI = Disp(
         TOML_CONF,
-        True,
+        False,
         "test_run.tmp"
     )
     DI.animate_message("Test Message !", 0.01)

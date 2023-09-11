@@ -11,7 +11,7 @@ setuptools.setup(
     ],
     author="Henry Letellier",
     author_email="henrysoftwarehouse@protonmail.com",
-    description="A module that alows you to display text with a few boilers (i.e. put your text in a square for titles)",
+    description="A module that allows you to display text with a few boilers (i.e. put your text in a square for titles)",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Hanra-s-work/disp",
