@@ -62,27 +62,73 @@ import disp as IDISP
 
 ### Initialising
 
-The generic class is: `AskQuestion(human_type:dict={}, illegal_characters_nb:str="")`
+The generic class is: `Disp(toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None)`
+
+For your convenience, you can use the IDISP variable which is an initialised version of the class.
+
 
 ```py
 IDISP.title("Hello World")
 ```
 
-### Calling the pause function
+### Calling the tree function
 
 The generic function is:
 
 ```py
-pause(self, pause_message:str="Press enter to continue...")
+tree(self, title: str, data: list[str], offset: int = 0)
 ```
 
 The output is: None
 
 ```py
-IDISP.pause("Press enter to continue ...")
+TEST_DATA = {
+        "a": "l",
+        "b": "o",
+        "c": [
+            "cl",
+            "cp",
+            "cq",
+            "cl",
+            "cm"
+        ],
+        "d": "e",
+        "e": {
+            "ea": "oo",
+            "eb": "on",
+            "ec": "ol",
+            "ed": "om"
+        },
+        "f": [
+            {
+                "fa": "ef",
+                "fb": "rf"
+            },
+            [
+                "fc",
+                "fd",
+                "fe",
+                "fg"
+            ]
+        ],
+        "g": {
+            "ga": {
+                "gaa": "gae",
+                "gab": "gar"
+            },
+            "gb": [
+                "gba",
+                "gbb",
+                "gbc",
+                "gbd",
+                "gbe"
+            ]
+        }
+    }
+IDISP.tree("This is a test tree", TEST_DATA, 0)
 ```
 
-### Asking a Question
+### Displaying a beaautified text
 
 The generic function to ask a question is:
 
