@@ -24,6 +24,7 @@ class Disp:
         self.message_success_char = self.toml_content["MESSAGE_SUCCESS_CHARACTER"]
         self.message_inform_char = self.toml_content["MESSAGE_INFORM_CHARACTER"]
         self.message_warning_char = self.toml_content["MESSAGE_WARNING_CHARACTER"]
+        self.message_question_char = self.toml_content["MESSAGE_QUESTION_CHARACTER"]
         if self.toml_content["PRETTY_OUTPUT_IN_BLOCS"] is True:
             self.message_animation_delay = self.toml_content["MESSAGE_ANIMATION_DELAY_BLOCKY"]
         else:
@@ -35,14 +36,14 @@ class Disp:
         self.file_name = file_name
         self.save_to_file = save_to_file
         self.file_descriptor = file_descriptor
-        self.open_file()
+        self._open_file()
 
     def close_file(self) -> None:
         """ Close the log file if it was opened """
         if self.file_descriptor != None:
             self.file_descriptor.close()
 
-    def open_file(self) -> None:
+    def _open_file(self) -> None:
         """ Open the file if required and add the current date and time """
         if self.save_to_file == True and self.file_descriptor == None:
             self.file_descriptor = open(
@@ -120,7 +121,7 @@ class Disp:
         """ Print a beautified sub sub title """
         self.disp_message_box(sub_sub_title, self.sub_sub_title_wall_chr)
 
-    def message(self, message) -> None:
+    def message(self, message: str) -> None:
         """ Print a beautified message """
         self.animate_message(
             f"{self.message_char}{self.message_char} {message} {self.message_char}{self.message_char}",
@@ -145,6 +146,13 @@ class Disp:
         """ Print a beautified warning message """
         self.animate_message(
             f"{self.message_warning_char}{self.message_warning_char} Warning: {message} {self.message_warning_char}{self.message_warning_char}",
+            self.message_animation_delay
+        )
+
+    def question_message(self, message: str) -> None:
+        """ Print a beautified warning message """
+        self.animate_message(
+            f"{self.message_question_char}{self.message_question_char} Question: {message} {self.message_question_char}{self.message_question_char}",
             self.message_animation_delay
         )
 
@@ -175,6 +183,7 @@ class Disp:
             processed_line += f"{self.tree_node_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}"
         if self.is_safe(line) == False:
             line = f"{line}"
+        processed_line += " "
         processed_line += line
         self.animate_message(processed_line, self.message_animation_delay)
 
@@ -222,18 +231,74 @@ class Disp:
         """ Add the date and time at which the program was launched """
         self.title(f"Run date: {time.strftime('%d/%m/%Y %H:%M:%S')}")
 
+    def _test(self) -> None:
+        """ This is a test function that you can use to have a template of the class """
+        test_data = {
+            "test_data1": "test_data1.1",
+            "test_data2": "test_data2.1",
+            "test_data3": [
+                "test_data_list3.1",
+                "test_data_list3.2",
+                "test_data_list3.3",
+                "test_data_list3.4",
+                "test_data_list3.5"
+            ],
+            "test_data4": "test_data4.1",
+            "test_data5": {
+                "test_data5.1": "test_data5.1.1",
+                "test_data5.2": "test_data5.2.1",
+                "test_data5.3": "test_data5.3.1",
+                "test_data5.4": "test_data5.4.1"
+            },
+            "test_data6": [
+                {
+                    "test_data6.1": "test_data6.1.1",
+                    "test_data6.2": "test_data6.2.1"
+                },
+                [
+                    "test_data_list6.3.1",
+                    "test_data_list6.3.1",
+                    "test_data_list6.3.1",
+                    "test_data_list6.3.1"
+                ]
+            ],
+            "test_data7": {
+                "test_data7.1": {
+                    "test_data7.1.1": "test_data7.1.1.1",
+                    "test_data7.1.2": "test_data7.1.2.1"
+                },
+                "test_data7.2": [
+                    "test_data7.2.1",
+                    "test_data7.2.2",
+                    "test_data7.2.3",
+                    "test_data7.2.4",
+                    "test_data7.2.5"
+                ]
+            }
+        }
+        self.animate_message("Test Message !", 0.01)
+        self.question_message("Test Question message !")
+        self.error_message("Test Error !")
+        self.inform_message("Test Inform !")
+        self.success_message("Test Success !")
+        self.warning_message("Test Warning !")
+        self.title("Test title")
+        self.sub_title("Test sub title")
+        self.sub_sub_title("Test sub sub title")
+        self.tree("Test data", test_data)
+        self.close_file()
+
 
 if __name__ == "__main__":
     TOML_CONF = {
-        'SHOW_IMAGE_AFTER_RENDER': False,
         'PRETTIFY_OUTPUT': True,
         'PRETTY_OUTPUT_IN_BLOCS': True,
         'MESSAGE_CHARACTER': '@',
         'MESSAGE_ERROR_CHARACTER': '#',
-        'MESSAGE_INFORM_CHARACTER': '!',
+        'MESSAGE_INFORM_CHARACTER': 'i',
         'MESSAGE_QUESTION_CHARACTER': '?',
         'MESSAGE_SUCCESS_CHARACTER': '/',
-        'MESSAGE_WARNING_CHARACTER': '?',
+        'MESSAGE_WARNING_CHARACTER': '!',
         'SUB_SUB_TITLE_WALL_CHARACTER': '*',
         'SUB_TITLE_WALL_CHARACTER': '@',
         'TITLE_WALL_CHARACTER': '#',
@@ -245,45 +310,45 @@ if __name__ == "__main__":
         'MESSAGE_ANIMATION_DELAY': 0.01
     }
     TEST_DATA = {
-        "a": "l",
-        "b": "o",
-        "c": [
-            "cl",
-            "cp",
-            "cq",
-            "cl",
-            "cm"
+        "test_data1": "test_data1.1",
+        "test_data2": "test_data2.1",
+        "test_data3": [
+            "test_data_list3.1",
+            "test_data_list3.2",
+            "test_data_list3.3",
+            "test_data_list3.4",
+            "test_data_list3.5"
         ],
-        "d": "e",
-        "e": {
-            "ea": "oo",
-            "eb": "on",
-            "ec": "ol",
-            "ed": "om"
+        "test_data4": "test_data4.1",
+        "test_data5": {
+            "test_data5.1": "test_data5.1.1",
+            "test_data5.2": "test_data5.2.1",
+            "test_data5.3": "test_data5.3.1",
+            "test_data5.4": "test_data5.4.1"
         },
-        "f": [
+        "test_data6": [
             {
-                "fa": "ef",
-                "fb": "rf"
+                "test_data6.1": "test_data6.1.1",
+                "test_data6.2": "test_data6.2.1"
             },
             [
-                "fc",
-                "fd",
-                "fe",
-                "fg"
+                "test_data_list6.3.1",
+                "test_data_list6.3.1",
+                "test_data_list6.3.1",
+                "test_data_list6.3.1"
             ]
         ],
-        "g": {
-            "ga": {
-                "gaa": "gae",
-                "gab": "gar"
+        "test_data7": {
+            "test_data7.1": {
+                "test_data7.1.1": "test_data7.1.1.1",
+                "test_data7.1.2": "test_data7.1.2.1"
             },
-            "gb": [
-                "gba",
-                "gbb",
-                "gbc",
-                "gbd",
-                "gbe"
+            "test_data7.2": [
+                "test_data7.2.1",
+                "test_data7.2.2",
+                "test_data7.2.3",
+                "test_data7.2.4",
+                "test_data7.2.5"
             ]
         }
     }
@@ -297,6 +362,7 @@ if __name__ == "__main__":
     DI.inform_message("Test Inform !")
     DI.success_message("Test Success !")
     DI.warning_message("Test Warning !")
+    DI.question_message("Test Question !")
     DI.title("Test title")
     DI.sub_title("Test sub title")
     DI.sub_sub_title("Test sub sub title")
