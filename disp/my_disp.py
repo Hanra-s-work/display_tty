@@ -55,7 +55,7 @@ class Disp:
         if self.file_descriptor != None:
             self.append_run_date()
 
-    def is_safe(self, content: any) -> bool:
+    def _is_safe(self, content: any) -> bool:
         """ Check if an item is safe to write or not """
         if isinstance(content, (str, int, float, tuple, complex, bytes, bytearray, memoryview)) == False:
             return False
@@ -86,7 +86,7 @@ class Disp:
 
     def animate_message(self, message: str = "Hello World!", delay: float = 0.02) -> None:
         """ Display or dump (to file) message """
-        if self.is_safe(message) == False:
+        if self._is_safe(message) == False:
             message = f"{message}"
         if self.save_to_file == True and self.file_descriptor != None:
             self.file_descriptor.write(f"{message}\n")
@@ -181,7 +181,7 @@ class Disp:
             processed_line += f"{self.tree_node_end_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}"
         else:
             processed_line += f"{self.tree_node_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}"
-        if self.is_safe(line) == False:
+        if self._is_safe(line) == False:
             line = f"{line}"
         processed_line += " "
         processed_line += line
@@ -276,6 +276,7 @@ class Disp:
                 ]
             }
         }
+        self.append_run_date()
         self.animate_message("Test Message !", 0.01)
         self.question_message("Test Question message !")
         self.error_message("Test Error !")
@@ -357,6 +358,7 @@ if __name__ == "__main__":
         False,
         "test_run.tmp"
     )
+    DI.append_run_date()
     DI.animate_message("Test Message !", 0.01)
     DI.error_message("Test Error !")
     DI.inform_message("Test Inform !")

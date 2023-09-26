@@ -317,6 +317,20 @@ IDISP.warning_message("Hello World !")
 The generic function to display `Hello World!` as an inform message is:
 
 ```py
+append_run_date(self)
+```
+
+The outputs is: None
+
+```py
+IDISP.append_run_date()
+```
+
+### Displaying the current date
+
+The generic function to display the current date as a title is:
+
+```py
 inform_message(self, message: list)
 ```
 
