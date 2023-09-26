@@ -343,7 +343,7 @@ However, in both cases, you will need to close the file by calling the function 
 
 This is the arguments that are required in the `TOML` file:
 
-```toml
+```txt #toml
 1  | PRETTIFY_OUTPUT: True,
 2  | PRETTY_OUTPUT_IN_BLOCS: True,
 3  | MESSAGE_CHARACTER: '@',
@@ -369,7 +369,7 @@ Thats a big file, lets break it down together:
 
 #### line 1
 
-```toml
+```txt #toml
 PRETTIFY_OUTPUT: True
 ```
 
@@ -382,7 +382,7 @@ If:
 
 #### line 2
 
-```toml
+```txt #toml
 PRETTY_OUTPUT_IN_BLOCS: True
 ```
 
@@ -397,7 +397,7 @@ If:
 
 #### line 3
 
-```toml
+```txt #toml
 MESSAGE_CHARACTER: '@'
 ```
 
@@ -405,7 +405,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 4
 
-```toml
+```txt #toml
 MESSAGE_ERROR_CHARACTER: '#'
 ```
 
@@ -413,7 +413,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 5
 
-```toml
+```txt #toml
 MESSAGE_INFORM_CHARACTER: '!'
 ```
 
@@ -421,7 +421,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 6
 
-```toml
+```txt #toml
 MESSAGE_QUESTION_CHARACTER: '?'
 ```
 
@@ -429,7 +429,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 7
 
-```toml
+```txt #toml
 MESSAGE_SUCCESS_CHARACTER: '/'
 ```
 
@@ -437,7 +437,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 8
 
-```toml
+```txt #toml
 MESSAGE_WARNING_CHARACTER: '?'
 ```
 
@@ -445,7 +445,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 9
 
-```toml
+```txt #toml
 SUB_SUB_TITLE_WALL_CHARACTER: '*'
 ```
 
@@ -453,7 +453,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 10
 
-```toml
+```txt #toml
 SUB_TITLE_WALL_CHARACTER: '@'
 ```
 
@@ -461,7 +461,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 11
 
-```toml
+```txt #toml
 TITLE_WALL_CHARACTER: '#'
 ```
 
@@ -469,7 +469,7 @@ This is a customisation, it allows you to specify the characther to use when dis
 
 #### line 12
 
-```toml
+```txt #toml
 TREE_COLUMN_SEPERATOR_CHAR: '│'
 ```
 
@@ -483,7 +483,7 @@ i.e:
 
 #### line 13
 
-```toml
+```txt #toml
 TREE_LINE_SEPERATOR_CHAR: '─'
 ```
 
@@ -497,7 +497,7 @@ i.e:
 
 #### line 14
 
-```toml
+```txt #toml
 TREE_NODE_CHAR: '├'
 ```
 
@@ -511,7 +511,7 @@ i.e:
 
 #### line 15
 
-```toml
+```txt #toml
 TREE_NODE_END_CHAR: '└'
 ```
 
@@ -525,7 +525,7 @@ i.e:
 
 #### line 16
 
-```toml
+```txt #toml
 MESSAGE_ANIMATION_DELAY_BLOCKY: 0.01
 ```
 
@@ -535,7 +535,7 @@ PS: if you enter 0, this is like setting `PRETTY_OUTPUT_IN_BLOCS` to `False`
 
 #### line 17
 
-```toml
+```txt #toml
 MESSAGE_ANIMATION_DELAY: 0.01
 ```
 
