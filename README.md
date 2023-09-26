@@ -1,5 +1,18 @@
 # Display tty
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/display_tty)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/display_tty)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/display_tty)
+![PyPI - Version](https://img.shields.io/pypi/v/display_tty?label=pypi%20package:%20display_tty)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/display-tty)
+![PyPI - License](https://img.shields.io/pypi/l/display-tty)
+![PyPI - Status](https://img.shields.io/pypi/status/display_tty)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Hanra-s-work/display_tty/python-package.yml)
+![GitHub repo size](https://img.shields.io/github/repo-size/Hanra-s-work/display_tty)
+![GitHub Repo stars](https://img.shields.io/github/stars/Hanra-s-work/display_tty)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/Hanra-s-work/display_tty)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Hanra-s-work/display_tty/main)
+
 ## Description
 
 This is a python package I created in order to simplify the boiling process for displaying text in a geometrical shape drawn using characters.
