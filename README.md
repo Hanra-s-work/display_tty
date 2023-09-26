@@ -4,15 +4,24 @@
 
 This is a python package I created in order to simplify the boiling process for displaying text in a geometrical shape drawn using characters.
 
+## Disclaimer
+
+The package was originally named disp but had to be changed to display_tty due because the names disp and display were already taken by other packages.
+
+The class will still remain `Disp` but a binding named `Display`, `DispTTY` and `DisplayTTY` will be available.
+
+The Preloaded version will exist under: `IDISP`, `IDISPLAY` and `IDTTY` as well as `IDISPTTY`
+
 ## Table of Content
 
 1. [Disp](#disp)
 2. [Description](#description)
-3. [Table of Content](#table-of-content)
-4. [Installation](#installation)
+3. [Disclaimer](#disclaimer)
+4. [Table of Content](#table-of-content)
+5. [Installation](#installation)
     1. [Using pip](#using-pip)
     2. [Using python](#using-python)
-5. [Usage](#usage)
+6. [Usage](#usage)
     1. [Importing](#importing)
     2. [Initialising](#initialising)
     3. [Calling the tree function](#calling-the-tree-function)
@@ -27,7 +36,7 @@ This is a python package I created in order to simplify the boiling process for 
         8. [Hello World as a success message](#hello-world-as-a-success-message)
         9. [Hello World as a warning message](#hello-world-as-a-warning-message)
         10. [Hello World as an inform message](#hello-world-as-an-inform-message)
-6. [Change the initialisation content](#change-the-initialisation-content)
+7. [Change the initialisation content](#change-the-initialisation-content)
     1. [TOML configuration breakdown](#toml-configuration-breakdown)
         1. [line 1](#line-1)
         2. [line 2](#line-2)
@@ -47,8 +56,8 @@ This is a python package I created in order to simplify the boiling process for 
         16. [line 16](#line-16)
         17. [line 17](#line-17)
     2. [Update the configuration of an initialised class](#update-the-configuration-of-an-initialised-class)
-7. [Author](#author)
-8. [Version](#version)
+8. [Author](#author)
+9. [Version](#version)
 
 ## Installation
 

@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8", newline="\n") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='disp',
+    name='display_tty',
     version='1.0.0',
     packages=setuptools.find_packages(),
     install_requires=[
