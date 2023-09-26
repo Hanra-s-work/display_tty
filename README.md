@@ -1,4 +1,4 @@
-# Disp
+# Display tty
 
 ## Description
 
@@ -14,7 +14,7 @@ The Preloaded version will exist under: `IDISP`, `IDISPLAY` and `IDTTY` as well 
 
 ## Table of Content
 
-1. [Disp](#disp)
+1. [Display tty](#display-tty)
 2. [Description](#description)
 3. [Disclaimer](#disclaimer)
 4. [Table of Content](#table-of-content)
