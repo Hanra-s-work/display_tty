@@ -6,11 +6,11 @@ This is a python package I created in order to simplify the boiling process for 
 
 ## Disclaimer
 
-The package was originally named disp but had to be changed to display_tty due because the names disp and display were already taken by other packages.
+The package was originally named `disp` but had to be changed to `display_tty` because the names `disp` and `display` were already taken by other packages.
 
-The class will still remain `Disp` but a binding named `Display`, `DispTTY` and `DisplayTTY` will be available.
+The class will still remain `Disp` but bindings named `Display`, `DispTTY` and `DisplayTTY` are available.
 
-The Preloaded version will exist under: `IDISP`, `IDISPLAY` and `IDTTY` as well as `IDISPTTY`
+The Preloaded version exists under: `IDISP`, `IDISPLAY`, `IDTTY` and `IDISPTTY`
 
 ## Table of Content
 
@@ -72,13 +72,13 @@ pip install -U disp
 Under Windows:
 
 ```bat
-py -m pip install -U disp
+py -m pip install -U display_tty
 ```
 
 Under Linux/Mac OS:
 
 ```sh
-python3 -m pip install -U disp
+python3 -m pip install -U display_tty
 ```
 
 ## Usage
@@ -86,23 +86,23 @@ python3 -m pip install -U disp
 ### Importing
 
 ```py
-from disp import IDISP
+from display_tty import IDTTY
 ```
 
 ### Initialising
 
 The generic class is: `Disp(toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None)`
 
-For your convenience, you can use the `IDISP` variable which is an initialised version of the class.
+For your convenience, you can use the `IDTTY` variable which is an initialised version of the class.
 
 ```py
-IDISP.title("Hello World")
+IDTTY.title("Hello World")
 ```
 
 Otherwise, if you wish to initialise the class with your own parameters, you can do so like this:
 
 ```py
-from disp import Disp
+from display_tty import DisplayTTY
 TOML_CONF = {
     'PRETTIFY_OUTPUT': True,
     'PRETTY_OUTPUT_IN_BLOCS': True,
@@ -128,7 +128,7 @@ FILE_NAME = "run_results.txt"
 FILE_DESCRIPTOR = None
 
 
-IDISP = Disp(
+IDTTY = DisplayTTY(
     TOML_CONF,
     SAVE_TO_FILE,
     FILE_NAME,
@@ -190,7 +190,7 @@ TEST_DATA = {
     }
 }
 
-IDISP.tree("This is a test tree", TEST_DATA, 0)
+IDTTY.tree("This is a test tree", TEST_DATA, 0)
 ```
 
 ### Displaying a beautified Hello World
@@ -206,7 +206,7 @@ title(self, title)
 The outputs is: None
 
 ```py
-IDISP.title("Hello World !")
+IDTTY.title("Hello World !")
 ```
 
 #### Hello World as a sub title
@@ -220,7 +220,7 @@ sub_title(self, sub_title)
 The outputs is: None
 
 ```py
-IDISP.sub_title("Hello World !")
+IDTTY.sub_title("Hello World !")
 ```
 
 #### Hello World as a sub sub title
@@ -234,7 +234,7 @@ sub_sub_title(self, sub_sub_title)
 The outputs is: None
 
 ```py
-IDISP.sub_sub_title("Hello World !")
+IDTTY.sub_sub_title("Hello World !")
 ```
 
 #### Hello World as a message with adjustable delay per call
@@ -248,7 +248,7 @@ animate_message(self, message: str = "Hello World!", delay: float = 0.02)
 The outputs is: None
 
 ```py
-IDISP.animate_message("Hello World !", 0.01)
+IDTTY.animate_message("Hello World !", 0.01)
 ```
 
 #### Hello World as a message
@@ -262,7 +262,7 @@ message(self, message:str)
 The outputs is: None
 
 ```py
-IDISP.message("Hello World !")
+IDTTY.message("Hello World !")
 ```
 
 #### Hello World as a question message
@@ -276,7 +276,7 @@ question_message(self, message: str)
 The outputs is: None
 
 ```py
-IDISP.question_message("Hello World !")
+IDTTY.question_message("Hello World !")
 ```
 
 #### Hello World as an error message
@@ -290,7 +290,7 @@ error_message(self, message: str)
 The outputs is: None
 
 ```py
-IDISP.error_message("Hello World !")
+IDTTY.error_message("Hello World !")
 ```
 
 #### Hello World as a success message
@@ -304,7 +304,7 @@ success_message(self, message: str)
 The outputs is: None
 
 ```py
-IDISP.success_message("Hello World !")
+IDTTY.success_message("Hello World !")
 ```
 
 #### Hello World as a warning message
@@ -318,7 +318,7 @@ warning_message(self, message: str)
 The outputs is: None
 
 ```py
-IDISP.warning_message("Hello World !")
+IDTTY.warning_message("Hello World !")
 ```
 
 #### Hello World as an inform message
@@ -332,7 +332,7 @@ append_run_date(self)
 The outputs is: None
 
 ```py
-IDISP.append_run_date()
+IDTTY.append_run_date()
 ```
 
 ### Displaying the current date
@@ -346,7 +346,7 @@ inform_message(self, message: list)
 The outputs is: None
 
 ```py
-IDISP.inform_message("Hello World !")
+IDTTY.inform_message("Hello World !")
 ```
 
 ## Change the initialisation content
@@ -575,27 +575,27 @@ If the default initialisation, or the class you previously initialised has some 
 Here are the variables you might be interested in:
 
 ```py
-from disp import IDISP
-IDISP.title_wall_chr # string (length 1): i.e.: '#'
-IDISP.sub_title_wall_chr # string (length 1): i.e.: '@'
-IDISP.sub_sub_title_wall_chr # string (length 1): i.e.: '*'
-IDISP.message_char # string (length 1): i.e.: '@'
-IDISP.message_error_char # string (length 1): i.e.: '#'
-IDISP.message_success_char # string (length 1): i.e.: '/'
-IDISP.message_inform_char # string (length 1): i.e.: 'i'
-IDISP.message_warning_char # string (length 1): i.e.: '!'
-IDISP.message_question_char # string (length 1): i.e.: '?'
-IDISP.message_animation_delay # float: i.e.: # 0.01
-IDISP.tree_node_char # string (length 1): i.e.: '├'
-IDISP.tree_node_end_char # string (length 1): i.e.: '└'
-IDISP.tree_line_seperator_char # string (length 1): i.e.: '─'
-IDISP.tree_column_seperator_char # string (length 1): i.e.: '│'
-IDISP.save_to_file # True or False
-IDISP.toml_content["PRETTIFY_OUTPUT"] # True of False
-IDISP.toml_content["PRETTY_OUTPUT_IN_BLOCS"] # True of False
+from display_tty import IDTTY
+IDTTY.title_wall_chr # string (length 1): i.e.: '#'
+IDTTY.sub_title_wall_chr # string (length 1): i.e.: '@'
+IDTTY.sub_sub_title_wall_chr # string (length 1): i.e.: '*'
+IDTTY.message_char # string (length 1): i.e.: '@'
+IDTTY.message_error_char # string (length 1): i.e.: '#'
+IDTTY.message_success_char # string (length 1): i.e.: '/'
+IDTTY.message_inform_char # string (length 1): i.e.: 'i'
+IDTTY.message_warning_char # string (length 1): i.e.: '!'
+IDTTY.message_question_char # string (length 1): i.e.: '?'
+IDTTY.message_animation_delay # float: i.e.: # 0.01
+IDTTY.tree_node_char # string (length 1): i.e.: '├'
+IDTTY.tree_node_end_char # string (length 1): i.e.: '└'
+IDTTY.tree_line_seperator_char # string (length 1): i.e.: '─'
+IDTTY.tree_column_seperator_char # string (length 1): i.e.: '│'
+IDTTY.save_to_file # True or False
+IDTTY.toml_content["PRETTIFY_OUTPUT"] # True of False
+IDTTY.toml_content["PRETTY_OUTPUT_IN_BLOCS"] # True of False
 ```
 
-To update a variable, simply assing it a new value, like in this example: `IDISP.title_wall_chr = "&"`
+To update a variable, simply assing it a new value, like in this example: `IDTTY.title_wall_chr = "&"`
 
 PS: These changes only apply to the class you loaded, any others will not be touched.
 
@@ -607,7 +607,7 @@ Attributions are appreciated.
 Quick way:
 
 ```py
-print(f"AskQuestion is written by {IDISP.author}")
+print(f"AskQuestion is written by {IDTTY.author}")
 ```
 
 ## Version
@@ -617,6 +617,6 @@ The current version is 1.0.0
 An easy way to display the version is:
 
 ```py
-import disp as IDISP
-print(f"Version : {IDISP.__Version__}")
+import display_tty as IDTTY
+print(f"Version : {IDTTY.__Version__}")
 ```
