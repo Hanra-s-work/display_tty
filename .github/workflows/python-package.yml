@@ -123,7 +123,7 @@ jobs:
           latest_tag=${latest_tag/"v"/""}
           echo "Tag: $latest_tag"
           sed -i "s/version='.*'/version='$latest_tag'/g" ${{env.SETUP_FILE}}
-          sed -i "s/self.__Version__ = '.*'/self.__Version__ = '$latest_tag'/g" ${{env.SOURCE_CODE_PATH}}
+          sed -i "s/self.__version__ = '.*'/self.__version__ = '$latest_tag'/g" ${{env.SOURCE_CODE_PATH}}
         fi
         echo "Content: $(ls)"
         echo "Content of file: $(cat ${{env.SETUP_FILE}})"

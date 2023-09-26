@@ -11,7 +11,7 @@ class Disp:
     """ The class in charge of Displaying messages """
 
     def __init__(self, toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
-        self.__Version__ = "1.0.0"
+        self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
         self.nb_chr = 40
@@ -41,24 +41,24 @@ class Disp:
 
     def close_file(self) -> None:
         """ Close the log file if it was opened """
-        if self.file_descriptor != None:
+        if self.file_descriptor is not None:
             self.file_descriptor.close()
 
     def _open_file(self) -> None:
         """ Open the file if required and add the current date and time """
-        if self.save_to_file == True and self.file_descriptor == None:
+        if self.save_to_file is True and self.file_descriptor is None:
             self.file_descriptor = open(
                 self.file_name,
                 "a",
                 encoding="utf-8",
                 newline="\n"
             )
-        if self.file_descriptor != None:
+        if self.file_descriptor is not None:
             self.append_run_date()
 
     def _is_safe(self, content: any) -> bool:
         """ Check if an item is safe to write or not """
-        if isinstance(content, (str, int, float, tuple, complex, bytes, bytearray, memoryview)) == False:
+        if isinstance(content, (str, int, float, tuple, complex, bytes, bytearray, memoryview)) is False:
             return False
         return True
 
@@ -87,9 +87,9 @@ class Disp:
 
     def animate_message(self, message: str = "Hello World!", delay: float = 0.02) -> None:
         """ Display or dump (to file) message """
-        if self._is_safe(message) == False:
+        if self._is_safe(message) is False:
             message = f"{message}"
-        if self.save_to_file == True and self.file_descriptor != None:
+        if self.save_to_file is True and self.file_descriptor is not None:
             self.file_descriptor.write(f"{message}\n")
         else:
             self.display_animation(message, delay)
@@ -178,11 +178,11 @@ class Disp:
         while i < offset:
             processed_line += f"{self.tree_column_seperator_char}   "
             i += 1
-        if index == max_lenght:
+        if index is max_lenght:
             processed_line += f"{self.tree_node_end_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}"
         else:
             processed_line += f"{self.tree_node_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}"
-        if self._is_safe(line) == False:
+        if self._is_safe(line) is False:
             line = f"{line}"
         processed_line += " "
         processed_line += line
@@ -190,7 +190,7 @@ class Disp:
 
     def tree(self, title: str, data: list[str], offset: int = 0) -> None:
         """ Print a list under the form of a beautified tree """
-        if (offset == 0):
+        if offset is 0:
             self.animate_message(f"{title}", self.message_animation_delay)
         length = len(data) - 1
 
@@ -291,7 +291,7 @@ class Disp:
         self.close_file()
 
 
-if __name__ == "__main__":
+if __name__ is "__main__":
     TOML_CONF = {
         'PRETTIFY_OUTPUT': True,
         'PRETTY_OUTPUT_IN_BLOCS': True,

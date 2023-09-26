@@ -47,19 +47,10 @@ IDTTY = IDISP
 class Display(Disp):
     """ A rebind of the class named Disp """
 
-    def __init__(self, toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
-        super().__init__(toml_content, save_to_file, file_name, file_descriptor)
-
 
 class DispTTY(Disp):
     """ A rebind of the class named Disp """
 
-    def __init__(self, toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
-        super().__init__(toml_content, save_to_file, file_name, file_descriptor)
-
 
 class DisplayTTY(Disp):
     """ A rebind of the class named Disp """
-
-    def __init__(self, toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
-        super().__init__(toml_content, save_to_file, file_name, file_descriptor)

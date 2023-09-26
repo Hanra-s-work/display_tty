@@ -1,6 +1,11 @@
 # tests/test_ask_question.py
+
+"""
+File in charge of testing the functions contained in the class
+"""
+
 from sys import stderr
-from disp import IDISP
+from display_tty import IDISP
 
 
 def print_debug(string: str = "") -> None:
