@@ -11,6 +11,7 @@ class Disp:
     """ The class in charge of Displaying messages """
 
     def __init__(self, toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
+        self.__Version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
         self.nb_chr = 40
