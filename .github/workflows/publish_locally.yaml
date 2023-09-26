@@ -1,4 +1,4 @@
-name: disp-gh-packages
+name: display_tty-gh-packages
 
 on:
   push:

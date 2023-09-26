@@ -1,4 +1,4 @@
-name: disp-pypi
+name: display_tty-pypi
 
 on:
   push:
