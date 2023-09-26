@@ -190,7 +190,7 @@ class Disp:
 
     def tree(self, title: str, data: list[str], offset: int = 0) -> None:
         """ Print a list under the form of a beautified tree """
-        if offset is 0:
+        if offset == 0:
             self.animate_message(f"{title}", self.message_animation_delay)
         length = len(data) - 1
 
