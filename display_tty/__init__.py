@@ -1,5 +1,5 @@
 """
-File in charge of helping the output of the program
+File in charge linking of the disp file ot the module so that it could be imported as a module
 """
 
 from .my_disp import Disp
