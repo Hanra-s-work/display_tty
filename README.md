@@ -13,6 +13,8 @@
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/Hanra-s-work/display_tty)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Hanra-s-work/display_tty/main)
 
+[![Static Badge](https://img.shields.io/badge/Buy_me_a_tea-Hanra-%235F7FFF?style=flat-square&logo=buymeacoffee&label=Buy%20me%20a%20coffee&labelColor=%235F7FFF&color=%23FFDD00&link=https%3A%2F%2Fwww.buymeacoffee.com%2Fhanra)](https://www.buymeacoffee.com/hanra)
+
 ## Description
 
 This is a python package I created in order to simplify the boiling process for displaying text in a geometrical shape drawn using characters.
