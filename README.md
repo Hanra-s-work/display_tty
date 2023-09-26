@@ -6,7 +6,7 @@
 ![PyPI - Version](https://img.shields.io/pypi/v/display_tty?label=pypi%20package:%20display_tty)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/display-tty)
 ![PyPI - License](https://img.shields.io/pypi/l/display-tty)
-![PyPI - Status](https://img.shields.io/pypi/status/display_tty)
+![Execution status](https://github.com/Hanra-s-work/display_tty/actions/workflows/python-package.yml/badge.svg)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Hanra-s-work/display_tty/python-package.yml)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Hanra-s-work/display_tty)
 ![GitHub Repo stars](https://img.shields.io/github/stars/Hanra-s-work/display_tty)
