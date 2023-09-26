@@ -1,4 +1,5 @@
 name: disp-pypi
+
 on:
   push:
     tags:
@@ -155,7 +156,8 @@ jobs:
       run: |
         git config --local user.name "${{secrets.USER_NAME_E}}"
         git config --local user.email "${{secrets.USER_EMAIL_E}}"
-        # Add the following steps if you want to publish to PyPI
+
+      # Add the following steps if you want to publish to PyPI
     - name: Build and publish to PyPI
       if: matrix.python-version == env.MATRIX_VERSION_PUBLISHING
       run: |
