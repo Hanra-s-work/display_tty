@@ -291,7 +291,7 @@ class Disp:
         self.close_file()
 
 
-if __name__ is "__main__":
+if __name__ == "__main__":
     TOML_CONF = {
         'PRETTIFY_OUTPUT': True,
         'PRETTY_OUTPUT_IN_BLOCS': True,
