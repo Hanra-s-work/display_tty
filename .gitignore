@@ -5,6 +5,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Apple file
+*.DS_Store
+
 # C extensions
 *.so
 
@@ -127,6 +130,10 @@ celerybeat.pid
 env/
 venv/
 ENV/
+wenv/
+lenv/
+menv/
+uenv/
 env.bak/
 venv.bak/
 

@@ -5,12 +5,13 @@ The file in charge of managing the beautified output on the terminal
 
 import sys
 import time
+from typing import List, Dict
 
 
 class Disp:
     """ The class in charge of Displaying messages """
 
-    def __init__(self, toml_content: dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
+    def __init__(self, toml_content: Dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
@@ -157,7 +158,7 @@ class Disp:
             self.message_animation_delay
         )
 
-    def inform_message(self, message: list) -> None:
+    def inform_message(self, message: List) -> None:
         """ Print a beautified information message """
         if isinstance(message, list) is True:
             for msg in message:
@@ -188,7 +189,7 @@ class Disp:
         processed_line += line
         self.animate_message(processed_line, self.message_animation_delay)
 
-    def tree(self, title: str, data: list[str], offset: int = 0) -> None:
+    def tree(self, title: str, data: List[str], offset: int = 0) -> None:
         """ Print a list under the form of a beautified tree """
         if offset == 0:
             self.animate_message(f"{title}", self.message_animation_delay)
