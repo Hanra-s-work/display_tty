@@ -17,7 +17,7 @@ env:
   IS_RELEASE: is_release.txt
   MATRIX_VERSION_PUBLISHING: "3.10"
   MAX_TAG_AGE: "1 hour"
-  SOURCE_CODE_PATH: tty_ov/tty_ov.py
+  SOURCE_CODE_PATH: display_tty/my_disp.py
 
 jobs:
 
