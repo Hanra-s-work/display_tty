@@ -10,6 +10,8 @@ from typing import List, Dict
 OUT_TTY = "tty"
 OUT_STRING = "string"
 OUT_FILE = "file"
+OUT_DEFAULT = ''
+
 TOML_CONF = {
     'PRETTIFY_OUTPUT': True,
     'PRETTY_OUTPUT_IN_BLOCS': True,
@@ -27,15 +29,17 @@ TOML_CONF = {
     'TREE_LINE_SEPERATOR_CHAR': '─',
     'TREE_NODE_CHAR': '├',
     'TREE_NODE_END_CHAR': '└',
+    'BOX_NO_VERTICAL': '#',
+    'BOX_VERTICAL_NO_HORIZONTAL': '#',
     'MESSAGE_ANIMATION_DELAY_BLOCKY': 0.01,
-    'MESSAGE_ANIMATION_DELAY': 0.01
+    'MESSAGE_ANIMATION_DELAY': 0.01,
 }
 
 
 class Disp:
     """ The class in charge of Displaying messages """
 
-    def __init__(self, toml_content: dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
+    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
@@ -65,6 +69,10 @@ class Disp:
             self.save_to_file = True
         self.file_descriptor = file_descriptor
         self.generated_content = ""
+        if self.toml_content['OUTPUT_MODE'] not in (OUT_FILE, OUT_STRING, OUT_TTY, OUT_DEFAULT):
+            raise ValueError(
+                f"Invalid output mode. Must be one of '{OUT_FILE}', '{OUT_STRING}', '{OUT_TTY}', '{OUT_DEFAULT}"
+            )
         self._open_file()
 
     def close_file(self) -> None:
@@ -126,58 +134,367 @@ class Disp:
         if self.save_to_file is True and self.file_descriptor is not None:
             self.file_descriptor.write(f"{message}\n")
         elif self.toml_content["OUTPUT_MODE"] == OUT_STRING:
-            self.generated_content = message
+            self.generated_content = f"{message}\n"
         else:
             self.display_animation(message, delay)
 
     def disp_message_box(self, msg, char) -> None:
-        """ 
-        Display a message in a box 
-        This is a sample box (characters and dimensions depend on the provided configuration):
-        #############################
-        #        Sample text        #
+        """
+        Display a message in a box \n
+        The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
+        This is a sample box (characters and dimensions depend on the provided configuration):\n
+        #############################\n
+        \#        Sample text        #\n
         #############################
         """
-        white_spaces = self.create_string(
-            int((self.max_whitespace - len(msg))/2),
+
+        box_wall = self.create_string(self.nb_chr, char)
+
+        title_content = ""
+        if "\n" in msg:
+            lines = msg.split("\n")
+            for i in lines:
+                string_length = len(i)
+                if string_length >= self.max_whitespace:
+                    string_length = 0
+                calculated_length = int(
+                    (self.max_whitespace - string_length)/2
+                )
+                if calculated_length % 2 == 1 and calculated_length != 0:
+                    calculated_length += 1
+                white_spaces = self.create_string(
+                    calculated_length,
+                    " "
+                )
+                title_content += white_spaces
+                title_content += i
+                if string_length % 2 == 1 and string_length != 0:
+                    white_spaces = white_spaces[:-1]
+                title_content += white_spaces
+                title_content += '\n'
+        else:
+            string_length = len(msg)
+            if string_length >= self.max_whitespace:
+                string_length = 0
+            calculated_length = int((self.max_whitespace - string_length)/2)
+            if calculated_length % 2 == 1 and calculated_length != 0:
+                calculated_length += 1
+            white_spaces = self.create_string(
+                calculated_length,
+                " "
+            )
+            box_wall = self.create_string(self.nb_chr, char)
+            title_content += white_spaces
+            title_content += msg
+            if string_length % 2 == 1 and string_length != 0:
+                white_spaces = white_spaces[:-1]
+            title_content += white_spaces
+            title_content += "\n"
+
+        generated_content = f"{box_wall}\n"
+        generated_content += f"{title_content}"
+        generated_content += f"{box_wall}"
+        self.animate_message(
+            f"{generated_content}",
+            self.message_animation_delay
+        )
+
+    def disp_box_no_vertical(self, message: str, character: str = "@") -> None:
+        """
+        Print another box format, this time without the internal bars\n
+        The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
+        Here is a sample box:\n
+        #############################\n
+                Sample text\n
+        #############################
+        """
+
+        if 'BOX_NO_VERTICAL' in self.toml_content:
+            char = self.toml_content['BOX_NO_VERTICAL']
+        else:
+            char = character
+
+        box_wall = self.create_string(self.nb_chr, char)
+
+        title_content = ""
+        if "\n" in message:
+            lines = message.split("\n")
+            for i in lines:
+                string_length = len(i)
+                if string_length >= self.max_whitespace:
+                    string_length = 0
+                calculated_length = int(
+                    (self.max_whitespace - string_length)/2
+                )
+                if calculated_length % 2 == 1 and calculated_length != 0:
+                    calculated_length += 1
+                white_spaces = self.create_string(
+                    calculated_length,
+                    " "
+                )
+                title_content += white_spaces
+                title_content += i
+                if string_length % 2 == 1 and string_length != 0:
+                    white_spaces = white_spaces[:-1]
+                title_content += white_spaces
+                title_content += '\n'
+        else:
+            string_length = len(message)
+            if string_length >= self.max_whitespace:
+                string_length = 0
+            calculated_length = int((self.max_whitespace - string_length)/2)+1
+            if calculated_length % 2 == 1 and calculated_length != 0:
+                calculated_length += 1
+            white_spaces = self.create_string(
+                calculated_length,
+                " "
+            )
+            title_content += white_spaces
+            title_content += message
+            if string_length % 2 == 1 and string_length != 0:
+                white_spaces = white_spaces[:-1]
+            title_content += white_spaces
+            title_content += "\n"
+
+        generated_content = f"{box_wall}\n"
+        generated_content += f"{title_content}"
+        generated_content += f"{box_wall}"
+        self.animate_message(
+            f"{generated_content}",
+            self.message_animation_delay
+        )
+
+    def disp_vertical_message_box(self, msg: str, character: str = '') -> None:
+        """
+        Display a message in a box \n
+        The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
+        The '#' characters a aligned to the first and last '#' character on each line\n
+        But due to the code editor's rendering, it removes spaces, thus, if you want an accurate view, look at the raw comment of the function\n
+        This is a sample box (characters and dimensions depend on the provided configuration):\n
+        \###############\n
+        \#             #\n
+        \#             #\n
+        \#             #\n
+        \# Sample text #\n
+        \#             #\n
+        \#             #\n
+        \#             #\n
+        \###############
+        """
+
+        if 'BOX_NO_VERTICAL' in self.toml_content:
+            character = self.toml_content['BOX_NO_VERTICAL']
+        elif character == '':
+            character = "#"
+
+        box_wall = self.create_string(self.nb_chr, character)
+
+        title_content = ""
+        if "\n" in msg:
+            lines = msg.split("\n")
+            for i in lines:
+                string_length = len(i)
+                if string_length >= self.max_whitespace:
+                    string_length = 0
+                calculated_length = int(
+                    (self.max_whitespace - string_length)/2
+                )
+                if calculated_length % 2 == 1 and calculated_length != 0:
+                    calculated_length += 1
+                white_spaces = self.create_string(
+                    calculated_length,
+                    " "
+                )
+                title_content += character
+                title_content += white_spaces
+                title_content += i
+                if string_length % 2 == 1 and string_length != 0:
+                    white_spaces = white_spaces[:-1]
+                title_content += white_spaces
+                title_content += character
+                title_content += "\n"
+            msg = lines
+        else:
+            string_length = len(msg)
+            if string_length >= self.max_whitespace:
+                string_length = 0
+            calculated_length = int((self.max_whitespace - string_length)/2)
+            if calculated_length % 2 == 1 and calculated_length != 0:
+                calculated_length += 1
+            white_spaces = self.create_string(
+                calculated_length,
+                " "
+            )
+            title_content += character
+            title_content += white_spaces
+            title_content += msg
+            if string_length % 2 == 1 and string_length != 0:
+                white_spaces = white_spaces[:-1]
+            title_content += white_spaces
+            title_content += character
+            title_content += "\n"
+
+        inner_length = int(self.max_whitespace)
+        inner_line = self.create_string(
+            inner_length,
             " "
         )
-        box_wall = self.create_string(self.nb_chr, char)
-        self.animate_message(f"{box_wall}")
-        title_content = char
-        title_content += white_spaces
-        title_content += msg
-        title_content += white_spaces
-        title_content += char
-        self.animate_message(f"{title_content}")
-        self.animate_message(f"{box_wall}")
+        inner_line = f"{character}{inner_line}{character}"
+
+        generated_content = f"{box_wall}\n"
+        if "\n" in msg:
+            max_height = (inner_length / 4) - len(msg)
+            if max_height <= 2:
+                max_height = 2
+        else:
+            max_height = 2
+        i = 0
+        while i < max_height:
+            generated_content += f"{inner_line}\n"
+            i += 1
+        generated_content += f"{title_content}"
+        i = 0
+        while i < max_height:
+            generated_content += f"{inner_line}\n"
+            i += 1
+
+        generated_content += f"{box_wall}"
+
+        self.animate_message(
+            f"{generated_content}",
+            self.message_animation_delay
+        )
+        o = ""
+
+    def box_vertical_no_horizontal(self, message: str, character: str = "") -> None:
+        """
+        Print another box format, this time without the internal bars\n
+        But due to the code editor's rendering, it removes spaces, thus, if you want an accurate view, look at the raw comment of the function\n
+        The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
+        Here is a sample box:\n
+        \#                            #\n
+        \#                            #\n
+        \#                            #\n
+        \#                            #\n
+        \#                            #\n
+        \#       Sample text          #\n
+        \#                            #\n
+        \#                            #\n
+        \#                            #\n
+        \#                            #\n
+        \#                            #\n
+        """
+
+        if 'BOX_VERTICAL_NO_HORIZONTAL' in self.toml_content:
+            character = self.toml_content['BOX_VERTICAL_NO_HORIZONTAL']
+        elif character == '':
+            character = "#"
+
+        title_content = ""
+        if "\n" in message:
+            lines = message.split("\n")
+            for i in lines:
+                string_length = len(i)
+                if string_length >= self.max_whitespace:
+                    string_length = 0
+                calculated_length = int(
+                    (self.max_whitespace - string_length)/2
+                )
+                if calculated_length % 2 == 1 and calculated_length != 0:
+                    calculated_length += 1
+                white_spaces = self.create_string(
+                    calculated_length,
+                    " "
+                )
+                title_content += character
+                title_content += white_spaces
+                title_content += i
+                if string_length % 2 == 1 and string_length != 0:
+                    white_spaces = white_spaces[:-1]
+                title_content += white_spaces
+                title_content += character
+                title_content += "\n"
+            message = lines
+        else:
+            string_length = len(message)
+            if string_length >= self.max_whitespace:
+                string_length = 0
+            calculated_length = int((self.max_whitespace - string_length)/2)
+            if calculated_length % 2 == 1 and calculated_length != 0:
+                calculated_length += 1
+            white_spaces = self.create_string(
+                calculated_length,
+                " "
+            )
+            title_content += character
+            title_content += white_spaces
+            title_content += message
+            if string_length % 2 == 1 and string_length != 0:
+                white_spaces = white_spaces[:-1]
+            title_content += white_spaces
+            title_content += character
+            title_content += "\n"
+        inner_length = int(self.max_whitespace)
+        if len(message) > self.max_whitespace:
+            inner_length = self.max_whitespace
+        inner_line = self.create_string(
+            inner_length,
+            " "
+        )
+        inner_line = f"{character}{inner_line}{character}"
+
+        generated_content = ""
+        if "\n" in message:
+            max_height = (inner_length / 4) - len(message)
+            if max_height <= 2:
+                max_height = 2
+        else:
+            max_height = 2
+        i = 0
+        while i < max_height:
+            generated_content += f"{inner_line}\n"
+            i += 1
+        generated_content += f"{title_content}"
+        i = 0
+        while i < max_height:
+            if i+1 >= max_height:
+                generated_content += f"{inner_line}"
+            else:
+                generated_content += f"{inner_line}\n"
+            i += 1
+
+        self.animate_message(
+            f"{generated_content}",
+            self.message_animation_delay
+        )
+        o = ""
 
     def title(self, title) -> None:
         """ 
-        Print a beautified title 
+        Print a beautified title \n
         This function calls the disp_message_box using the title parameters
         """
         self.disp_message_box(title, self.title_wall_chr)
 
     def sub_title(self, sub_title) -> None:
         """ 
-        Print a beautified sub title
+        Print a beautified sub title\n
         This function calls the disp_message_box using the sub_title parameters
         """
         self.disp_message_box(sub_title, self.sub_title_wall_chr)
 
     def sub_sub_title(self, sub_sub_title) -> None:
         """
-        Print a beautified sub sub title
+        Print a beautified sub sub title\n
         This function calls the disp_message_box using the sub_sub_title parameters
         """
         self.disp_message_box(sub_sub_title, self.sub_sub_title_wall_chr)
 
     def message(self, message: str) -> None:
         """
-        Print a beautified message
-        This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration
-        Here is an example for the output (This is determined by the key repeated twice)
+        Print a beautified message\n
+        This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
+        Here is an example for the output (This is determined by the key repeated twice)\n
         @@ This is an example message @@
         """
         self.animate_message(
@@ -187,9 +504,9 @@ class Disp:
 
     def error_message(self, message: str) -> None:
         """
-        Print a beautified error message
-        This function displays the provided message using the 'MESSAGE_ERROR_CHARACTER' key in the toml configuration
-        Here is an example for the output (This is determined by the key repeated twice)
+        Print a beautified error message\n
+        This function displays the provided message using the 'MESSAGE_ERROR_CHARACTER' key in the toml configuration\n
+        Here is an example for the output (This is determined by the key repeated twice)\n
         @@ This is an example message @@
         """
         self.animate_message(
@@ -199,9 +516,9 @@ class Disp:
 
     def success_message(self, message: str) -> None:
         """
-        Print a beautified success message
-        This function displays the provided message using the 'MESSAGE_SUCCESS_CHARACTER' key in the toml configuration
-        Here is an example for the output (This is determined by the key repeated twice)
+        Print a beautified success message\n
+        This function displays the provided message using the 'MESSAGE_SUCCESS_CHARACTER' key in the toml configuration\n
+        Here is an example for the output (This is determined by the key repeated twice)\n
         @@ This is an example message @@
         """
         self.animate_message(
@@ -211,9 +528,9 @@ class Disp:
 
     def warning_message(self, message: str) -> None:
         """
-        Print a beautified warning message
-        This function displays the provided message using the 'MESSAGE_WARNING_CHARACTER' key in the toml configuration
-        Here is an example for the output (This is determined by the key repeated twice)
+        Print a beautified warning message\n
+        This function displays the provided message using the 'MESSAGE_WARNING_CHARACTER' key in the toml configuration\n
+        Here is an example for the output (This is determined by the key repeated twice)\n
         @@ This is an example message @@
         """
         self.animate_message(
@@ -223,9 +540,9 @@ class Disp:
 
     def question_message(self, message: str) -> None:
         """
-        Print a beautified question message
-        This function displays the provided message using the 'MESSAGE_QUESTION_CHARACTER' key in the toml configuration
-        Here is an example for the output (This is determined by the key repeated twice)
+        Print a beautified question message\n
+        This function displays the provided message using the 'MESSAGE_QUESTION_CHARACTER' key in the toml configuration\n
+        Here is an example for the output (This is determined by the key repeated twice)\n
         @@ This is an example message @@
         """
         self.animate_message(
@@ -235,9 +552,9 @@ class Disp:
 
     def inform_message(self, message: List) -> None:
         """
-        Print a beautified information message
-        This function displays the provided message using the 'MESSAGE_INFORM_CHARACTER' key in the toml configuration
-        Here is an example for the output (This is determined by the key repeated twice)
+        Print a beautified information message\n
+        This function displays the provided message using the 'MESSAGE_INFORM_CHARACTER' key in the toml configuration\n
+        Here is an example for the output (This is determined by the key repeated twice)\n
         @@ This is an example message @@
         """
         if isinstance(message, list) is True:
@@ -252,16 +569,16 @@ class Disp:
                 self.message_animation_delay
             )
 
-    def _tree_node(self, line, offset: int, index: int, max_lenght: int) -> None:
+    def _tree_node(self, line, offset: int, index: int, max_lenght: int) -> str:
         """
-        Display a line of the tree
-        The characters displayed in this tree function is managed by the following keys:
-        * TREE_NODE_CHAR
-        * TREE_NODE_END_CHAR
-        * TREE_LINE_SEPERATOR_CHAR
-        * TREE_COLUMN_SEPERATOR_CHAR
-        Here is an example generated by this function:
-        ├─── data1
+        Display a line of the tree\n
+        The characters displayed in this tree function is managed by the following keys:\n
+        * TREE_NODE_CHAR\n
+        * TREE_NODE_END_CHAR\n
+        * TREE_LINE_SEPERATOR_CHAR\n
+        * TREE_COLUMN_SEPERATOR_CHAR\n
+        Here is an example generated by this function:\n
+        ├─── data1\n
         └─── data2
         """
         processed_line = str()
@@ -277,72 +594,86 @@ class Disp:
             line = f"{line}"
         processed_line += " "
         processed_line += line
-        self.animate_message(processed_line, self.message_animation_delay)
+        processed_line += '\n'
+        return processed_line
 
     def tree(self, title: str, data: List[str], offset: int = 0) -> None:
         """
-        Print a list under the form of a beautified tree
-        The characters displayed in this tree function is managed by the following keys:
-        * TREE_NODE_CHAR
-        * TREE_NODE_END_CHAR
-        * TREE_LINE_SEPERATOR_CHAR
-        * TREE_COLUMN_SEPERATOR_CHAR
-        Here is an example generated by this function:
-        ├─── data1
+        Print a list under the form of a beautified tree\n
+        The characters displayed in this tree function is managed by the following keys:\n
+        * TREE_NODE_CHAR\n
+        * TREE_NODE_END_CHAR\n
+        * TREE_LINE_SEPERATOR_CHAR\n
+        * TREE_COLUMN_SEPERATOR_CHAR\n
+        Here is an example generated by this function:\n
+        ├─── data1\n
         └─── data2
         """
+        generated_content = ""
         if offset == 0:
-            self.animate_message(f"{title}", self.message_animation_delay)
+            generated_content += f"{title}\n"
         length = len(data) - 1
 
         for line in enumerate(data):
             if isinstance(data, list) and isinstance(line[1], (list, dict)):
-                self._tree_node(
+                generated_content += self._tree_node(
                     "<list instance>",
                     offset,
                     line[0],
                     length
                 )
-                self.tree(line[0], line[1], offset + 1)
+                generated_content += self.tree(line[0], line[1], offset + 1)
                 continue
             if isinstance(data, dict) and isinstance(data[line[1]], (list, dict)):
-                self._tree_node(
+                generated_content += self._tree_node(
                     line[1],
                     offset,
                     line[0],
                     length
                 )
-                self.tree(line[0], data[line[1]], offset + 1)
+                generated_content += self.tree(
+                    line[0],
+                    data[line[1]],
+                    offset + 1
+                )
                 continue
             if isinstance(data, dict) and isinstance(data[line[1]], dict) is False:
-                self._tree_node(
+                generated_content += self._tree_node(
                     f"{line[1]}: {data[line[1]]}",
                     offset,
                     line[0],
                     length
                 )
             else:
-                self._tree_node(
+                generated_content += self._tree_node(
                     line[1],
                     offset,
                     line[0],
                     length
                 )
+        if offset == 0:
+            self.animate_message(
+                f"{generated_content}",
+                self.message_animation_delay
+            )
+        else:
+            return generated_content
 
     def append_run_date(self) -> None:
         """
-        Add the date and time at which the program was launched
-        This is an example of the output (the design is controlled by the title function):
-        Example:
-        ########################################
-        #    Run date: 07/06/2024 22:26:10     #
+        Add the date and time at which the program was launched\n
+        The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
+        This is an example of the output (the design is controlled by the title function):\n
+        Example:\n
+        ########################################\n
+        \#    Run date: 07/06/2024 22:26:10     #\n
         ########################################
         """
         self.title(f"Run date: {time.strftime('%d/%m/%Y %H:%M:%S')} ")
 
-    def _test(self) -> None:
+    def test_the_class(self) -> None:
         """
-        This is a test function that you can use to have a template of the class
+        This is a test function that you can use to have a template of the class\n
         It allows you to make sure all the implemented functions work as expected
         """
         test_data = {
@@ -398,68 +729,18 @@ class Disp:
         self.title("Test title")
         self.sub_title("Test sub title")
         self.sub_sub_title("Test sub sub title")
+        self.disp_box_no_vertical('Test Box no vertical')
+        self.disp_vertical_message_box("Test Disp vertical message box")
+        self.box_vertical_no_horizontal("Test Box vertical no horizontal")
         self.tree("Test data", test_data)
         self.close_file()
 
 
 if __name__ == "__main__":
-    TEST_DATA = {
-        "test_data1": "test_data1.1",
-        "test_data2": "test_data2.1",
-        "test_data3": [
-            "test_data_list3.1",
-            "test_data_list3.2",
-            "test_data_list3.3",
-            "test_data_list3.4",
-            "test_data_list3.5"
-        ],
-        "test_data4": "test_data4.1",
-        "test_data5": {
-            "test_data5.1": "test_data5.1.1",
-            "test_data5.2": "test_data5.2.1",
-            "test_data5.3": "test_data5.3.1",
-            "test_data5.4": "test_data5.4.1"
-        },
-        "test_data6": [
-            {
-                "test_data6.1": "test_data6.1.1",
-                "test_data6.2": "test_data6.2.1"
-            },
-            [
-                "test_data_list6.3.1",
-                "test_data_list6.3.1",
-                "test_data_list6.3.1",
-                "test_data_list6.3.1"
-            ]
-        ],
-        "test_data7": {
-            "test_data7.1": {
-                "test_data7.1.1": "test_data7.1.1.1",
-                "test_data7.1.2": "test_data7.1.2.1"
-            },
-            "test_data7.2": [
-                "test_data7.2.1",
-                "test_data7.2.2",
-                "test_data7.2.3",
-                "test_data7.2.4",
-                "test_data7.2.5"
-            ]
-        }
-    }
     DI = Disp(
-        TOML_CONF,
-        False,
-        "test_run.tmp"
+        toml_content=TOML_CONF,
+        save_to_file=False,
+        file_name="test_run.tmp",
+        file_descriptor=None
     )
-    DI.append_run_date()
-    DI.animate_message("Test Message !", 0.01)
-    DI.error_message("Test Error !")
-    DI.inform_message("Test Inform !")
-    DI.success_message("Test Success !")
-    DI.warning_message("Test Warning !")
-    DI.question_message("Test Question !")
-    DI.title("Test title")
-    DI.sub_title("Test sub title")
-    DI.sub_sub_title("Test sub sub title")
-    DI.tree("Test data", TEST_DATA)
-    DI.close_file()
+    DI.test_the_class()

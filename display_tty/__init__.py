@@ -2,31 +2,11 @@
 File in charge linking of the disp file ot the module so that it could be imported as a module
 """
 
-from .my_disp import Disp
+from .my_disp import Disp, TOML_CONF, OUT_STRING, OUT_DEFAULT, OUT_FILE, OUT_TTY
 
 SUCCESS = 0
 ERR = 84
 ERROR = 84
-
-TOML_CONF = {
-    'PRETTIFY_OUTPUT': True,
-    'PRETTY_OUTPUT_IN_BLOCS': True,
-    'MESSAGE_CHARACTER': '@',
-    'MESSAGE_ERROR_CHARACTER': '#',
-    'MESSAGE_INFORM_CHARACTER': 'i',
-    'MESSAGE_QUESTION_CHARACTER': '?',
-    'MESSAGE_SUCCESS_CHARACTER': '/',
-    'MESSAGE_WARNING_CHARACTER': '!',
-    'SUB_SUB_TITLE_WALL_CHARACTER': '*',
-    'SUB_TITLE_WALL_CHARACTER': '@',
-    'TITLE_WALL_CHARACTER': '#',
-    'TREE_COLUMN_SEPERATOR_CHAR': '│',
-    'TREE_LINE_SEPERATOR_CHAR': '─',
-    'TREE_NODE_CHAR': '├',
-    'TREE_NODE_END_CHAR': '└',
-    'MESSAGE_ANIMATION_DELAY_BLOCKY': 0.01,
-    'MESSAGE_ANIMATION_DELAY': 0.01
-}
 
 SAVE_TO_FILE = False
 FILE_NAME = "run_results.txt"
@@ -42,6 +22,12 @@ IDISP = Disp(
 IDISPLAY = IDISP
 IDISPTTY = IDISP
 IDTTY = IDISP
+
+
+OSTRING = OUT_STRING
+ODEFAULT = OUT_DEFAULT
+OFILE = OUT_FILE
+OTTY = OUT_TTY
 
 
 class Display(Disp):
