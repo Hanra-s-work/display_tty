@@ -7,11 +7,35 @@ import sys
 import time
 from typing import List, Dict
 
+OUT_TTY = "tty"
+OUT_STRING = "string"
+OUT_FILE = "file"
+TOML_CONF = {
+    'PRETTIFY_OUTPUT': True,
+    'PRETTY_OUTPUT_IN_BLOCS': True,
+    'OUTPUT_MODE': OUT_TTY,
+    'MESSAGE_CHARACTER': '@',
+    'MESSAGE_ERROR_CHARACTER': '#',
+    'MESSAGE_INFORM_CHARACTER': 'i',
+    'MESSAGE_QUESTION_CHARACTER': '?',
+    'MESSAGE_SUCCESS_CHARACTER': '/',
+    'MESSAGE_WARNING_CHARACTER': '!',
+    'SUB_SUB_TITLE_WALL_CHARACTER': '*',
+    'SUB_TITLE_WALL_CHARACTER': '@',
+    'TITLE_WALL_CHARACTER': '#',
+    'TREE_COLUMN_SEPERATOR_CHAR': '│',
+    'TREE_LINE_SEPERATOR_CHAR': '─',
+    'TREE_NODE_CHAR': '├',
+    'TREE_NODE_END_CHAR': '└',
+    'MESSAGE_ANIMATION_DELAY_BLOCKY': 0.01,
+    'MESSAGE_ANIMATION_DELAY': 0.01
+}
+
 
 class Disp:
     """ The class in charge of Displaying messages """
 
-    def __init__(self, toml_content: Dict, save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
+    def __init__(self, toml_content: dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
@@ -37,13 +61,22 @@ class Disp:
         self.tree_column_seperator_char = self.toml_content["TREE_COLUMN_SEPERATOR_CHAR"]
         self.file_name = file_name
         self.save_to_file = save_to_file
+        if self.toml_content['OUTPUT_MODE'] == OUT_FILE:
+            self.save_to_file = True
         self.file_descriptor = file_descriptor
+        self.generated_content = ""
         self._open_file()
 
     def close_file(self) -> None:
         """ Close the log file if it was opened """
         if self.file_descriptor is not None:
             self.file_descriptor.close()
+
+    def get_generated_content(self) -> str:
+        """ Return the generated string """
+        data = self.generated_content
+        self.generated_content = ""
+        return data
 
     def _open_file(self) -> None:
         """ Open the file if required and add the current date and time """
@@ -92,11 +125,19 @@ class Disp:
             message = f"{message}"
         if self.save_to_file is True and self.file_descriptor is not None:
             self.file_descriptor.write(f"{message}\n")
+        elif self.toml_content["OUTPUT_MODE"] == OUT_STRING:
+            self.generated_content = message
         else:
             self.display_animation(message, delay)
 
     def disp_message_box(self, msg, char) -> None:
-        """ Display a message in a box """
+        """ 
+        Display a message in a box 
+        This is a sample box (characters and dimensions depend on the provided configuration):
+        #############################
+        #        Sample text        #
+        #############################
+        """
         white_spaces = self.create_string(
             int((self.max_whitespace - len(msg))/2),
             " "
@@ -112,54 +153,93 @@ class Disp:
         self.animate_message(f"{box_wall}")
 
     def title(self, title) -> None:
-        """ Print a beautified title """
+        """ 
+        Print a beautified title 
+        This function calls the disp_message_box using the title parameters
+        """
         self.disp_message_box(title, self.title_wall_chr)
 
     def sub_title(self, sub_title) -> None:
-        """ Print a beautified sub title """
+        """ 
+        Print a beautified sub title
+        This function calls the disp_message_box using the sub_title parameters
+        """
         self.disp_message_box(sub_title, self.sub_title_wall_chr)
 
     def sub_sub_title(self, sub_sub_title) -> None:
-        """ Print a beautified sub sub title """
+        """
+        Print a beautified sub sub title
+        This function calls the disp_message_box using the sub_sub_title parameters
+        """
         self.disp_message_box(sub_sub_title, self.sub_sub_title_wall_chr)
 
     def message(self, message: str) -> None:
-        """ Print a beautified message """
+        """
+        Print a beautified message
+        This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration
+        Here is an example for the output (This is determined by the key repeated twice)
+        @@ This is an example message @@
+        """
         self.animate_message(
             f"{self.message_char}{self.message_char} {message} {self.message_char}{self.message_char}",
             self.message_animation_delay
         )
 
     def error_message(self, message: str) -> None:
-        """ Print a beautified error message """
+        """
+        Print a beautified error message
+        This function displays the provided message using the 'MESSAGE_ERROR_CHARACTER' key in the toml configuration
+        Here is an example for the output (This is determined by the key repeated twice)
+        @@ This is an example message @@
+        """
         self.animate_message(
             f"{self.message_error_char}{self.message_error_char} Error: {message} {self.message_error_char}{self.message_error_char}",
             self.message_animation_delay
         )
 
     def success_message(self, message: str) -> None:
-        """ Print a beautified error message """
+        """
+        Print a beautified success message
+        This function displays the provided message using the 'MESSAGE_SUCCESS_CHARACTER' key in the toml configuration
+        Here is an example for the output (This is determined by the key repeated twice)
+        @@ This is an example message @@
+        """
         self.animate_message(
             f"{self.message_success_char}{self.message_success_char} Success: {message} {self.message_success_char}{self.message_success_char}",
             self.message_animation_delay
         )
 
     def warning_message(self, message: str) -> None:
-        """ Print a beautified warning message """
+        """
+        Print a beautified warning message
+        This function displays the provided message using the 'MESSAGE_WARNING_CHARACTER' key in the toml configuration
+        Here is an example for the output (This is determined by the key repeated twice)
+        @@ This is an example message @@
+        """
         self.animate_message(
             f"{self.message_warning_char}{self.message_warning_char} Warning: {message} {self.message_warning_char}{self.message_warning_char}",
             self.message_animation_delay
         )
 
     def question_message(self, message: str) -> None:
-        """ Print a beautified warning message """
+        """
+        Print a beautified question message
+        This function displays the provided message using the 'MESSAGE_QUESTION_CHARACTER' key in the toml configuration
+        Here is an example for the output (This is determined by the key repeated twice)
+        @@ This is an example message @@
+        """
         self.animate_message(
             f"{self.message_question_char}{self.message_question_char} Question: {message} {self.message_question_char}{self.message_question_char}",
             self.message_animation_delay
         )
 
     def inform_message(self, message: List) -> None:
-        """ Print a beautified information message """
+        """
+        Print a beautified information message
+        This function displays the provided message using the 'MESSAGE_INFORM_CHARACTER' key in the toml configuration
+        Here is an example for the output (This is determined by the key repeated twice)
+        @@ This is an example message @@
+        """
         if isinstance(message, list) is True:
             for msg in message:
                 self.animate_message(
@@ -172,8 +252,18 @@ class Disp:
                 self.message_animation_delay
             )
 
-    def tree_node(self, line, offset: int, index: int, max_lenght: int) -> None:
-        """ Display a line of the tree """
+    def _tree_node(self, line, offset: int, index: int, max_lenght: int) -> None:
+        """
+        Display a line of the tree
+        The characters displayed in this tree function is managed by the following keys:
+        * TREE_NODE_CHAR
+        * TREE_NODE_END_CHAR
+        * TREE_LINE_SEPERATOR_CHAR
+        * TREE_COLUMN_SEPERATOR_CHAR
+        Here is an example generated by this function:
+        ├─── data1
+        └─── data2
+        """
         processed_line = str()
         i = 0
         while i < offset:
@@ -190,14 +280,24 @@ class Disp:
         self.animate_message(processed_line, self.message_animation_delay)
 
     def tree(self, title: str, data: List[str], offset: int = 0) -> None:
-        """ Print a list under the form of a beautified tree """
+        """
+        Print a list under the form of a beautified tree
+        The characters displayed in this tree function is managed by the following keys:
+        * TREE_NODE_CHAR
+        * TREE_NODE_END_CHAR
+        * TREE_LINE_SEPERATOR_CHAR
+        * TREE_COLUMN_SEPERATOR_CHAR
+        Here is an example generated by this function:
+        ├─── data1
+        └─── data2
+        """
         if offset == 0:
             self.animate_message(f"{title}", self.message_animation_delay)
         length = len(data) - 1
 
         for line in enumerate(data):
             if isinstance(data, list) and isinstance(line[1], (list, dict)):
-                self.tree_node(
+                self._tree_node(
                     "<list instance>",
                     offset,
                     line[0],
@@ -206,7 +306,7 @@ class Disp:
                 self.tree(line[0], line[1], offset + 1)
                 continue
             if isinstance(data, dict) and isinstance(data[line[1]], (list, dict)):
-                self.tree_node(
+                self._tree_node(
                     line[1],
                     offset,
                     line[0],
@@ -215,14 +315,14 @@ class Disp:
                 self.tree(line[0], data[line[1]], offset + 1)
                 continue
             if isinstance(data, dict) and isinstance(data[line[1]], dict) is False:
-                self.tree_node(
+                self._tree_node(
                     f"{line[1]}: {data[line[1]]}",
                     offset,
                     line[0],
                     length
                 )
             else:
-                self.tree_node(
+                self._tree_node(
                     line[1],
                     offset,
                     line[0],
@@ -230,11 +330,21 @@ class Disp:
                 )
 
     def append_run_date(self) -> None:
-        """ Add the date and time at which the program was launched """
-        self.title(f"Run date: {time.strftime('%d/%m/%Y %H:%M:%S')}")
+        """
+        Add the date and time at which the program was launched
+        This is an example of the output (the design is controlled by the title function):
+        Example:
+        ########################################
+        #    Run date: 07/06/2024 22:26:10     #
+        ########################################
+        """
+        self.title(f"Run date: {time.strftime('%d/%m/%Y %H:%M:%S')} ")
 
     def _test(self) -> None:
-        """ This is a test function that you can use to have a template of the class """
+        """
+        This is a test function that you can use to have a template of the class
+        It allows you to make sure all the implemented functions work as expected
+        """
         test_data = {
             "test_data1": "test_data1.1",
             "test_data2": "test_data2.1",
@@ -293,25 +403,6 @@ class Disp:
 
 
 if __name__ == "__main__":
-    TOML_CONF = {
-        'PRETTIFY_OUTPUT': True,
-        'PRETTY_OUTPUT_IN_BLOCS': True,
-        'MESSAGE_CHARACTER': '@',
-        'MESSAGE_ERROR_CHARACTER': '#',
-        'MESSAGE_INFORM_CHARACTER': 'i',
-        'MESSAGE_QUESTION_CHARACTER': '?',
-        'MESSAGE_SUCCESS_CHARACTER': '/',
-        'MESSAGE_WARNING_CHARACTER': '!',
-        'SUB_SUB_TITLE_WALL_CHARACTER': '*',
-        'SUB_TITLE_WALL_CHARACTER': '@',
-        'TITLE_WALL_CHARACTER': '#',
-        'TREE_COLUMN_SEPERATOR_CHAR': '│',
-        'TREE_LINE_SEPERATOR_CHAR': '─',
-        'TREE_NODE_CHAR': '├',
-        'TREE_NODE_END_CHAR': '└',
-        'MESSAGE_ANIMATION_DELAY_BLOCKY': 0.01,
-        'MESSAGE_ANIMATION_DELAY': 0.01
-    }
     TEST_DATA = {
         "test_data1": "test_data1.1",
         "test_data2": "test_data2.1",
