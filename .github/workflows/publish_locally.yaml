@@ -171,9 +171,11 @@ jobs:
       id: update-generated
       if: matrix.python-version == env.MATRIX_VERSION_PUBLISHING
       run: |
+        echo "Listing directory:"
+        ls -a
         {
           echo 'UG<<EOF'
-          find ./build -maxdepth 1
+          ls dist/*
           echo EOF
         } >> "$GITHUB_OUTPUT"
 
