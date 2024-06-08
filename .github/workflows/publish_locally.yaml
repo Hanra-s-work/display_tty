@@ -195,6 +195,7 @@ jobs:
 
     - name: Get body message
       id: body-message
+      if: matrix.python-version == env.MATRIX_VERSION_PUBLISHING
       run: |
         if [ "${{env.LATEST_TAG}}" = "" ]
         then
