@@ -181,7 +181,7 @@ class Disp:
         else:
             self.display_animation(message, delay)
 
-    def disp_message_box(self, msg, char) -> None:
+    def disp_message_box(self, msg: str, char: str = "#") -> None:
         """
         Display a message in a box \n
         The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
@@ -199,21 +199,25 @@ class Disp:
             for i in lines:
                 string_length = len(i)
                 white_spaces = self._calculate_required_spaces(string_length)
+                title_content += char
                 title_content += white_spaces
                 title_content += i
                 if string_length % 2 == 1 and string_length != 0:
                     white_spaces = white_spaces[:-1]
                 title_content += white_spaces
+                title_content += char
                 title_content += '\n'
         else:
             string_length = len(msg)
             white_spaces = self._calculate_required_spaces(string_length)
             box_wall = self.create_string(self.nb_chr, char)
+            title_content += char
             title_content += white_spaces
             title_content += msg
             if string_length % 2 == 1 and string_length != 0:
                 white_spaces = white_spaces[:-1]
             title_content += white_spaces
+            title_content += char
             title_content += "\n"
 
         generated_content = f"{box_wall}\n"
@@ -319,7 +323,7 @@ class Disp:
             self.message_animation_delay
         )
 
-    def disp_diff_side_and_top_message_box(self, msg) -> None:
+    def disp_diff_side_and_top_message_box(self, msg: str) -> None:
         """
         Display a message in a box \n
         The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
@@ -591,21 +595,21 @@ class Disp:
             self.message_animation_delay
         )
 
-    def title(self, title) -> None:
+    def title(self, title: str) -> None:
         """ 
         Print a beautified title \n
         This function calls the disp_message_box using the title parameters
         """
         self.disp_message_box(title, self.title_wall_chr)
 
-    def sub_title(self, sub_title) -> None:
+    def sub_title(self, sub_title: str) -> None:
         """ 
         Print a beautified sub title\n
         This function calls the disp_message_box using the sub_title parameters
         """
         self.disp_message_box(sub_title, self.sub_title_wall_chr)
 
-    def sub_sub_title(self, sub_sub_title) -> None:
+    def sub_sub_title(self, sub_sub_title: str) -> None:
         """
         Print a beautified sub sub title\n
         This function calls the disp_message_box using the sub_sub_title parameters
