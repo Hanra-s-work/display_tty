@@ -1,12 +1,10 @@
 name: display_tty-gh-packages
 
 on:
-  push:
-    tags:
-      - 'v*'
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["display_tty-pypi"]
+    types:
+      - completed
   workflow_dispatch:
 
 env:
@@ -27,10 +25,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
