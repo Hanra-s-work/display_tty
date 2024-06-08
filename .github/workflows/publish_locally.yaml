@@ -191,10 +191,9 @@ jobs:
         COMMIT_TITLE="$(git tag -l --format='%(subject)' $TAG_NAME)"
         if [ "$COMMIT_TITLE" = "" ]
         then
-          COMMIT_TITLE="There is no title"
-        else
-          COMMIT_TITLE="$TAG_NAME - $COMMIT_TITLE"
+          COMMIT_TITLE="$(git log --format=%s -n 1)"
         fi
+        COMMIT_TITLE="$TAG_NAME - $COMMIT_TITLE"
         echo "Commit title: $COMMIT_TITLE"
         echo "COMMIT_TITLE=$COMMIT_TITLE" >> "$GITHUB_OUTPUT"
 
