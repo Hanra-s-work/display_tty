@@ -1,6 +1,9 @@
 name: display_tty-gh-packages
 
 on:
+  push:
+    branches:
+      - main
   workflow_run:
     workflows: ["display_tty-pypi"]
     types:
