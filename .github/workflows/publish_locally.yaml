@@ -4,10 +4,12 @@ on:
   push:
     branches:
       - main
-  workflow_run:
-    workflows: ["display_tty-pypi"]
-    types:
-      - completed
+    tags:
+      - "v*.*.*"
+  # workflow_run:
+  #   workflows: ["display_tty-pypi"]
+  #   types:
+  #     - completed
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -232,7 +234,7 @@ jobs:
 
     - name: Publish binary as GitHub release
       uses: softprops/action-gh-release@v2
-      if: startsWith(github.ref, 'refs/tags/') && matrix.python-version == env.MATRIX_VERSION_PUBLISHING
+      if: matrix.python-version == env.MATRIX_VERSION_PUBLISHING && startsWith(github.ref, 'refs/tags/')
       with:
         files: ${{ steps.update-generated.outputs.UG }}
         name: ${{ steps.commit-title.outputs.COMMIT_TITLE }}
