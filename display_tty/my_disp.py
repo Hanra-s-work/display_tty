@@ -33,6 +33,14 @@ TOML_CONF = {
     'BOX_VERTICAL_NO_HORIZONTAL': '#',
     'MESSAGE_ANIMATION_DELAY_BLOCKY': 0.01,
     'MESSAGE_ANIMATION_DELAY': 0.01,
+    'ROUND_BOX_CORNER_LEFT': '╔',
+    'ROUND_BOX_CORNER_RIGHT': '╗',
+    'ROUND_BOX_CORNER_BOTTOM_LEFT': '╚',
+    'ROUND_BOX_CORNER_BOTTOM_RIGHT': '╝',
+    'ROUND_BOX_HORIZONTAL': '═',
+    'ROUND_BOX_VERTICAL': '║',
+    'DIFF_BORDER_LINE_CHARACTER_BOX': '-',
+    'DIFF_SIDE_LINE_CHARACTER_BOX': '|',
 }
 
 
@@ -85,6 +93,29 @@ class Disp:
         data = self.generated_content
         self.generated_content = ""
         return data
+
+    def _calculate_required_spaces(self, string_length: int) -> str:
+        """_summary_
+            This is a function that will generate the required amount of spaces for the padding of the shape.
+        Args:
+            string_length (int): _description_: The length of the provided string
+
+        Returns:
+            str: _description_: The number of spaces required for the padding
+        """
+        if string_length >= self.max_whitespace:
+            white_spaces = " "
+        else:
+            calculated_length = int(
+                (self.max_whitespace - string_length)/2
+            )
+            if calculated_length % 2 == 1 and calculated_length != 0:
+                calculated_length += 1
+            white_spaces = self.create_string(
+                calculated_length,
+                " "
+            )
+        return white_spaces
 
     def _open_file(self) -> None:
         """ Open the file if required and add the current date and time """
@@ -155,17 +186,7 @@ class Disp:
             lines = msg.split("\n")
             for i in lines:
                 string_length = len(i)
-                if string_length >= self.max_whitespace:
-                    string_length = 0
-                calculated_length = int(
-                    (self.max_whitespace - string_length)/2
-                )
-                if calculated_length % 2 == 1 and calculated_length != 0:
-                    calculated_length += 1
-                white_spaces = self.create_string(
-                    calculated_length,
-                    " "
-                )
+                white_spaces = self._calculate_required_spaces(string_length)
                 title_content += white_spaces
                 title_content += i
                 if string_length % 2 == 1 and string_length != 0:
@@ -174,21 +195,166 @@ class Disp:
                 title_content += '\n'
         else:
             string_length = len(msg)
-            if string_length >= self.max_whitespace:
-                string_length = 0
-            calculated_length = int((self.max_whitespace - string_length)/2)
-            if calculated_length % 2 == 1 and calculated_length != 0:
-                calculated_length += 1
-            white_spaces = self.create_string(
-                calculated_length,
-                " "
-            )
+            white_spaces = self._calculate_required_spaces(string_length)
             box_wall = self.create_string(self.nb_chr, char)
             title_content += white_spaces
             title_content += msg
             if string_length % 2 == 1 and string_length != 0:
                 white_spaces = white_spaces[:-1]
             title_content += white_spaces
+            title_content += "\n"
+
+        generated_content = f"{box_wall}\n"
+        generated_content += f"{title_content}"
+        generated_content += f"{box_wall}"
+        self.animate_message(
+            f"{generated_content}",
+            self.message_animation_delay
+        )
+
+    def disp_round_message_box(self, msg: str = "Sample text") -> None:
+        """
+        Display a message in a box \n
+        The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
+        This is a sample box (characters and dimensions depend on the provided configuration):\n
+        ╔══════════════════════╗\n
+        ║      Sample Text     ║\n
+        ╚══════════════════════╝
+        """
+
+        offset_reset = 2
+
+        # Generate the top line
+        top_wall = ""
+        if 'ROUND_BOX_CORNER_LEFT' in self.toml_content:
+            top_wall += self.toml_content['ROUND_BOX_CORNER_LEFT']
+        else:
+            top_wall += "╔"
+        if 'ROUND_BOX_HORIZONTAL' in self.toml_content:
+            top_wall += self.create_string(
+                self.nb_chr - offset_reset,
+                self.toml_content['ROUND_BOX_HORIZONTAL']
+            )
+        else:
+            top_wall += self.create_string(
+                self.nb_chr-offset_reset,
+                "═"
+            )
+        if 'ROUND_BOX_CORNER_RIGHT' in self.toml_content:
+            top_wall += self.toml_content['ROUND_BOX_CORNER_RIGHT']
+        else:
+            top_wall += "╗"
+
+        # Generate the bottom line
+        bottom_wall = ""
+        if 'ROUND_BOX_CORNER_BOTTOM_LEFT' in self.toml_content:
+            bottom_wall += self.toml_content['ROUND_BOX_CORNER_BOTTOM_LEFT']
+        else:
+            bottom_wall += "╚"
+
+        if 'ROUND_BOX_HORIZONTAL' in self.toml_content:
+            bottom_wall += self.create_string(
+                self.nb_chr-offset_reset,
+                self.toml_content['ROUND_BOX_HORIZONTAL']
+            )
+        else:
+            bottom_wall += self.create_string(
+                self.nb_chr-offset_reset,
+                "═"
+            )
+        if 'ROUND_BOX_CORNER_BOTTOM_RIGHT' in self.toml_content:
+            bottom_wall += self.toml_content['ROUND_BOX_CORNER_BOTTOM_RIGHT']
+        else:
+            bottom_wall += "╝"
+
+        border_character = ""
+        if 'ROUND_BOX_VERTICAL' in self.toml_content:
+            border_character = self.toml_content['ROUND_BOX_VERTICAL']
+        else:
+            border_character = "║"
+
+        center_content = ""
+        if "\n" in msg:
+            lines = msg.split("\n")
+            for i in lines:
+                string_length = len(i)
+                white_spaces = self._calculate_required_spaces(string_length)
+                center_content += border_character
+                center_content += white_spaces
+                center_content += i
+                if string_length % 2 == 1 and string_length != 0:
+                    white_spaces = white_spaces[:-1]
+                center_content += white_spaces
+                center_content += border_character
+                center_content += '\n'
+        else:
+            string_length = len(msg)
+            white_spaces = self._calculate_required_spaces(string_length)
+            center_content += border_character
+            center_content += white_spaces
+            center_content += msg
+            if string_length % 2 == 1 and string_length != 0:
+                white_spaces = white_spaces[:-1]
+            center_content += white_spaces
+            center_content += border_character
+            center_content += "\n"
+
+        generated_content = f"{top_wall}\n"
+        generated_content += f"{center_content}"
+        generated_content += f"{bottom_wall}"
+        self.animate_message(
+            f"{generated_content}",
+            self.message_animation_delay
+        )
+
+    def disp_diff_side_and_top_message_box(self, msg) -> None:
+        """
+        Display a message in a box \n
+        The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
+        This is a sample box (characters and dimensions depend on the provided configuration):\n
+        _____________________________\n
+        |        Sample text        |\n
+        _____________________________
+        """
+
+        ceiling_boxes = ""
+        if 'DIFF_BORDER_LINE_CHARACTER_BOX' in self.toml_content:
+            ceiling_boxes = self.toml_content['DIFF_BORDER_LINE_CHARACTER_BOX']
+        else:
+            ceiling_boxes = "-"
+
+        border_character = ""
+        if 'DIFF_SIDE_LINE_CHARACTER_BOX' in self.toml_content:
+            border_character = self.toml_content['DIFF_SIDE_LINE_CHARACTER_BOX']
+        else:
+            border_character = "|"
+
+        box_wall = self.create_string(self.nb_chr, ceiling_boxes)
+
+        title_content = ""
+        if "\n" in msg:
+            lines = msg.split("\n")
+            for i in lines:
+                string_length = len(i)
+                white_spaces = self._calculate_required_spaces(string_length)
+                title_content += border_character
+                title_content += white_spaces
+                title_content += i
+                if string_length % 2 == 1 and string_length != 0:
+                    white_spaces = white_spaces[:-1]
+                title_content += white_spaces
+                title_content += border_character
+                title_content += '\n'
+        else:
+            string_length = len(msg)
+            white_spaces = self._calculate_required_spaces(string_length)
+            title_content += border_character
+            title_content += white_spaces
+            title_content += msg
+            if string_length % 2 == 1 and string_length != 0:
+                white_spaces = white_spaces[:-1]
+            title_content += white_spaces
+            title_content += border_character
             title_content += "\n"
 
         generated_content = f"{box_wall}\n"
@@ -221,17 +387,7 @@ class Disp:
             lines = message.split("\n")
             for i in lines:
                 string_length = len(i)
-                if string_length >= self.max_whitespace:
-                    string_length = 0
-                calculated_length = int(
-                    (self.max_whitespace - string_length)/2
-                )
-                if calculated_length % 2 == 1 and calculated_length != 0:
-                    calculated_length += 1
-                white_spaces = self.create_string(
-                    calculated_length,
-                    " "
-                )
+                white_spaces = self._calculate_required_spaces(string_length)
                 title_content += white_spaces
                 title_content += i
                 if string_length % 2 == 1 and string_length != 0:
@@ -240,15 +396,7 @@ class Disp:
                 title_content += '\n'
         else:
             string_length = len(message)
-            if string_length >= self.max_whitespace:
-                string_length = 0
-            calculated_length = int((self.max_whitespace - string_length)/2)+1
-            if calculated_length % 2 == 1 and calculated_length != 0:
-                calculated_length += 1
-            white_spaces = self.create_string(
-                calculated_length,
-                " "
-            )
+            white_spaces = self._calculate_required_spaces(string_length)
             title_content += white_spaces
             title_content += message
             if string_length % 2 == 1 and string_length != 0:
@@ -294,17 +442,7 @@ class Disp:
             lines = msg.split("\n")
             for i in lines:
                 string_length = len(i)
-                if string_length >= self.max_whitespace:
-                    string_length = 0
-                calculated_length = int(
-                    (self.max_whitespace - string_length)/2
-                )
-                if calculated_length % 2 == 1 and calculated_length != 0:
-                    calculated_length += 1
-                white_spaces = self.create_string(
-                    calculated_length,
-                    " "
-                )
+                white_spaces = self._calculate_required_spaces(string_length)
                 title_content += character
                 title_content += white_spaces
                 title_content += i
@@ -316,15 +454,7 @@ class Disp:
             msg = lines
         else:
             string_length = len(msg)
-            if string_length >= self.max_whitespace:
-                string_length = 0
-            calculated_length = int((self.max_whitespace - string_length)/2)
-            if calculated_length % 2 == 1 and calculated_length != 0:
-                calculated_length += 1
-            white_spaces = self.create_string(
-                calculated_length,
-                " "
-            )
+            white_spaces = self._calculate_required_spaces(string_length)
             title_content += character
             title_content += white_spaces
             title_content += msg
@@ -364,7 +494,6 @@ class Disp:
             f"{generated_content}",
             self.message_animation_delay
         )
-        o = ""
 
     def box_vertical_no_horizontal(self, message: str, character: str = "") -> None:
         """
@@ -395,17 +524,7 @@ class Disp:
             lines = message.split("\n")
             for i in lines:
                 string_length = len(i)
-                if string_length >= self.max_whitespace:
-                    string_length = 0
-                calculated_length = int(
-                    (self.max_whitespace - string_length)/2
-                )
-                if calculated_length % 2 == 1 and calculated_length != 0:
-                    calculated_length += 1
-                white_spaces = self.create_string(
-                    calculated_length,
-                    " "
-                )
+                white_spaces = self._calculate_required_spaces(string_length)
                 title_content += character
                 title_content += white_spaces
                 title_content += i
@@ -417,15 +536,7 @@ class Disp:
             message = lines
         else:
             string_length = len(message)
-            if string_length >= self.max_whitespace:
-                string_length = 0
-            calculated_length = int((self.max_whitespace - string_length)/2)
-            if calculated_length % 2 == 1 and calculated_length != 0:
-                calculated_length += 1
-            white_spaces = self.create_string(
-                calculated_length,
-                " "
-            )
+            white_spaces = self._calculate_required_spaces(string_length)
             title_content += character
             title_content += white_spaces
             title_content += message
@@ -467,7 +578,6 @@ class Disp:
             f"{generated_content}",
             self.message_animation_delay
         )
-        o = ""
 
     def title(self, title) -> None:
         """ 
@@ -730,6 +840,10 @@ class Disp:
         self.sub_title("Test sub title")
         self.sub_sub_title("Test sub sub title")
         self.disp_box_no_vertical('Test Box no vertical')
+        self.disp_round_message_box("Test Disp round message box")
+        self.disp_diff_side_and_top_message_box(
+            "Test Disp diff side and top message box"
+        )
         self.disp_vertical_message_box("Test Disp vertical message box")
         self.box_vertical_no_horizontal("Test Box vertical no horizontal")
         self.tree("Test data", test_data)
