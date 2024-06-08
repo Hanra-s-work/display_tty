@@ -15,6 +15,7 @@ env:
   IS_RELEASE: is_release.txt
   MATRIX_VERSION_PUBLISHING: "3.10"
   SOURCE_CODE_PATH: display_tty/my_disp.py
+  LATEST_TAG: ""
 
 jobs:
   build:
@@ -38,9 +39,10 @@ jobs:
       id: get_latest_tag
       run: |
         echo "Getting tags"
-        git fetch --tags # Make sure to fetch the tags first
+        # git fetch --tags # Make sure to fetch the tags first
         echo "Updated the list"
         latest_tag=$(git tag --list "v*" | sort -rV | head -n 1)
+        echo "Tag list: $(git tag -l)"
         echo "Latest tag = $latest_tag"
         if [ "$latest_tag" == "" ]; then
           echo "No tags found matching 'v*'."
@@ -50,10 +52,12 @@ jobs:
           echo "Latest Tag: $latest_tag"
         fi
         echo "$latest_tag" > ${{env.TAG_FILE}}
+        echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
         echo -e "\n\n\n\n\n\n\n\n\n"
         echo "new_tag = $latest_tag"
         echo "env.new_tag = ${{env.tag_file}}"
         echo "cat env.new_tag = $(cat ${{env.TAG_FILE}})"
+        echo "env.LATEST_TAG = ${{env.LATEST_TAG}}"
         echo -e "\n\n\n\n\n\n\n\n\n"
 
     - name: Check if Latest Tag is a Release
@@ -154,12 +158,7 @@ jobs:
         pip install build
         python -m build
 
-    - name: Update author
-      run: |
-        git config --local user.name "${{secrets.USER_NAME_E}}"
-        git config --local user.email "${{secrets.USER_EMAIL_E}}"
-
-      # Add the following steps if you want to publish to PyPI
+    # Add the following steps if you want to publish to PyPI
     - name: Build and publish to PyPI
       if: matrix.python-version == env.MATRIX_VERSION_PUBLISHING
       run: |

@@ -7,12 +7,18 @@ on:
       - completed
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  id-token: write
+
 env:
   SETUP_FILE: setup.py
   TAG_FILE: version.txt
   IS_RELEASE: is_release.txt
   MATRIX_VERSION_PUBLISHING: "3.10"
   SOURCE_CODE_PATH: display_tty/my_disp.py
+  LATEST_TAG: ""
 
 jobs:
   build:
@@ -36,9 +42,10 @@ jobs:
       id: get_latest_tag
       run: |
         echo "Getting tags"
-        git fetch --tags # Make sure to fetch the tags first
+        # git fetch --tags # Make sure to fetch the tags first
         echo "Updated the list"
         latest_tag=$(git tag --list "v*" | sort -rV | head -n 1)
+        echo "Tag list: $(git tag -l)"
         echo "Latest tag = $latest_tag"
         if [ "$latest_tag" == "" ]; then
           echo "No tags found matching 'v*'."
@@ -48,10 +55,12 @@ jobs:
           echo "Latest Tag: $latest_tag"
         fi
         echo "$latest_tag" > ${{env.TAG_FILE}}
+        echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
         echo -e "\n\n\n\n\n\n\n\n\n"
         echo "new_tag = $latest_tag"
         echo "env.new_tag = ${{env.tag_file}}"
         echo "cat env.new_tag = $(cat ${{env.TAG_FILE}})"
+        echo "env.LATEST_TAG = ${{env.LATEST_TAG}}"
         echo -e "\n\n\n\n\n\n\n\n\n"
 
     - name: Check if Latest Tag is a Release
@@ -110,6 +119,7 @@ jobs:
         echo "cat env.new_tag = $(cat ${{env.TAG_FILE}})"
         echo "cat env.is_release = $(cat ${{env.IS_RELEASE}})"
         echo -e "\n\n\n\n\n\n\n\n\n"
+
     - name: Update module version in source code and builder file
       run: |
         latest_tag="$(cat ${{env.TAG_FILE}})"
@@ -156,15 +166,73 @@ jobs:
       run: |
         git config --local user.name "${{secrets.USER_NAME_E}}"
         git config --local user.email "${{secrets.USER_EMAIL_E}}"
-    - name: Publish as GitHub release
+
+    - name: Update generated file
+      id: update-generated
       if: matrix.python-version == env.MATRIX_VERSION_PUBLISHING
       run: |
-        tag_version="$(cat ${{env.TAG_FILE}})"
-        echo "Publishing $tag_version as a GitHub release"
-        echo "Tag version: $tag_version"
-        tag_description="Bump version to $tag_version"
-        echo "Tag description: $tag_description"
-        echo "Creating tag"
-        git tag -a "$tag_version" -m "$tag_description"
-        echo "Publishing tag"
-        git push origin $tag_version
+        {
+          echo 'UG<<EOF'
+          find ./build -maxdepth 1
+          echo EOF
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Get commit title
+      id: commit-title
+      if: matrix.python-version == env.MATRIX_VERSION_PUBLISHING
+      run: |
+        TAG_NAME="${{env.LATEST_TAG}}"
+        echo "Found file=$TAG_NAME"
+        COMMIT_TITLE="$(git tag -l --format='%(subject)' $TAG_NAME)"
+        if [ "$COMMIT_TITLE" = "" ]
+        then
+          COMMIT_TITLE="There is no title"
+        else
+          COMMIT_TITLE="$TAG_NAME - $COMMIT_TITLE"
+        fi
+        echo "Commit title: $COMMIT_TITLE"
+        echo "COMMIT_TITLE=$COMMIT_TITLE" >> "$GITHUB_OUTPUT"
+
+    - name: Get body message
+      id: body-message
+      run: |
+        if [ "${{env.LATEST_TAG}}" = "" ]
+        then
+          echo "Tag name not found"
+          TAG_NAME="v0.0.0"
+        else
+          TAG_NAME="${{env.LATEST_TAG}}"
+        fi
+        echo "TAG NAME content = $TAG_NAME"
+        COMMIT_MESSAGE=$(git tag -l --format='%(contents)' $TAG_NAME)
+        echo "Commit message content = $COMMIT_MESSAGE"
+        if [[ -n "$COMMIT_MESSAGE" ]]; then
+          COMMIT_MESSAGE=$(git log --format=%s -n 1)
+        fi
+        if [ "$COMMIT_MESSAGE" = "" ]
+        then
+          COMMIT_MESSAGE="There is no message\n$(cat ./README.md)"
+        else
+          COMMIT_MESSAGE="${COMMIT_MESSAGE}\n$(cat ./README.md)"
+        fi
+        COMMIT_MESSAGE="${COMMIT_MESSAGE}\n\`\`\`log\n$(git log --format=%s -n 50)\n\`\`\`"
+        echo "Commit message final content = '$COMMIT_MESSAGE'"
+        # COMMIT_MESSAGE_ESCAPED=$(echo "$COMMIT_MESSAGE" | awk '{printf "%s\\n", $0}')
+        # echo "COMMIT_MESSAGE=$COMMIT_MESSAGE_ESCAPED" >> $GITHUB_ENV
+        {
+          echo "COMMIT_MESSAGE<<EOH"
+          echo -e "$COMMIT_MESSAGE"
+          echo EOH
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Publish binary as GitHub release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/') && matrix.python-version == env.MATRIX_VERSION_PUBLISHING
+      with:
+        files: ${{ steps.update-generated.outputs.UG }}
+        name: ${{ steps.commit-title.outputs.COMMIT_TITLE }}
+        body: ${{ steps.body-message.outputs.COMMIT_MESSAGE }}
+        draft: false
+        prerelease: false
+        make_latest: true
+        token: ${{ secrets.GITHUB_TOKEN }}
