@@ -12,10 +12,21 @@ OUT_STRING = "string"
 OUT_FILE = "file"
 OUT_DEFAULT = ''
 
+# OUTPUT modes
+KEY_OUTPUT_MODE = "OUTPUT_MODE"
+KEY_PRETTIFY_OUTPUT = "PRETTIFY_OUTPUT"
+KEY_PRETTIFY_OUTPUT_IN_BLOCKS = "PRETTY_OUTPUT_IN_BLOCS"
+
+# Animation delays
+KEY_ANIMATION_DELAY = 'MESSAGE_ANIMATION_DELAY'
+KEY_ANIMATION_DELAY_BLOCKY = 'MESSAGE_ANIMATION_DELAY_BLOCKY'
+
 TOML_CONF = {
-    'PRETTIFY_OUTPUT': True,
-    'PRETTY_OUTPUT_IN_BLOCS': True,
-    'OUTPUT_MODE': OUT_TTY,
+    KEY_OUTPUT_MODE: OUT_TTY,
+    KEY_PRETTIFY_OUTPUT: True,
+    KEY_PRETTIFY_OUTPUT_IN_BLOCKS: True,
+    KEY_ANIMATION_DELAY: 0.01,
+    KEY_ANIMATION_DELAY_BLOCKY: 0.01,
     'MESSAGE_CHARACTER': '@',
     'MESSAGE_ERROR_CHARACTER': '#',
     'MESSAGE_INFORM_CHARACTER': 'i',
@@ -31,8 +42,6 @@ TOML_CONF = {
     'TREE_NODE_END_CHAR': '└',
     'BOX_NO_VERTICAL': '#',
     'BOX_VERTICAL_NO_HORIZONTAL': '#',
-    'MESSAGE_ANIMATION_DELAY_BLOCKY': 0.01,
-    'MESSAGE_ANIMATION_DELAY': 0.01,
     'ROUND_BOX_CORNER_LEFT': '╔',
     'ROUND_BOX_CORNER_RIGHT': '╗',
     'ROUND_BOX_CORNER_BOTTOM_LEFT': '╚',
@@ -63,28 +72,31 @@ class Disp:
         self.message_inform_char = self.toml_content["MESSAGE_INFORM_CHARACTER"]
         self.message_warning_char = self.toml_content["MESSAGE_WARNING_CHARACTER"]
         self.message_question_char = self.toml_content["MESSAGE_QUESTION_CHARACTER"]
-        if self.toml_content["PRETTY_OUTPUT_IN_BLOCS"] is True:
-            self.message_animation_delay = self.toml_content["MESSAGE_ANIMATION_DELAY_BLOCKY"]
+        if self.toml_content[KEY_PRETTIFY_OUTPUT_IN_BLOCKS] is True:
+            self.message_animation_delay = self.toml_content[KEY_ANIMATION_DELAY_BLOCKY]
         else:
-            self.message_animation_delay = self.toml_content["MESSAGE_ANIMATION_DELAY"]
+            self.message_animation_delay = self.toml_content[KEY_ANIMATION_DELAY]
         self.tree_node_char = self.toml_content["TREE_NODE_CHAR"]
         self.tree_node_end_char = self.toml_content["TREE_NODE_END_CHAR"]
         self.tree_line_seperator_char = self.toml_content["TREE_LINE_SEPERATOR_CHAR"]
         self.tree_column_seperator_char = self.toml_content["TREE_COLUMN_SEPERATOR_CHAR"]
         self.file_name = file_name
         self.save_to_file = save_to_file
-        if self.toml_content['OUTPUT_MODE'] == OUT_FILE:
+        if self.toml_content[KEY_OUTPUT_MODE] == OUT_FILE:
             self.save_to_file = True
         self.file_descriptor = file_descriptor
         self.generated_content = ""
-        if self.toml_content['OUTPUT_MODE'] not in (OUT_FILE, OUT_STRING, OUT_TTY, OUT_DEFAULT):
+        if self.toml_content[KEY_OUTPUT_MODE] not in (OUT_FILE, OUT_STRING, OUT_TTY, OUT_DEFAULT):
             raise ValueError(
                 f"Invalid output mode. Must be one of '{OUT_FILE}', '{OUT_STRING}', '{OUT_TTY}', '{OUT_DEFAULT}"
             )
-        self._open_file()
+        if self.toml_content[KEY_OUTPUT_MODE] == OUT_FILE:
+            self._open_file()
 
     def close_file(self) -> None:
         """ Close the log file if it was opened """
+        if self.toml_content[KEY_OUTPUT_MODE] != OUT_FILE:
+            return
         if self.file_descriptor is not None:
             self.file_descriptor.close()
 
@@ -143,13 +155,13 @@ class Disp:
 
     def display_animation(self, message: str = "Hello World!", delay: float = 0.02) -> None:
         """ Print the message letter by letter while applying a provided delay """
-        if " " in message and self.toml_content["PRETTIFY_OUTPUT"] is True and self.toml_content["PRETTY_OUTPUT_IN_BLOCS"] is True:
+        if " " in message and self.toml_content[KEY_PRETTIFY_OUTPUT] is True and self.toml_content[KEY_PRETTIFY_OUTPUT_IN_BLOCKS] is True:
             for letter in message.split(" "):
                 sys.stdout.write(letter)
                 sys.stdout.flush()
                 sys.stdout.write(" ")
                 time.sleep(delay)
-        elif self.toml_content["PRETTIFY_OUTPUT"] is True:
+        elif self.toml_content[KEY_PRETTIFY_OUTPUT] is True:
             for letter in message:
                 sys.stdout.write(letter)
                 sys.stdout.flush()
@@ -164,7 +176,7 @@ class Disp:
             message = f"{message}"
         if self.save_to_file is True and self.file_descriptor is not None:
             self.file_descriptor.write(f"{message}\n")
-        elif self.toml_content["OUTPUT_MODE"] == OUT_STRING:
+        elif self.toml_content[KEY_OUTPUT_MODE] == OUT_STRING:
             self.generated_content = f"{message}\n"
         else:
             self.display_animation(message, delay)

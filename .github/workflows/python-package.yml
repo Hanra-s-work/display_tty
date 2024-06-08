@@ -171,7 +171,7 @@ jobs:
       run: |
         python -m build
         pip install twine
-        twine upload dist/*
+        twine upload dist/* --verbose
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
