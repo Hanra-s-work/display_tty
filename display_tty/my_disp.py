@@ -116,12 +116,28 @@ class Disp:
                 )
                 handler.setFormatter(formatter)
                 self.logger.addHandler(handler)
-            self.logger.setLevel(logger.DEBUG)
+            self.logger.setLevel(logging.DEBUG)
 
-    def _disp_print_debug(self, string: str = "") -> None:
+    def disp_print_debug(self, string: str = "") -> None:
         """ Print a debug message """
         if self.debug is True:
             self.logger.debug("(Disp) %s", string)
+
+    def disp_print_info(self, string: str = "") -> None:
+        """ Print an info message """
+        self.logger.info("(Disp) %s", string)
+
+    def disp_print_warning(self, string: str = "") -> None:
+        """ Print a warning message """
+        self.logger.warning("(Disp) %s", string)
+
+    def disp_print_error(self, string: str = "") -> None:
+        """ Print an error message """
+        self.logger.error("(Disp) %s", string)
+
+    def disp_print_critical(self, string: str = "") -> None:
+        """ Print a critical message """
+        self.logger.critical("(Disp) %s", string)
 
     def close_file(self) -> None:
         """ Close the log file if it was opened """
@@ -893,6 +909,14 @@ class Disp:
         self.disp_vertical_message_box("Test Disp vertical message box")
         self.box_vertical_no_horizontal("Test Box vertical no horizontal")
         self.tree("Test data", test_data)
+        prev_debug = self.debug
+        self.debug = True
+        self.disp_print_debug("This is a test for debug messages")
+        self.debug = prev_debug
+        self.disp_print_info("This is a test for info messages")
+        self.disp_print_warning("This is a test for warning messages")
+        self.disp_print_error("This is a test for error messages")
+        self.disp_print_critical("This is a test for critical messages")
         self.close_file()
 
 
