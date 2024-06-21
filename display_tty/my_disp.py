@@ -5,6 +5,8 @@ The file in charge of managing the beautified output on the terminal
 
 import sys
 import time
+import logging
+import colorlog
 from typing import List, Dict
 
 OUT_TTY = "tty"
@@ -56,11 +58,12 @@ TOML_CONF = {
 class Disp:
     """ The class in charge of Displaying messages """
 
-    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None) -> None:
+    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: logging = None) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
         self.nb_chr = 40
+        self.debug = debug
         self.nb_side_walls = 2
         self.max_whitespace = self.nb_chr - self.nb_side_walls
         self.title_wall_chr = self.toml_content["TITLE_WALL_CHARACTER"]
@@ -92,6 +95,33 @@ class Disp:
             )
         if self.toml_content[KEY_OUTPUT_MODE] == OUT_FILE:
             self._open_file()
+        # ---- Logging data ----
+        if callable(logger) and hasattr(logger, "debug"):
+            self.logger = logger
+        else:
+            self.logger = logging.getLogger(self.__class__.__name__)
+            if not self.logger.hasHandlers():
+                handler = colorlog.StreamHandler()
+                formatter = colorlog.ColoredFormatter(
+                    '[%(asctime)s] %(log_color)s%(levelname)s%(reset)s %(name)s: \'%(message)s\'',
+                    datefmt=None,
+                    reset=True,
+                    log_colors={
+                        'DEBUG':    'cyan',
+                        'INFO':     'green',
+                        'WARNING':  'yellow',
+                        'ERROR':    'red',
+                        'CRITICAL': 'bold_red',
+                    }
+                )
+                handler.setFormatter(formatter)
+                self.logger.addHandler(handler)
+            self.logger.setLevel(logger.DEBUG)
+
+    def _disp_print_debug(self, string: str = "") -> None:
+        """ Print a debug message """
+        if self.debug is True:
+            self.logger.debug("(Disp) %s", string)
 
     def close_file(self) -> None:
         """ Close the log file if it was opened """
@@ -871,6 +901,7 @@ if __name__ == "__main__":
         toml_content=TOML_CONF,
         save_to_file=False,
         file_name="test_run.tmp",
-        file_descriptor=None
+        file_descriptor=None,
+        debug=False
     )
     DI.test_the_class()
