@@ -232,9 +232,9 @@ class Disp:
         Display a message in a box \n
         The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
         This is a sample box (characters and dimensions depend on the provided configuration):\n
-        #############################\n
-        \#        Sample text        #\n
-        #############################
+         #############################\n
+         #        Sample text        #\n
+         #############################
         """
 
         box_wall = self.create_string(self.nb_chr, char)
@@ -481,15 +481,15 @@ class Disp:
         The '#' characters a aligned to the first and last '#' character on each line\n
         But due to the code editor's rendering, it removes spaces, thus, if you want an accurate view, look at the raw comment of the function\n
         This is a sample box (characters and dimensions depend on the provided configuration):\n
-        \###############\n
-        \#             #\n
-        \#             #\n
-        \#             #\n
-        \# Sample text #\n
-        \#             #\n
-        \#             #\n
-        \#             #\n
-        \###############
+         ###############\n
+         #             #\n
+         #             #\n
+         #             #\n
+         # Sample text #\n
+         #             #\n
+         #             #\n
+         #             #\n
+         ###############
         """
 
         if 'BOX_NO_VERTICAL' in self.toml_content:
@@ -563,17 +563,17 @@ class Disp:
         But due to the code editor's rendering, it removes spaces, thus, if you want an accurate view, look at the raw comment of the function\n
         The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
         Here is a sample box:\n
-        \#                            #\n
-        \#                            #\n
-        \#                            #\n
-        \#                            #\n
-        \#                            #\n
-        \#       Sample text          #\n
-        \#                            #\n
-        \#                            #\n
-        \#                            #\n
-        \#                            #\n
-        \#                            #\n
+         #                            #\n
+         #                            #\n
+         #                            #\n
+         #                            #\n
+         #                            #\n
+         #       Sample text          #\n
+         #                            #\n
+         #                            #\n
+         #                            #\n
+         #                            #\n
+         #                            #\n
         """
 
         if 'BOX_VERTICAL_NO_HORIZONTAL' in self.toml_content:
@@ -837,9 +837,9 @@ class Disp:
         The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
         This is an example of the output (the design is controlled by the title function):\n
         Example:\n
-        ########################################\n
-        \#    Run date: 07/06/2024 22:26:10     #\n
-        ########################################
+         ########################################\n
+         #    Run date: 07/06/2024 22:26:10     #\n
+         ########################################
         """
         self.title(f"Run date: {time.strftime('%d/%m/%Y %H:%M:%S')} ")
 
