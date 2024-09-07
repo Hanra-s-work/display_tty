@@ -1,10 +1,11 @@
 name: display_tty-gh-packages
 
-# version: 1.0.2
+# version: 1.0.3
 # Version log:
   # 1.0.0: Initial version
   # 1.0.1: Add the xvfb library to the actions for any graphical environements
   # 1.0.2: Put the tests in a container
+  # 1.0.3: Install pytest in the docker in case the requirements.txt did not already do it for us.
 
 on:
   push:
@@ -130,7 +131,7 @@ jobs:
           echo 'Installing requirements' && \
           pip3 install -r requirements.txt  --break-system-packages && \
           echo 'Installing pytest if it was not present' && \
-          pip3 install pytest && \
+          pip3 install pytest --break-system-packages && \
           echo 'Running the tests' && \
           pytest -s
         "
