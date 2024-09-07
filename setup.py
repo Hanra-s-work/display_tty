@@ -12,7 +12,6 @@ setuptools.setup(
     version='1.0.0',
     packages=setuptools.find_packages(),
     install_requires=[
-        "logging==0.4.9.6",
         "colorlog==6.8.2"
     ],
     author="Henry Letellier",
