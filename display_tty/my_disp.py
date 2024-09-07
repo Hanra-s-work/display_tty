@@ -95,6 +95,9 @@ class Disp:
             raise ValueError(msg)
         if self.toml_content[KEY_OUTPUT_MODE] == OUT_FILE:
             self._open_file()
+        self._setup_logger(logger)
+
+    def _setup_logger(self, logger: logging) -> None:
         # ---- Logging data ----
         if callable(logger) and hasattr(logger, "debug"):
             self.logger = logger
@@ -111,7 +114,7 @@ class Disp:
                         'INFO':     'green',
                         'WARNING':  'yellow',
                         'ERROR':    'red',
-                        'CRITICAL': 'bold_red',
+                        'CRITICAL': 'bold_red'
                     }
                 )
                 handler.setFormatter(formatter)
