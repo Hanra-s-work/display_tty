@@ -91,7 +91,8 @@ class Disp:
         self.generated_content = ""
         if self.toml_content[KEY_OUTPUT_MODE] not in (OUT_FILE, OUT_STRING, OUT_TTY, OUT_DEFAULT):
             raise ValueError(
-                f"Invalid output mode. Must be one of '{OUT_FILE}', '{OUT_STRING}', '{OUT_TTY}', '{OUT_DEFAULT}"
+                f"Invalid output mode. Must be one of '{OUT_FILE}', '{
+                    OUT_STRING}', '{OUT_TTY}', '{OUT_DEFAULT}"
             )
         if self.toml_content[KEY_OUTPUT_MODE] == OUT_FILE:
             self._open_file()
@@ -118,26 +119,36 @@ class Disp:
                 self.logger.addHandler(handler)
             self.logger.setLevel(logging.DEBUG)
 
-    def disp_print_debug(self, string: str = "") -> None:
+    def disp_print_debug(self, string: str = "", func_name: str = "Disp") -> None:
         """ Print a debug message """
+        if isinstance(func_name, str) is False:
+            func_name = "Disp"
         if self.debug is True:
-            self.logger.debug("(Disp) %s", string)
+            self.logger.debug("(%s) %s", func_name, string)
 
-    def disp_print_info(self, string: str = "") -> None:
+    def disp_print_info(self, string: str = "", func_name: str = "Disp") -> None:
         """ Print an info message """
-        self.logger.info("(Disp) %s", string)
+        if isinstance(func_name, str) is False:
+            func_name = "Disp"
+        self.logger.info("(%s) %s", func_name, string)
 
-    def disp_print_warning(self, string: str = "") -> None:
+    def disp_print_warning(self, string: str = "", func_name: str = "Disp") -> None:
         """ Print a warning message """
-        self.logger.warning("(Disp) %s", string)
+        if isinstance(func_name, str) is False:
+            func_name = "Disp"
+        self.logger.warning("(%s) %s", func_name, string)
 
-    def disp_print_error(self, string: str = "") -> None:
+    def disp_print_error(self, string: str = "", func_name: str = "Disp") -> None:
         """ Print an error message """
-        self.logger.error("(Disp) %s", string)
+        if isinstance(func_name, str) is False:
+            func_name = "Disp"
+        self.logger.error("(%s) %s", func_name, string)
 
-    def disp_print_critical(self, string: str = "") -> None:
+    def disp_print_critical(self, string: str = "", func_name: str = "Disp") -> None:
         """ Print a critical message """
-        self.logger.critical("(Disp) %s", string)
+        if isinstance(func_name, str) is False:
+            func_name = "Disp"
+        self.logger.critical("(%s) %s", func_name, string)
 
     def close_file(self) -> None:
         """ Close the log file if it was opened """
@@ -670,7 +681,8 @@ class Disp:
         @@ This is an example message @@
         """
         self.animate_message(
-            f"{self.message_char}{self.message_char} {message} {self.message_char}{self.message_char}",
+            f"{self.message_char}{self.message_char} {message} {
+                self.message_char}{self.message_char}",
             self.message_animation_delay
         )
 
@@ -682,7 +694,8 @@ class Disp:
         @@ This is an example message @@
         """
         self.animate_message(
-            f"{self.message_error_char}{self.message_error_char} Error: {message} {self.message_error_char}{self.message_error_char}",
+            f"{self.message_error_char}{self.message_error_char} Error: {
+                message} {self.message_error_char}{self.message_error_char}",
             self.message_animation_delay
         )
 
@@ -694,7 +707,8 @@ class Disp:
         @@ This is an example message @@
         """
         self.animate_message(
-            f"{self.message_success_char}{self.message_success_char} Success: {message} {self.message_success_char}{self.message_success_char}",
+            f"{self.message_success_char}{self.message_success_char} Success: {
+                message} {self.message_success_char}{self.message_success_char}",
             self.message_animation_delay
         )
 
@@ -706,7 +720,8 @@ class Disp:
         @@ This is an example message @@
         """
         self.animate_message(
-            f"{self.message_warning_char}{self.message_warning_char} Warning: {message} {self.message_warning_char}{self.message_warning_char}",
+            f"{self.message_warning_char}{self.message_warning_char} Warning: {
+                message} {self.message_warning_char}{self.message_warning_char}",
             self.message_animation_delay
         )
 
@@ -718,7 +733,8 @@ class Disp:
         @@ This is an example message @@
         """
         self.animate_message(
-            f"{self.message_question_char}{self.message_question_char} Question: {message} {self.message_question_char}{self.message_question_char}",
+            f"{self.message_question_char}{self.message_question_char} Question: {
+                message} {self.message_question_char}{self.message_question_char}",
             self.message_animation_delay
         )
 
@@ -732,12 +748,14 @@ class Disp:
         if isinstance(message, list) is True:
             for msg in message:
                 self.animate_message(
-                    f"{self.message_inform_char}{self.message_inform_char} {msg} {self.message_inform_char}{self.message_inform_char}",
+                    f"{self.message_inform_char}{self.message_inform_char} {msg} {
+                        self.message_inform_char}{self.message_inform_char}",
                     self.message_animation_delay
                 )
         else:
             self.animate_message(
-                f"{self.message_inform_char}{self.message_inform_char} {message} {self.message_inform_char}{self.message_inform_char}",
+                f"{self.message_inform_char}{self.message_inform_char} {message} {
+                    self.message_inform_char}{self.message_inform_char}",
                 self.message_animation_delay
             )
 
@@ -759,9 +777,11 @@ class Disp:
             processed_line += f"{self.tree_column_seperator_char}   "
             i += 1
         if index is max_lenght:
-            processed_line += f"{self.tree_node_end_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}"
+            processed_line += f"{self.tree_node_end_char}{self.tree_line_seperator_char}{
+                self.tree_line_seperator_char}{self.tree_line_seperator_char}"
         else:
-            processed_line += f"{self.tree_node_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}{self.tree_line_seperator_char}"
+            processed_line += f"{self.tree_node_char}{self.tree_line_seperator_char}{
+                self.tree_line_seperator_char}{self.tree_line_seperator_char}"
         if self._is_safe(line) is False:
             line = f"{line}"
         processed_line += " "
