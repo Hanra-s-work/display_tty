@@ -124,6 +124,8 @@ jobs:
           cd /home && \
           echo 'Installing requirements' && \
           pip3 install -r requirements.txt  --break-system-packages && \
+          echo 'Installing pytest if it was not present' && \
+          pip3 install pytest && \
           echo 'Running the tests' && \
           pytest -s
         "
