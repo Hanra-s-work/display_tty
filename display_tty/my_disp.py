@@ -58,7 +58,7 @@ TOML_CONF = {
 class Disp:
     """ The class in charge of Displaying messages """
 
-    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: logging = None) -> None:
+    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: logging: Union[logging, str, None] = None) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
@@ -97,12 +97,15 @@ class Disp:
             self._open_file()
         self._setup_logger(logger)
 
-    def _setup_logger(self, logger: logging) -> None:
+    def _setup_logger(self, logger: Union[logging, str, None]) -> None:
         # ---- Logging data ----
         if callable(logger) and hasattr(logger, "debug"):
             self.logger = logger
         else:
-            self.logger = logging.getLogger(self.__class__.__name__)
+            if isinstance(logger, str) is True:
+                self.logger = logging.getLogger(logger)
+            else:
+                self.logger = logging.getLogger(self.__class__.__name__)
             if not self.logger.hasHandlers():
                 handler = colorlog.StreamHandler()
                 formatter = colorlog.ColoredFormatter(
