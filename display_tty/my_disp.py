@@ -5,9 +5,10 @@ The file in charge of managing the beautified output on the terminal
 
 import sys
 import time
+from typing import List, Dict, Union
+
 import logging
 import colorlog
-from typing import List, Dict, Union
 
 OUT_TTY = "tty"
 OUT_STRING = "string"
@@ -55,10 +56,19 @@ TOML_CONF = {
 }
 
 
+class Logging:
+    """_summary_
+        This is a class that represents the logging library, it is in no means a functioning class.
+    """
+
+    def __init__(self) -> None:
+        pass
+
+
 class Disp:
     """ The class in charge of Displaying messages """
 
-    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: logging: Union[logging, str, None] = None) -> None:
+    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
@@ -97,7 +107,7 @@ class Disp:
             self._open_file()
         self._setup_logger(logger)
 
-    def _setup_logger(self, logger: Union[logging, str, None]) -> None:
+    def _setup_logger(self, logger: Union[Logging, str, None]) -> None:
         # ---- Logging data ----
         if callable(logger) and hasattr(logger, "debug"):
             self.logger = logger
