@@ -134,6 +134,15 @@ class Disp:
                 self.logger.addHandler(handler)
             self.logger.setLevel(logging.DEBUG)
 
+    def update_disp_debug(self, debug: bool) -> None:
+        """_summary_
+            Update the debug mode
+
+        Args:
+            debug (bool): _description_
+        """
+        self.debug = debug
+
     def disp_print_debug(self, string: str = "", func_name: str = "Disp") -> None:
         """_summary_
             Print a debug message (using logger)
