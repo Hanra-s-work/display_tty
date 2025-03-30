@@ -3,57 +3,24 @@
 The file in charge of managing the beautified output on the terminal
 """
 
+import os
 import sys
 import time
+import inspect
+
 from typing import List, Dict, Union
 
 import logging
 import colorlog
 
-OUT_TTY = "tty"
-OUT_STRING = "string"
-OUT_FILE = "file"
-OUT_DEFAULT = ''
-
-# OUTPUT modes
-KEY_OUTPUT_MODE = "OUTPUT_MODE"
-KEY_PRETTIFY_OUTPUT = "PRETTIFY_OUTPUT"
-KEY_PRETTIFY_OUTPUT_IN_BLOCKS = "PRETTY_OUTPUT_IN_BLOCS"
-
-# Animation delays
-KEY_ANIMATION_DELAY = 'MESSAGE_ANIMATION_DELAY'
-KEY_ANIMATION_DELAY_BLOCKY = 'MESSAGE_ANIMATION_DELAY_BLOCKY'
-
-TOML_CONF = {
-    KEY_OUTPUT_MODE: OUT_TTY,
-    KEY_PRETTIFY_OUTPUT: True,
-    KEY_PRETTIFY_OUTPUT_IN_BLOCKS: True,
-    KEY_ANIMATION_DELAY: 0.01,
-    KEY_ANIMATION_DELAY_BLOCKY: 0.01,
-    'MESSAGE_CHARACTER': '@',
-    'MESSAGE_ERROR_CHARACTER': '#',
-    'MESSAGE_INFORM_CHARACTER': 'i',
-    'MESSAGE_QUESTION_CHARACTER': '?',
-    'MESSAGE_SUCCESS_CHARACTER': '/',
-    'MESSAGE_WARNING_CHARACTER': '!',
-    'SUB_SUB_TITLE_WALL_CHARACTER': '*',
-    'SUB_TITLE_WALL_CHARACTER': '@',
-    'TITLE_WALL_CHARACTER': '#',
-    'TREE_COLUMN_SEPERATOR_CHAR': '│',
-    'TREE_LINE_SEPERATOR_CHAR': '─',
-    'TREE_NODE_CHAR': '├',
-    'TREE_NODE_END_CHAR': '└',
-    'BOX_NO_VERTICAL': '#',
-    'BOX_VERTICAL_NO_HORIZONTAL': '#',
-    'ROUND_BOX_CORNER_LEFT': '╔',
-    'ROUND_BOX_CORNER_RIGHT': '╗',
-    'ROUND_BOX_CORNER_BOTTOM_LEFT': '╚',
-    'ROUND_BOX_CORNER_BOTTOM_RIGHT': '╝',
-    'ROUND_BOX_HORIZONTAL': '═',
-    'ROUND_BOX_VERTICAL': '║',
-    'DIFF_BORDER_LINE_CHARACTER_BOX': '-',
-    'DIFF_SIDE_LINE_CHARACTER_BOX': '|',
-}
+if __name__ == "__main__":
+    from colours import LoggerColours
+    from constants import ERR, SUCCESS, OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY, TOML_CONF, FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
+    from log_level_tracker import LogLevelTracker
+else:
+    from .colours import LoggerColours
+    from .constants import ERR, SUCCESS, OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY, TOML_CONF, FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
+    from .log_level_tracker import LogLevelTracker
 
 
 class Logging:
@@ -68,12 +35,14 @@ class Logging:
 class Disp:
     """ The class in charge of Displaying messages """
 
-    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None) -> None:
+    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None, success: int = SUCCESS, error: int = ERR) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.author = "(c) Created by Henry Letellier"
         self.nb_chr = 40
         self.debug = debug
+        self.error = error
+        self.success = success
         self.nb_side_walls = 2
         self.max_whitespace = self.nb_chr - self.nb_side_walls
         self.title_wall_chr = self.toml_content["TITLE_WALL_CHARACTER"]
@@ -128,11 +97,82 @@ class Disp:
                         'WARNING':  'yellow',
                         'ERROR':    'red',
                         'CRITICAL': 'bold_red'
-                    }
+                    },
+                    secondary_log_colors={
+                        'message': {
+                            'DEBUG':    'cyan',
+                            'INFO':     'green',
+                            'WARNING':  'yellow',
+                            'ERROR':    'red',
+                            'CRITICAL': 'bold_red'
+                        },
+                        # 'name': {
+                        #     'DEBUG':    'cyan',
+                        #     'INFO':     'green',
+                        #     'WARNING':  'yellow',
+                        #     'ERROR':    'red',
+                        #     'CRITICAL': 'bold_red'
+                        # },
+                        # 'asctime': {
+                        #     'DEBUG':    'cyan',
+                        #     'INFO':     'green',
+                        #     'WARNING':  'yellow',
+                        #     'ERROR':    'red',
+                        #     'CRITICAL': 'bold_red'
+                        # },
+                        # 'levelname': {
+                        #     'DEBUG':    'cyan',
+                        #     'INFO':     'green',
+                        #     'WARNING':  'yellow',
+                        #     'ERROR':    'red',
+                        #     'CRITICAL': 'bold_red'
+                        # },
+                    },
                 )
                 handler.setFormatter(formatter)
                 self.logger.addHandler(handler)
+            # This is what controls the importance of the log that will be allowed to be displayed, the higher the number, the more important the log is.
             self.logger.setLevel(logging.DEBUG)
+        node = LogLevelTracker()
+        if node.check_presence() is False:
+            node.inject_class()
+
+    def _create_function(self, name, func_code):
+        # Create a namespace for the function
+        namespace = {}
+
+        print(
+            f"115: namespace: {namespace}, name: {name}, func_code: {func_code}")
+
+        # Execute the code that defines the function
+        exec(func_code, globals(), namespace)
+
+        print(f"120: namespace: {namespace}")
+
+        # Extract the function from namespace
+        func = namespace[name]
+
+        print(f"125: func: {func}")
+
+        # Return the function
+        return func
+
+    def _add_function_to_instance(self, func_dest: object, func_name: str, func_code: str) -> None:
+        """_summary_
+            Add a function to the instance
+
+        Args:
+            func_dest (object): _description_
+            func_name (str): _description_
+            func_code (str): _description_
+        """
+        print(
+            f"140: func_dest: {func_dest}, func_name: {func_name}, func_code: {func_code}")
+        function_instance = self._create_function(func_name, func_code)
+        print(
+            f"143: func_dest: {func_dest}, func_name: {func_name}, function_instance: {function_instance}")
+        setattr(func_dest, func_name, function_instance)
+        print(f"145: func_dest: {func_dest}")
 
     def update_disp_debug(self, debug: bool) -> None:
         """_summary_
@@ -143,7 +183,447 @@ class Disp:
         """
         self.debug = debug
 
-    def disp_print_debug(self, string: str = "", func_name: str = "Disp") -> None:
+    def update_logger_level(self, level: int = logging.DEBUG) -> None:
+        """_summary_
+            Update the logger level
+            This is what controls the importance of the log that will be allowed to be displayed.
+            The higher the number, the more important the log is.
+
+        Args:
+            level (int): _description_: The log importance level. Defaults to logging.NOTSET.
+        """
+        self.logger.setLevel(level)
+
+    def _check_the_logging_instance(self, logger_instance: logging.Logger = None) -> logging.Logger:
+        """_summary_
+            Check if the logger instance is valid
+
+        Args:
+            logger_instance (logging.Logger, optional): _description_. Defaults to None.
+
+        Returns:
+            logging.Logger: _description_
+        """
+        # Get the parent function name if present
+        _func_name = inspect.currentframe()
+        if _func_name.f_back is not None:
+            _func_name = _func_name.f_back.f_code.co_name
+        else:
+            _func_name = _func_name.f_code.co_name
+
+        # Checking the logger instance
+        if logger_instance is None or not isinstance(logger_instance, logging.Logger):
+            self.log_warning(
+                "No logger instance provided, using the default logger", _func_name
+            )
+            logger_instance = self.logger
+        return logger_instance
+
+    def _check_colour_data(self, colour: Union[str, int], logger_instance: logging.Logger = None) -> Union[int, str]:
+        """_summary_
+            Check if the colour data is correct
+
+        Args:
+            colour (Union[str, int]): _description_
+            level_name (Union[str, int]): _description_
+            logger_instance (logging.Logger, optional): _description_. Defaults to None.
+
+        Returns:
+            int: _description_
+        """
+        # Get the parent function name if present
+        _func_name = inspect.currentframe()
+        if _func_name.f_back is not None:
+            _func_name = _func_name.f_back.f_code.co_name
+        else:
+            _func_name = _func_name.f_code.co_name
+
+        # Checking if the colour exists
+        print(
+            f"213: Checking colour data: {colour} in colour_string: '{str(LoggerColours.get_colour_string(LoggerColours, colour))}'")
+        if isinstance(colour, int):
+            print(f"215: Colour is of type int: {colour}")
+            colour = LoggerColours.get_colour_string(LoggerColours, colour)
+            print(f"217: Colour is now: {colour}")
+        if LoggerColours.check_if_colour_present(LoggerColours, colour) is False:
+            self.log_error(
+                "The provided colour is not valid", _func_name
+            )
+            return self.error
+        return colour
+
+    def _check_level_data(self, level_name: Union[str, int], logger_instance: logging.Logger = None) -> Union[int, str]:
+        """_summary_
+            Check if the level data is correct
+
+        Args:
+            level_name (Union[str, int]): _description_
+            logger_instance (logging.Logger, optional): _description_. Defaults to None.
+
+        Returns:
+            Union[int, str]: _description_
+        """
+        # Get the parent function name if present
+        _func_name = inspect.currentframe()
+        if _func_name.f_back is not None:
+            _func_name = _func_name.f_back.f_code.co_name
+        else:
+            _func_name = _func_name.f_code.co_name
+
+        # Check if there are any handlers in use.
+        if len(logger_instance.handlers) == 0:
+            self.log_error(
+                'No handlers are present in this logging instance',
+                _func_name
+            )
+            return self.error
+
+        # Checking for the presence of the logging level in the logger instance
+        if isinstance(level_name, str):
+            name_string = level_name.upper()
+        elif isinstance(level_name, int):
+            name_string = logging.getLevelName(level_name)
+        else:
+            self.log_error(
+                "The level name must be a string or an integer",
+                _func_name
+            )
+            return self.error
+        return name_string
+
+    def _get_colour_formatter(self, logger_instance: logging.Logger = None) -> Union[None, colorlog.ColoredFormatter]:
+        """_summary_
+            Get the colour formatter
+
+        Args:
+            logger_instance (logging.Logger, optional): _description_. Defaults to None.
+
+        Returns:
+            Union[None, colorlog.ColoredFormatter]: _description_
+        """
+        # Get the parent function name if present
+        _func_name = inspect.currentframe()
+        if _func_name.f_back is not None:
+            _func_name = _func_name.f_back.f_code.co_name
+        else:
+            _func_name = _func_name.f_code.co_name
+
+        # iterate through the handlers to find the colour handler
+        colour_handler = None
+        for i in logger_instance.handlers:
+            if isinstance(i, colorlog.StreamHandler):
+                colour_handler = i
+                break
+        if not colour_handler:
+            self.log_error(
+                'No colour handler is present in this logging instance', _func_name
+            )
+            return self.error
+
+        # Check if the colour is a string or an integer
+        if hasattr(colour_handler, "formatter") is False:
+            self.log_error(
+                'The colour handler has no formatter', _func_name
+            )
+            return self.error
+        colour_formatter: colorlog.ColoredFormatter = colour_handler.formatter
+        if isinstance(colour_formatter, colorlog.ColoredFormatter) is False:
+            self.log_error(
+                'The formatter is not a ColoredFormatter', _func_name
+            )
+            return self.error
+        if hasattr(colour_formatter, "log_colors") is False:
+            self.log_error(
+                'The formatter has no log_colors', _func_name
+            )
+            return self.error
+        return colour_formatter
+
+    def update_logging_colour_text(self, colour: Union[str, int], level_name: Union[str, int], logger_instance: logging.Logger = None) -> int:
+        """_summary_
+            Update or insert a logging colour for the text of the level specified
+
+        Args:
+            colour (Union[str, int]): The colour to use (string or number [based of the variables in variables starting with LOG_])
+            level_name (Union[str, int]): The level name or number
+            logger_instance (logging.Logger, optional): The logger instance to update. Defaults to None. If the value isn't of type logging.Logger, the default logger will be used.
+
+        Returns:
+            int: The status code of the operation
+        """
+        _func_name = inspect.currentframe().f_code.co_name
+        # Checking the logger instance
+        logger_instance = self._check_the_logging_instance(logger_instance)
+
+        name_string = self._check_level_data(
+            level_name,
+            logger_instance
+        )
+        print(f"332: name string (text): {name_string}")
+        print(f"333: level name: {level_name}")
+        if name_string == self.error:
+            print("335: name string (text) error")
+            return self.error
+
+        name_string = name_string.upper()
+
+        # Checking if the colour exists
+        print(f"341: Checking colour data: {colour}")
+        colour = self._check_colour_data(
+            colour,
+            logger_instance
+        )
+        print(f"346: Colour response: {colour}")
+        if colour == self.error:
+            return self.error
+
+        internal_log_colors = self._get_colour_formatter(logger_instance)
+        print(f"351: log_colors: {internal_log_colors}")
+        if internal_log_colors == self.error or internal_log_colors is None:
+            return self.error
+        lib_log_colors = internal_log_colors.log_colors
+        print(f"355: lib_log_colors instance: {lib_log_colors}")
+        if isinstance(lib_log_colors, dict) is False:
+            self.log_error(
+                'The log_colors is not a dictionary', _func_name
+            )
+            return self.error
+        for i in lib_log_colors:
+            if i.upper() == name_string:
+                print(f"363: Colour found and updated: {i}")
+                lib_log_colors[i] = colour
+                return self.success
+        print(f"366: Colour not found, inserting: {name_string}")
+        lib_log_colors[name_string.upper()] = colour
+        print(f"368: Log colours: {lib_log_colors}")
+        return self.success
+
+    def update_logging_colour_background(self, colour: Union[str, int], level_name: Union[str, int], logger_instance: logging.Logger = None) -> int:
+        """_summary_
+            Update or insert a logging colour for the background of the logging level specified
+
+        Args:
+            colour (Union[str, int]): The colour to use (string or number [based of the variables in variables starting with LOG_])
+            level_name (Union[str, int]): The level name or number
+            logger_instance (logging.Logger, optional): The logger instance to update. Defaults to None. If the value isn't of type logging.Logger, the default logger will be used.
+
+        Returns:
+            int: The status code of the operation
+        """
+        _func_name = inspect.currentframe().f_code.co_name
+        # Checking the logger instance
+        logger_instance = self._check_the_logging_instance(logger_instance)
+
+        name_string = self._check_level_data(
+            level_name,
+            logger_instance
+        )
+        print(f"391: name string (background): {name_string}")
+        print(f"392: level name: {level_name}")
+        if name_string == self.error:
+            print("388: name_string (background) error")
+            return self.error
+        name_string = name_string.upper()
+
+        # Checking if the colour exists
+        colour = self._check_colour_data(
+            colour,
+            logger_instance
+        )
+        if colour == self.error:
+            return self.error
+
+        secondary_log_colors = self._get_colour_formatter(logger_instance)
+        if secondary_log_colors == self.error:
+            return self.error
+        secondary_log_colors = secondary_log_colors.secondary_log_colors
+        if isinstance(secondary_log_colors, dict) is False:
+            self.log_error(
+                'The secondary_log_colors is not a dictionary', _func_name
+            )
+            return self.error
+
+        # Add the level and colour to the secondary log colours
+        tmp_node = "message"
+        if hasattr(secondary_log_colors, tmp_node) is False:
+            secondary_log_colors[tmp_node] = {
+                name_string.upper(): colour
+            }
+            return self.success
+        for i in secondary_log_colors[tmp_node]:
+            if i.upper() == name_string:
+                secondary_log_colors[tmp_node][i.upper()] = colour
+                print(
+                    f"436: Colour found and updated: {i} -> {secondary_log_colors}")
+                return self.success
+        secondary_log_colors[tmp_node][name_string.upper()] = colour
+        print(
+            f"440: Colour not found, inserting: {name_string} -> {secondary_log_colors}")
+        return self.success
+
+    def add_custom_level(self, level: int, name: str, colour_text: Union[int, str] = "", colour_bg: Union[int, str] = "") -> int:
+        """_summary_
+            Add a custom level to the logger
+
+        Args:
+            level (int): _description_
+            name (str): _description_
+        """
+        _func_name = inspect.currentframe().f_code.co_name
+        logger = self._check_the_logging_instance(self.logger)
+        print(f"438: logger instance: {logger}")
+        # Check if the level is already taken
+        if (level in FORBIDDEN_NUMBER_LOG_LEVELS):
+            self.disp_print_error(
+                f"The provided level  is forbidden because already taken '{level}'",
+                _func_name
+            )
+            return self.error
+        if (name in FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE):
+            self.disp_print_error(
+                f"The provided name is forbidden because already taken '{name}'",
+                _func_name
+            )
+            return self.error
+        print(f"452: level: {level}, name: {name}")
+        # Add the level to the logger
+        logging.addLevelName(level, name)
+        if hasattr(logging.getLogger(), "log_level_tracker") is False:
+            self.log_warning(
+                "The log level tracker is not present, adding",
+                _func_name
+            )
+            logging.getLogger().log_level_tracker = LogLevelTracker()
+        if logging.getLogger().log_level_tracker.add_level(name, level) is False:
+            self.log_warning(
+                "The level could not be added to the log level tracker",
+                _func_name
+            )
+            return self.error
+        print(f"467: logging = {dir(logging)}")
+        print(f"468: logging.getLogger() = {dir(logging.getLogger())}")
+        print(
+            f"470: logging.getLogger().log_level_tracker = {dir(logging.getLogger().log_level_tracker)}"
+        )
+        # Check the colours
+        if colour_text != "" or colour_text < 0:
+            colour_text_status = self.update_logging_colour_text(
+                colour_text,
+                level,
+                logger
+            )
+            if colour_text_status == self.error:
+                self.log_warning(
+                    "The colour for the text could not be set",
+                    _func_name
+                )
+        if colour_bg != "" or colour_bg < 0:
+            colour_bg_status = self.update_logging_colour_background(
+                colour_bg,
+                level,
+                logger
+            )
+            if colour_bg_status == self.error:
+                self.log_warning(
+                    "The colour for the background could not be set",
+                    _func_name
+                )
+
+        print(f"496: colour level added: {level}, name: {name}")
+
+        # generate the function name
+        func_name = name.lower()
+#         print(f"494: func_name: {func_name}")
+#         # Generate the function for the logger
+#         function_code = f"""
+# def {func_name}(self, message: str):
+#     self.logger.log({level}, message)
+# """
+#         print(f"500: function_code: {function_code}")
+#         self._add_function_to_instance(
+#             logger,
+#             func_name,
+#             function_code
+#         )
+        # Generate the function for the display class
+        func_disp_name = f"disp_print_{func_name}"
+#         function_disp_code = f"""
+# def {func_disp_name}(self, string: str = "", func_name: Union[str, None] = None) -> None:
+#     if isinstance(func_name, str) is False or func_name is None:
+#         _func_name = inspect.currentframe()
+#         if _func_name.f_back is not None:
+#             func_name = _func_name.f_back.f_code.co_name
+#         else:
+#             func_name = _func_name.f_code.co_name
+#     self.logger.{func_name}("(%s) %s", func_name, string)
+# """
+        function_disp_code = f"""
+def {func_disp_name}(self, string: str = "", func_name: Union[str, None] = None) -> None:
+    if isinstance(func_name, str) is False or func_name is None:
+        _func_name = inspect.currentframe()
+        if _func_name.f_back is not None:
+            func_name = _func_name.f_back.f_code.co_name
+        else:
+            func_name = _func_name.f_code.co_name
+    self.log_custom_level({level}, string, func_name)
+"""
+        print(
+            f"535: function_disp_name: {func_disp_name}, function_disp_code: {function_disp_code}")
+        self._add_function_to_instance(
+            self,
+            func_disp_name,
+            function_disp_code
+        )
+        # Generate the shorthand name for the display class
+        func_log_name = f"log_{func_name}"
+        function_disp_short_code = f"""
+def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) -> None:
+    if isinstance(func_name, str) is False or func_name is None:
+        _func_name = inspect.currentframe()
+        if _func_name.f_back is not None:
+            func_name = _func_name.f_back.f_code.co_name
+        else:
+            func_name = _func_name.f_code.co_name
+    self.log_custom_level({level}, string, func_name)
+"""
+        print(f"553: function_disp_short_code: {function_disp_short_code}")
+        self._add_function_to_instance(
+            self,
+            func_log_name,
+            function_disp_short_code
+        )
+        print(f"559: info in disp: {dir(self)}")
+        print(f"560: info in self.logger: {dir(self.logger)}")
+        return self.success
+
+    def disp_print_custom_level(self, level: Union[int, str], string: str, func_name: Union[str, None] = None) -> None:
+        """_summary_
+            Print a message with a custom level
+
+        Args:
+            level (Union[int, str]): _description_
+            message (str): _description_
+            func_name (Union[str,None], optional): _description_. Defaults to None.
+        """
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
+        if isinstance(level, str):
+            log_level_tracker: LogLevelTracker = logging.getLogger().log_level_tracker
+            level = log_level_tracker.get_level(level)
+            if level is None:
+                self.logger.error(
+                    "The provided level is not valid"
+                )
+                return
+        print(f"556: level: {level}, func_name: {func_name}, string: {string}")
+        if self.logger.isEnabledFor(level):
+            self.logger.log(level, "(%s) %s", func_name, string)
+
+    def disp_print_debug(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Print a debug message (using logger)
 
@@ -151,98 +631,165 @@ class Disp:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
-        if isinstance(func_name, str) is False:
-            func_name = "Disp"
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         if self.debug is True:
             self.logger.debug("(%s) %s", func_name, string)
 
-    def disp_print_info(self, string: str = "", func_name: str = "Disp") -> None:
+    def disp_print_info(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Print an information message (using logger)
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
-        if isinstance(func_name, str) is False:
-            func_name = "Disp"
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.logger.info("(%s) %s", func_name, string)
 
-    def disp_print_warning(self, string: str = "", func_name: str = "Disp") -> None:
+    def disp_print_warning(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Print a warning message (using logger)
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
-        if isinstance(func_name, str) is False:
-            func_name = "Disp"
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.logger.warning("(%s) %s", func_name, string)
 
-    def disp_print_error(self, string: str = "", func_name: str = "Disp") -> None:
+    def disp_print_error(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Print an error message (using logger)
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
-        if isinstance(func_name, str) is False:
-            func_name = "Disp"
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.logger.error("(%s) %s", func_name, string)
 
-    def disp_print_critical(self, string: str = "", func_name: str = "Disp") -> None:
+    def disp_print_critical(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Print a critical message (using logger)
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
-        if isinstance(func_name, str) is False:
-            func_name = "Disp"
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.logger.critical("(%s) %s", func_name, string)
 
-    def log_debug(self, string: str = "", func_name: str = "Disp") -> None:
+    def log_custom_level(self, level: Union[int, str], string: str, func_name: Union[str, None] = None) -> None:
+        """_summary_
+            Log a message with a custom level
+
+        Args:
+            level (Union[int, str]): _description_
+            message (str): _description_
+            func_name (Union[str,None], optional): _description_. Defaults to None.
+        """
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
+        self.disp_print_custom_level(level, string, func_name)
+
+    def log_debug(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Log a debug message
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.disp_print_debug(string, func_name)
 
-    def log_info(self, string: str = "", func_name: str = "Disp") -> None:
+    def log_info(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Log a info message
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.disp_print_info(string, func_name)
 
-    def log_warning(self, string: str = "", func_name: str = "Disp") -> None:
+    def log_warning(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Log a warning message
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.disp_print_warning(string, func_name)
 
-    def log_error(self, string: str = "", func_name: str = "Disp") -> None:
+    def log_error(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Log a error message
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.disp_print_error(string, func_name)
 
-    def log_critical(self, string: str = "", func_name: str = "Disp") -> None:
+    def log_critical(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """_summary_
             Log a critical message
         Args:
             string (str, optional): _description_. Defaults to "".
             func_name (str, optional): _description_. Defaults to "Disp".
         """
+        if isinstance(func_name, str) is False or func_name is None:
+            _func_name = inspect.currentframe()
+            if _func_name.f_back is not None:
+                func_name = _func_name.f_back.f_code.co_name
+            else:
+                func_name = _func_name.f_code.co_name
         self.disp_print_critical(string, func_name)
 
     def close_file(self) -> None:
@@ -1147,6 +1694,53 @@ class Disp:
         self.disp_print_warning("This is a test for warning messages")
         self.disp_print_error("This is a test for error messages")
         self.disp_print_critical("This is a test for critical messages")
+        # custom_level_int = 11
+        # if self.add_custom_level(
+        #     custom_level_int,
+        #     "DARLING",
+        #     "blue",
+        #     LoggerColours.BLACK
+        # ) == self.error:
+        #     self.log_error(
+        #         "The custom level could not be added, please check the configuration"
+        #     )
+        # else:
+        #     print("Logging")
+
+        #     self.log_custom_level(
+        #         logging.WARNING,
+        #         "This is a test warning for custom level messages"
+        #     )
+
+        #     # self.log_custom_level(
+        #     #     custom_level_int,
+        #     #     "This is a test for custom level messages"
+        #     # )
+        custom_level_int = 196
+        if self.add_custom_level(
+            custom_level_int,
+            "Ikuno",
+            "cyan",
+            LoggerColours.BLACK
+        ) == self.error:
+            self.log_error(
+                "The custom level could not be added, please check the configuration"
+            )
+        else:
+            print("Logging")
+
+            self.log_info("This is a test for info messages")
+            self.log_warning("This is a test for warning messages")
+
+            self.log_custom_level(
+                logging.WARNING,
+                "This is a test warning for custom level messages"
+            )
+
+            self.log_custom_level(
+                custom_level_int,
+                "This is a test for custom level messages"
+            )
         self.close_file()
 
 

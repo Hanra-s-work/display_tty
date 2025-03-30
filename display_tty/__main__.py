@@ -1,4 +1,5 @@
-from .my_disp import Disp, TOML_CONF
+from src import Disp, TOML_CONF
+
 
 if __name__ == "__main__":
     DI = Disp(
