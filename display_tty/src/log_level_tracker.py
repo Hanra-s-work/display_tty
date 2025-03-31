@@ -26,6 +26,32 @@ class LogLevelTracker:
             self.inject_class()
             return
 
+    class Levels:
+        """
+        This is a class that will be used to patch the small error in the logging library regarding the notset level.
+        """
+
+        CRITICAL = logging.CRITICAL
+        CRIT = CRITICAL
+        FATAL = CRITICAL
+        ERROR = logging.ERROR
+        WARNING = logging.WARNING
+        WARN = WARNING
+        INFO = logging.INFO
+        DEBUG = logging.DEBUG
+        NOTSET = 1
+        __all__ = [
+            CRITICAL,
+            CRIT,
+            FATAL,
+            ERROR,
+            WARNING,
+            WARN,
+            INFO,
+            DEBUG,
+            NOTSET,
+        ]
+
     def add_level(self, level_name: str, level: int) -> bool:
         """
         Method in charge of adding a new logging level.
