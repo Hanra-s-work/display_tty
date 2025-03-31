@@ -134,4 +134,9 @@ class LoggerColours:
         Returns:
             list: _description_
         """
-        return [i for i in dir(colour_class) if not i.startswith("__") and not callable(getattr(colour_class, i))]
+        colours = []
+        for i in dir(colour_class):
+            if not i.startswith("__") and not callable(getattr(colour_class, i)):
+                continue
+            colours.append(i)
+        return colours

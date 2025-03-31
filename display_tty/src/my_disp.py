@@ -37,6 +37,7 @@ class Disp:
     def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None, success: int = SUCCESS, error: int = ERR) -> None:
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
+        self.background_colour_key = 'background_colour'
         self.author = "(c) Created by Henry Letellier"
         self.nb_chr = 40
         self.debug = debug
@@ -86,10 +87,14 @@ class Disp:
                 self.logger = logging.getLogger(self.__class__.__name__)
             if not self.logger.hasHandlers():
                 handler = colorlog.StreamHandler()
+                format_string = '[%(asctime)s] %(log_color)s%('
+                format_string += self.background_colour_key
+                format_string += '_log_color)s%(levelname)s%(reset)s %(name)s: \'%(message)s\''
                 formatter = colorlog.ColoredFormatter(
-                    '[%(asctime)s] %(log_color)s%(levelname)s%(reset)s %(name)s: \'%(message)s\'',
+                    fmt=format_string,
                     datefmt=None,
                     reset=True,
+                    style='%',
                     log_colors={
                         'DEBUG':    'cyan',
                         'INFO':     'green',
@@ -98,33 +103,12 @@ class Disp:
                         'CRITICAL': 'bold_red'
                     },
                     secondary_log_colors={
-                        'message': {
-                            'DEBUG':    'cyan',
-                            'INFO':     'green',
-                            'WARNING':  'yellow',
-                            'ERROR':    'red',
-                            'CRITICAL': 'bold_red'
-                        },
-                        'name': {
-                            'DEBUG':    'red',
-                            'INFO':     'red',
-                            'WARNING':  'red',
-                            'ERROR':    'red',
-                            'CRITICAL': 'red'
-                        },
-                        'asctime': {
-                            'DEBUG':    'cyan',
-                            'INFO':     'cyan',
-                            'WARNING':  'cyan',
-                            'ERROR':    'cyan',
-                            'CRITICAL': 'cyan'
-                        },
-                        'levelname': {
-                            'DEBUG':    'green',
-                            'INFO':     'green',
-                            'WARNING':  'green',
-                            'ERROR':    'green',
-                            'CRITICAL': 'green'
+                        self.background_colour_key: {
+                            'DEBUG': 'bg_black',
+                            'INFO': 'bg_black',
+                            'WARNING': 'bg_black',
+                            'ERROR': 'bg_black',
+                            'CRITICAL': 'bg_black',
                         }
                     },
                 )
@@ -422,6 +406,10 @@ class Disp:
         if colour == self.error:
             return self.error
 
+        # Checking if the colour is a background colour
+        if colour.startswith("bg_") is False:
+            colour = "bg_" + colour
+
         secondary_log_colors = self._get_colour_formatter(logger_instance)
         if secondary_log_colors == self.error:
             return self.error
@@ -434,17 +422,19 @@ class Disp:
             return self.error
 
         # Add the level and colour to the secondary log colours
-        tmp_node = "message"
-        if hasattr(secondary_log_colors, tmp_node) is False:
-            secondary_log_colors[tmp_node] = {
+        if hasattr(secondary_log_colors, self.background_colour_key) is False:
+            secondary_log_colors[self.background_colour_key] = {
                 name_string.upper(): colour
             }
             return self.success
-        for i in secondary_log_colors[tmp_node]:
+        for i in secondary_log_colors[self.background_colour_key]:
             if i.upper() == name_string:
-                secondary_log_colors[tmp_node][i.upper()] = colour
+                secondary_log_colors[self.background_colour_key][i.upper(
+                )] = colour
                 return self.success
-        secondary_log_colors[tmp_node][name_string.upper()] = colour
+        secondary_log_colors[
+            self.background_colour_key
+        ][name_string.upper()] = colour
         return self.success
 
     def add_custom_level(self, level: int, name: str, colour_text: Union[int, str] = "", colour_bg: Union[int, str] = "") -> int:
@@ -1667,35 +1657,36 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             logging.WARNING, "This is a test warning for custom level messages"
         )
         custom_level_int = 2
+        level_name = "DARLING"
         if self.add_custom_level(
             custom_level_int,
-            "DARLING",
+            level_name,
             "purple",
             LoggerColours.BLACK
         ) == self.error:
             self.log_error(
-                "The custom level could not be added, please check the configuration"
+                f"The custom level '{level_name}' could not be added, please check the configuration"
             )
         else:
             self.log_custom_level(
                 custom_level_int,
-                "This is a test for custom level messages"
+                f"This is a test for custom level message \"{logging.getLevelName(custom_level_int)}\""
             )
         custom_level_int = 196
+        level_name = "Ikuno"
         if self.add_custom_level(
             custom_level_int,
-            "Ikuno",
+            level_name,
             "cyan",
             LoggerColours.BLACK
         ) == self.error:
             self.log_error(
-                "The custom level could not be added, please check the configuration"
+                f"The custom level '{level_name}' could not be added, please check the configuration"
             )
         else:
-
             self.log_custom_level(
                 custom_level_int,
-                "This is a test for custom level messages"
+                f"This is a test for custom level message \"{logging.getLevelName(custom_level_int)}\""
             )
         self.close_file()
 
