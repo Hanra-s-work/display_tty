@@ -85,7 +85,7 @@ The Preloaded version exists under: `IDISP`, `IDISPLAY`, `IDTTY` and `IDISPTTY`
 ### Using pip
 
 ```sh
-pip install -U disp
+pip install -U display_tty
 ```
 
 ### Using python
