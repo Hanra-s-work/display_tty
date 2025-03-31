@@ -956,6 +956,7 @@ INPUT                  = src \
                          server \
                          network \
                          game_source \
+                         display_tty \
                          Makefile \
                          README.md \
                          COMMIT_CONVENTION.md \
