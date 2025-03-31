@@ -51,6 +51,12 @@ The Preloaded version exists under: `IDISP`, `IDISPLAY`, `IDTTY` and `IDISPTTY`
         8. [Hello World as a success message](#hello-world-as-a-success-message)
         9. [Hello World as a warning message](#hello-world-as-a-warning-message)
         10. [Hello World as an inform message](#hello-world-as-an-inform-message)
+        11. [Displaying a message in a box](#displaying-a-message-in-a-box)
+        12. [Displaying a rounded message box](#displaying-a-rounded-message-box)
+        13. [Displaying a vertical message box](#displaying-a-vertical-message-box)
+        14. [Displaying a box with different side and top characters](#displaying-a-box-with-different-side-and-top-characters)
+        15. [Displaying a box without vertical bars](#displaying-a-box-without-vertical-bars)
+        16. [Displaying a vertical box without horizontal bars](#displaying-a-vertical-box-without-horizontal-bars)
 7. [Change the initialisation content](#change-the-initialisation-content)
     1. [TOML configuration breakdown](#toml-configuration-breakdown)
         1. [line 1](#line-1)
@@ -212,13 +218,7 @@ IDTTY.tree("This is a test tree", TEST_DATA, 0)
 
 #### Hello World as a title
 
-The generic function to display `Hello World!` as a title is:
-
-```py
-title(self, title)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a title is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.title("Hello World !")
@@ -226,13 +226,7 @@ IDTTY.title("Hello World !")
 
 #### Hello World as a sub title
 
-The generic function to display `Hello World!` as a sub title is:
-
-```py
-sub_title(self, sub_title)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a sub title is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.sub_title("Hello World !")
@@ -240,13 +234,7 @@ IDTTY.sub_title("Hello World !")
 
 #### Hello World as a sub sub title
 
-The generic function to display `Hello World!` as a sub sub  title is:
-
-```py
-sub_sub_title(self, sub_sub_title)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a sub sub  title is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.sub_sub_title("Hello World !")
@@ -254,13 +242,7 @@ IDTTY.sub_sub_title("Hello World !")
 
 #### Hello World as a message with adjustable delay per call
 
-The generic function to display `Hello World!` as a message is:
-
-```py
-animate_message(self, message: str = "Hello World!", delay: float = 0.02)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a message is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.animate_message("Hello World !", 0.01)
@@ -268,13 +250,7 @@ IDTTY.animate_message("Hello World !", 0.01)
 
 #### Hello World as a message
 
-The generic function to display `Hello World!` as a message is:
-
-```py
-message(self, message:str)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a message is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.message("Hello World !")
@@ -282,13 +258,7 @@ IDTTY.message("Hello World !")
 
 #### Hello World as a question message
 
-The generic function to display `Hello World!` as a question message is:
-
-```py
-question_message(self, message: str)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a question message is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.question_message("Hello World !")
@@ -296,13 +266,7 @@ IDTTY.question_message("Hello World !")
 
 #### Hello World as an error message
 
-The generic function to display `Hello World!` as an error message is:
-
-```py
-error_message(self, message: str)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as an error message is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.error_message("Hello World !")
@@ -310,13 +274,7 @@ IDTTY.error_message("Hello World !")
 
 #### Hello World as a success message
 
-The generic function to display `Hello World!` as a success message is:
-
-```py
-success_message(self, message: str)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a success message is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.success_message("Hello World !")
@@ -324,13 +282,7 @@ IDTTY.success_message("Hello World !")
 
 #### Hello World as a warning message
 
-The generic function to display `Hello World!` as a warning message is:
-
-```py
-warning_message(self, message: str)
-```
-
-The outputs is: None
+The generic function to display `Hello World!` as a warning message is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.warning_message("Hello World !")
@@ -338,30 +290,66 @@ IDTTY.warning_message("Hello World !")
 
 #### Hello World as an inform message
 
-The generic function to display `Hello World!` as an inform message is:
+The generic function to display `Hello World!` as an inform message is (If we use the Pre-initialised class instance):
 
 ```py
-append_run_date(self)
+IDTTY.inform_message("Hello World !")
 ```
 
-The outputs is: None
+### Displaying a message in a box
+
+The generic function to display `Hello World!` as a message in a box is (If we use the Pre-initialised class instance):
 
 ```py
-IDTTY.append_run_date()
+IDTTY.disp_message_box("Hello World!", "#")
+```
+
+### Displaying a rounded message box
+
+The generic function to display `Hello World!` in a rounded message box is (If we use the Pre-initialised class instance):
+
+```py
+IDTTY.disp_round_message_box("Hello World!")
+```
+
+### Displaying a vertical message box
+
+The generic function to display `Hello World!` in a vertical message box is (If we use the Pre-initialised class instance):
+
+```py
+IDTTY.disp_vertical_message_box("Hello World!")
 ```
 
 ### Displaying the current date
 
-The generic function to display the current date as a title is:
-
-```py
-inform_message(self, message: list)
-```
-
-The outputs is: None
+The generic function to display the current date as a title is (If we use the Pre-initialised class instance):
 
 ```py
 IDTTY.inform_message("Hello World !")
+```
+
+### Displaying a box with different side and top characters
+
+The generic function to display a message in a box made of different characters is (If we use the Pre-initialised class instance):
+
+```py
+IDTTY.disp_diff_side_and_top_message_box("Hello World!")
+```
+
+### Displaying a box without vertical bars
+
+The generic function to display a message in a box without vertical bars is (If we use the Pre-initialised class instance):
+
+```py
+IDTTY.disp_box_no_vertical("Hello World!")
+```
+
+### Displaying a vertical box without horizontal bars
+
+The generic function to display a message in a box without horizontal bars is (If we use the Pre-initialised class instance):
+
+```py
+IDTTY.box_vertical_no_horizontal("Hello World!")
 ```
 
 ## Change the initialisation content
