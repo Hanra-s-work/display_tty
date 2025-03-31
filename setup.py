@@ -20,6 +20,9 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Hanra-s-work/disp",
+    project_urls={
+        "Documentation": "https://hanra-s-work.github.io/display_tty/"
+    },
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
