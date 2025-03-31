@@ -11,7 +11,10 @@
 @details This script initializes the Disp class with a TOML configuration and runs a test method to validate its functionality. The output is not saved to a file by default.
 """
 
-from src import Disp, TOML_CONF
+try:
+    from src import Disp, TOML_CONF
+except ImportError:
+    from display_tty import Disp, TOML_CONF
 
 
 if __name__ == "__main__":
