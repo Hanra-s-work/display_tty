@@ -19,7 +19,7 @@ env:
   TAG_FILE: version.txt
   IS_RELEASE: is_release.txt
   MATRIX_VERSION_PUBLISHING: "3.10"
-  SOURCE_CODE_PATH: display_tty/my_disp.py
+  SOURCE_CODE_PATH: display_tty/__init__.py
   LATEST_TAG: ""
 
 jobs:
