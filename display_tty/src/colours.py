@@ -10,68 +10,67 @@ from typing import Union
 
 class LoggerColours:
     """
-    Class in charge of containing the colour names and id's that correspond to the allowed colours for the logger library.
+    @class LoggerColours
+    @brief Class in charge of containing the colour names and id's that correspond to the allowed colours for the logger library.
     """
-    BLUE = 0
-    RED = 1
-    CYAN = 2
-    BLACK = 3
-    GREEN = 4
-    WHITE = 5
-    YELLOW = 6
-    PURPLE = 7
-    LIGHT_RED = 8
-    LIGHT_BLUE = 9
-    LIGHT_CYAN = 10
-    LIGHT_WHITE = 11
-    LIGHT_BLACK = 12
-    LIGHT_GREEN = 13
-    LIGHT_YELLOW = 14
-    LIGHT_PURPLE = 15
-    BOLD_BLUE = 16
-    BOLD_RED = 17
-    BOLD_CYAN = 18
-    BOLD_BLACK = 19
-    BOLD_GREEN = 20
-    BOLD_WHITE = 21
-    BOLD_YELLOW = 22
-    BOLD_PURPLE = 23
-    BOLD_LIGHT_RED = 24
-    BOLD_LIGHT_BLUE = 25
-    BOLD_LIGHT_CYAN = 26
-    BOLD_LIGHT_WHITE = 27
-    BOLD_LIGHT_BLACK = 28
-    BOLD_LIGHT_GREEN = 29
-    BOLD_LIGHT_YELLOW = 30
-    BOLD_LIGHT_PURPLE = 31
-    THIN_BLUE = 32
-    THIN_RED = 33
-    THIN_CYAN = 34
-    THIN_BLACK = 35
-    THIN_GREEN = 36
-    THIN_WHITE = 37
-    THIN_YELLOW = 38
-    THIN_PURPLE = 39
-    THIN_LIGHT_RED = 40
-    THIN_LIGHT_BLUE = 41
-    THIN_LIGHT_CYAN = 42
-    THIN_LIGHT_WHITE = 43
-    THIN_LIGHT_BLACK = 44
-    THIN_LIGHT_GREEN = 45
-    THIN_LIGHT_YELLOW = 46
-    THIN_LIGHT_PURPLE = 47
+
+    # Colour constants
+    BLUE = 0  # @brief Colour code for blue.
+    RED = 1  # @brief Colour code for red.
+    CYAN = 2  # @brief Colour code for cyan.
+    BLACK = 3  # @brief Colour code for black.
+    GREEN = 4  # @brief Colour code for green.
+    WHITE = 5  # @brief Colour code for white.
+    YELLOW = 6  # @brief Colour code for yellow.
+    PURPLE = 7  # @brief Colour code for purple.
+    LIGHT_RED = 8  # @brief Colour code for light red.
+    LIGHT_BLUE = 9  # @brief Colour code for light blue.
+    LIGHT_CYAN = 10  # @brief Colour code for light cyan.
+    LIGHT_WHITE = 11  # @brief Colour code for light white.
+    LIGHT_BLACK = 12  # @brief Colour code for light black.
+    LIGHT_GREEN = 13  # @brief Colour code for light green.
+    LIGHT_YELLOW = 14  # @brief Colour code for light yellow.
+    LIGHT_PURPLE = 15  # @brief Colour code for light purple.
+    BOLD_BLUE = 16  # @brief Colour code for bold blue.
+    BOLD_RED = 17  # @brief Colour code for bold red.
+    BOLD_CYAN = 18  # @brief Colour code for bold cyan.
+    BOLD_BLACK = 19  # @brief Colour code for bold black.
+    BOLD_GREEN = 20  # @brief Colour code for bold green.
+    BOLD_WHITE = 21  # @brief Colour code for bold white.
+    BOLD_YELLOW = 22  # @brief Colour code for bold yellow.
+    BOLD_PURPLE = 23  # @brief Colour code for bold purple.
+    BOLD_LIGHT_RED = 24  # @brief Colour code for bold light red.
+    BOLD_LIGHT_BLUE = 25  # @brief Colour code for bold light blue.
+    BOLD_LIGHT_CYAN = 26  # @brief Colour code for bold light cyan.
+    BOLD_LIGHT_WHITE = 27  # @brief Colour code for bold light white.
+    BOLD_LIGHT_BLACK = 28  # @brief Colour code for bold light black.
+    BOLD_LIGHT_GREEN = 29  # @brief Colour code for bold light green.
+    BOLD_LIGHT_YELLOW = 30  # @brief Colour code for bold light yellow.
+    BOLD_LIGHT_PURPLE = 31  # @brief Colour code for bold light purple.
+    THIN_BLUE = 32  # @brief Colour code for thin blue.
+    THIN_RED = 33  # @brief Colour code for thin red.
+    THIN_CYAN = 34  # @brief Colour code for thin cyan.
+    THIN_BLACK = 35  # @brief Colour code for thin black.
+    THIN_GREEN = 36  # @brief Colour code for thin green.
+    THIN_WHITE = 37  # @brief Colour code for thin white.
+    THIN_YELLOW = 38  # @brief Colour code for thin yellow.
+    THIN_PURPLE = 39  # @brief Colour code for thin purple.
+    THIN_LIGHT_RED = 40  # @brief Colour code for thin light red.
+    THIN_LIGHT_BLUE = 41  # @brief Colour code for thin light blue.
+    THIN_LIGHT_CYAN = 42  # @brief Colour code for thin light cyan.
+    THIN_LIGHT_WHITE = 43  # @brief Colour code for thin light white.
+    THIN_LIGHT_BLACK = 44  # @brief Colour code for thin light black.
+    THIN_LIGHT_GREEN = 45  # @brief Colour code for thin light green.
+    THIN_LIGHT_YELLOW = 46  # @brief Colour code for thin light yellow.
+    THIN_LIGHT_PURPLE = 47  # @brief Colour code for thin light purple.
 
     @staticmethod
     def get_colour_string(colour_class, colour_code: int) -> str:
-        """_summary_
-            Function in charge of returning the name of the colour to use.
-
-        Args:
-            colour_class (_type_): _description_
-            colour_code (int): _description_
-
-        Returns:
-            str: _description_
+        """
+        @brief Function in charge of returning the name of the colour to use.
+        @param colour_class The class containing the colour definitions.
+        @param colour_code The integer code of the colour.
+        @return The name of the colour as a string, or an empty string if the code is invalid.
         """
         if isinstance(colour_code, int) is False or colour_code < 0:
             return ""
@@ -82,15 +81,11 @@ class LoggerColours:
 
     @staticmethod
     def get_colour_code(colour_class, colour_name: str) -> Union[int, None]:
-        """_summary_
-            Function in charge of returning the code of the colour to use.
-
-        Args:
-            colour_class (_type_): _description_
-            colour_name (str): _description_
-
-        Returns:
-            Union[int, None]: _description_
+        """
+        @brief Function in charge of returning the code of the colour to use.
+        @param colour_class The class containing the colour definitions.
+        @param colour_name The name of the colour as a string.
+        @return The integer code of the colour, or None if the name is invalid.
         """
         if not isinstance(colour_name, str) or not colour_name or len(colour_name) == 0:
             return None
@@ -103,15 +98,11 @@ class LoggerColours:
 
     @staticmethod
     def check_if_colour_present(colour_class, colour_name: str) -> bool:
-        """_summary_
-            Function in charge of checking if the colour is present in the list of allowed colours.
-
-        Args:
-            colour_class (_type_): _description_
-            colour_name (str): _description_
-
-        Returns:
-            bool: _description_
+        """
+        @brief Function in charge of checking if the colour is present in the list of allowed colours.
+        @param colour_class The class containing the colour definitions.
+        @param colour_name The name of the colour as a string.
+        @return True if the colour is present, False otherwise.
         """
         if not isinstance(colour_name, str) or not colour_name or len(colour_name) == 0:
             return None
@@ -125,14 +116,10 @@ class LoggerColours:
 
     @staticmethod
     def get_all_colours(colour_class) -> list:
-        """_summary_
-            Function in charge of returning the list of all the colours.
-
-        Args:
-            colour_class (_type_): _description_
-
-        Returns:
-            list: _description_
+        """
+        @brief Function in charge of returning the list of all the colours.
+        @param colour_class The class containing the colour definitions.
+        @return A list of all the colour names as strings.
         """
         colours = []
         for i in dir(colour_class):

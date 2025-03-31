@@ -1,6 +1,13 @@
+##
+# EPITECH PROJECT, 2024
+# display_tty
+# File description:
+# my_disp.py
+##
 
 """
-The file in charge of managing the beautified output on the terminal
+@file my_disp.py
+@brief The file in charge of managing the beautified output on the terminal.
 """
 
 import sys
@@ -12,6 +19,7 @@ from typing import List, Dict, Union
 import logging
 import colorlog
 
+# Check if the script is being run directly or imported
 if __name__ == "__main__":
     from colours import LoggerColours
     from constants import ERR, SUCCESS, OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY, TOML_CONF, FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
@@ -23,8 +31,9 @@ else:
 
 
 class Logging:
-    """_summary_
-        This is a class that represents the logging library, it is in no means a functioning class.
+    """
+    @class Logging
+    @brief Represents a placeholder for the logging library. This is not a functioning class.
     """
 
     def __init__(self) -> None:
@@ -32,9 +41,26 @@ class Logging:
 
 
 class Disp:
-    """ The class in charge of Displaying messages """
+    """
+    @class Disp
+    @brief The class in charge of displaying messages with various styles and animations.
+
+    @details This class provides methods to display messages in different formats, log messages, and manage output configurations.
+    """
 
     def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None, success: int = SUCCESS, error: int = ERR) -> None:
+        """
+        @brief Constructor for the Disp class.
+
+        @param toml_content Dictionary containing configuration values.
+        @param save_to_file Boolean indicating whether to save output to a file.
+        @param file_name Name of the file to save output to.
+        @param file_descriptor File descriptor for the output file.
+        @param debug Boolean indicating whether debug mode is enabled.
+        @param logger Logger instance or name to use for logging.
+        @param success Integer representing the success status code.
+        @param error Integer representing the error status code.
+        """
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
         self.background_colour_key = 'background_colour'
@@ -77,6 +103,11 @@ class Disp:
         self._setup_logger(logger)
 
     def _setup_logger(self, logger: Union[Logging, str, None]) -> None:
+        """
+        @brief Setup the logger for the class.
+
+        @param logger The logger to use. If None, a default logger will be used.
+        """
         # ---- Logging data ----
         if callable(logger) and hasattr(logger, "debug"):
             self.logger = logger
@@ -129,39 +160,32 @@ class Disp:
 
         # Extract the function from namespace
         func = namespace[name]
-
-        # Return the function
         return func
 
     def _add_function_to_instance(self, func_dest: object, func_name: str, func_code: str) -> None:
-        """_summary_
-            Add a function to the instance
+        """
+        @brief Add a dynamically created function to an instance.
 
-        Args:
-            func_dest (object): _description_
-            func_name (str): _description_
-            func_code (str): _description_
+        @param func_dest The destination object to add the function to.
+        @param func_name Name of the function.
+        @param func_code Code of the function.
         """
         function_instance = self._create_function(func_name, func_code)
         setattr(func_dest, func_name, function_instance)
 
     def update_disp_debug(self, debug: bool) -> None:
-        """_summary_
-            Update the debug mode
+        """
+        @brief Update the debug mode.
 
-        Args:
-            debug (bool): _description_
+        @param debug Boolean indicating whether debug mode is enabled.
         """
         self.debug = debug
 
     def update_logger_level(self, level: Union[int, LogLevelTracker.Levels] = LogLevelTracker.Levels.NOTSET) -> None:
-        """_summary_
-            Update the logger level
-            This is what controls the importance of the log that will be allowed to be displayed.
-            The higher the number, the more important the log is.
+        """
+        @brief Update the logger level.
 
-        Args:
-            level (int): _description_: The log importance level. Defaults to logging.NOTSET.
+        @param level The log importance level. Defaults to NOTSET.
         """
         _func_name = inspect.currentframe().f_code.co_name
 
@@ -178,14 +202,11 @@ class Disp:
         self.logger.setLevel(level)
 
     def _check_the_logging_instance(self, logger_instance: logging.Logger = None) -> logging.Logger:
-        """_summary_
-            Check if the logger instance is valid
+        """
+        @brief Check if the logger instance is valid.
 
-        Args:
-            logger_instance (logging.Logger, optional): _description_. Defaults to None.
-
-        Returns:
-            logging.Logger: _description_
+        @param logger_instance The logger instance to validate.
+        @return A valid logger instance.
         """
         # Get the parent function name if present
         _func_name = inspect.currentframe()
@@ -204,18 +225,13 @@ class Disp:
         return logger_instance
 
     def _check_colour_data(self, colour: Union[str, int], logger_instance: logging.Logger = None) -> Union[int, str]:
-        """_summary_
-            Check if the colour data is correct
-
-        Args:
-            colour (Union[str, int]): _description_
-            level_name (Union[str, int]): _description_
-            logger_instance (logging.Logger, optional): _description_. Defaults to None.
-
-        Returns:
-            int: _description_
         """
-        # Get the parent function name if present
+        @brief Check if the provided colour data is valid.
+
+        @param colour The colour to validate.
+        @param logger_instance The logger instance to use for logging errors.
+        @return The validated colour or an error code.
+        """
         _func_name = inspect.currentframe()
         if _func_name.f_back is not None:
             _func_name = _func_name.f_back.f_code.co_name
@@ -234,17 +250,13 @@ class Disp:
         return colour
 
     def _check_level_data(self, level_name: Union[str, int], logger_instance: logging.Logger = None) -> Union[int, str]:
-        """_summary_
-            Check if the level data is correct
-
-        Args:
-            level_name (Union[str, int]): _description_
-            logger_instance (logging.Logger, optional): _description_. Defaults to None.
-
-        Returns:
-            Union[int, str]: _description_
         """
-        # Get the parent function name if present
+        @brief Check if the provided level data is valid.
+
+        @param level_name The level name or number to validate.
+        @param logger_instance The logger instance to use for logging errors.
+        @return The validated level name or an error code.
+        """
         _func_name = inspect.currentframe()
         if _func_name.f_back is not None:
             _func_name = _func_name.f_back.f_code.co_name
@@ -273,16 +285,12 @@ class Disp:
         return name_string
 
     def _get_colour_formatter(self, logger_instance: logging.Logger = None) -> Union[None, colorlog.ColoredFormatter]:
-        """_summary_
-            Get the colour formatter
-
-        Args:
-            logger_instance (logging.Logger, optional): _description_. Defaults to None.
-
-        Returns:
-            Union[None, colorlog.ColoredFormatter]: _description_
         """
-        # Get the parent function name if present
+        @brief Get the colour formatter from the logger instance.
+
+        @param logger_instance The logger instance to retrieve the formatter from.
+        @return The colour formatter or an error code.
+        """
         _func_name = inspect.currentframe()
         if _func_name.f_back is not None:
             _func_name = _func_name.f_back.f_code.co_name
@@ -325,16 +333,13 @@ class Disp:
         return colour_formatter
 
     def update_logging_colour_text(self, colour: Union[str, int], level_name: Union[str, int], logger_instance: logging.Logger = None) -> int:
-        """_summary_
-            Update or insert a logging colour for the text of the level specified
+        """
+        @brief Update or insert a logging colour for the text of the specified level.
 
-        Args:
-            colour (Union[str, int]): The colour to use (string or number [based of the variables in variables starting with LOG_])
-            level_name (Union[str, int]): The level name or number
-            logger_instance (logging.Logger, optional): The logger instance to update. Defaults to None. If the value isn't of type logging.Logger, the default logger will be used.
-
-        Returns:
-            int: The status code of the operation
+        @param colour The colour to use (string or number).
+        @param level_name The level name or number.
+        @param logger_instance The logger instance to update.
+        @return The status code of the operation.
         """
         _func_name = inspect.currentframe().f_code.co_name
         # Checking the logger instance
@@ -375,16 +380,13 @@ class Disp:
         return self.success
 
     def update_logging_colour_background(self, colour: Union[str, int], level_name: Union[str, int], logger_instance: logging.Logger = None) -> int:
-        """_summary_
-            Update or insert a logging colour for the background of the logging level specified
+        """
+        @brief Update or insert a logging colour for the background of the specified level.
 
-        Args:
-            colour (Union[str, int]): The colour to use (string or number [based of the variables in variables starting with LOG_])
-            level_name (Union[str, int]): The level name or number
-            logger_instance (logging.Logger, optional): The logger instance to update. Defaults to None. If the value isn't of type logging.Logger, the default logger will be used.
-
-        Returns:
-            int: The status code of the operation
+        @param colour The colour to use (string or number).
+        @param level_name The level name or number.
+        @param logger_instance The logger instance to update.
+        @return The status code of the operation.
         """
         _func_name = inspect.currentframe().f_code.co_name
         # Checking the logger instance
@@ -438,12 +440,14 @@ class Disp:
         return self.success
 
     def add_custom_level(self, level: int, name: str, colour_text: Union[int, str] = "", colour_bg: Union[int, str] = "") -> int:
-        """_summary_
-            Add a custom level to the logger
+        """
+        @brief Add a custom level to the logger.
 
-        Args:
-            level (int): _description_
-            name (str): _description_
+        @param level The integer value of the custom level.
+        @param name The name of the custom level.
+        @param colour_text The text colour for the custom level.
+        @param colour_bg The background colour for the custom level.
+        @return The status code of the operation.
         """
         _func_name = inspect.currentframe().f_code.co_name
         logger = self._check_the_logging_instance(self.logger)
@@ -512,16 +516,6 @@ class Disp:
 #         )
         # Generate the function for the display class
         func_disp_name = f"disp_print_{func_name}"
-#         function_disp_code = f"""
-# def {func_disp_name}(self, string: str = "", func_name: Union[str, None] = None) -> None:
-#     if isinstance(func_name, str) is False or func_name is None:
-#         _func_name = inspect.currentframe()
-#         if _func_name.f_back is not None:
-#             func_name = _func_name.f_back.f_code.co_name
-#         else:
-#             func_name = _func_name.f_code.co_name
-#     self.logger.{func_name}("(%s) %s", func_name, string)
-# """
         function_disp_code = f"""
 def {func_disp_name}(self, string: str = "", func_name: Union[str, None] = None) -> None:
     if isinstance(func_name, str) is False or func_name is None:
@@ -544,10 +538,10 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
     if isinstance(func_name, str) is False or func_name is None:
         _func_name = inspect.currentframe()
         if _func_name.f_back is not None:
-            func_name = _func_name.f_back.f_code.co_name
+            _func_name = _func_name.f_back.f_code.co_name
         else:
-            func_name = _func_name.f_code.co_name
-    self.log_custom_level({level}, string, func_name)
+            _func_name = _func_name.f_code.co_name
+    self.log_custom_level({level}, string, _func_name)
 """
         self._add_function_to_instance(
             self,
@@ -557,13 +551,12 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         return self.success
 
     def disp_print_custom_level(self, level: Union[int, str], string: str, func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Print a message with a custom level
+        """
+        @brief Print a message with a custom level.
 
-        Args:
-            level (Union[int, str]): _description_
-            message (str): _description_
-            func_name (Union[str,None], optional): _description_. Defaults to None.
+        @param level The custom level to use.
+        @param string The message to print.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -583,12 +576,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             self.logger.log(level, "(%s) %s", func_name, string)
 
     def disp_print_debug(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Print a debug message (using logger)
+        """
+        @brief Print a debug message (using logger).
 
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        @param string The message to print.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -600,11 +592,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             self.logger.debug("(%s) %s", func_name, string)
 
     def disp_print_info(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Print an information message (using logger)
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Print an information message (using logger).
+
+        @param string The message to print.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -615,11 +607,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.logger.info("(%s) %s", func_name, string)
 
     def disp_print_warning(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Print a warning message (using logger)
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Print a warning message (using logger).
+
+        @param string The message to print.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -630,11 +622,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.logger.warning("(%s) %s", func_name, string)
 
     def disp_print_error(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Print an error message (using logger)
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Print an error message (using logger).
+
+        @param string The message to print.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -645,11 +637,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.logger.error("(%s) %s", func_name, string)
 
     def disp_print_critical(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Print a critical message (using logger)
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Print a critical message (using logger).
+
+        @param string The message to print.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -660,13 +652,12 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.logger.critical("(%s) %s", func_name, string)
 
     def log_custom_level(self, level: Union[int, str], string: str, func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Log a message with a custom level
+        """
+        @brief Log a message with a custom level.
 
-        Args:
-            level (Union[int, str]): _description_
-            message (str): _description_
-            func_name (Union[str,None], optional): _description_. Defaults to None.
+        @param level The custom level to use.
+        @param string The message to log.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -677,11 +668,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.disp_print_custom_level(level, string, func_name)
 
     def log_debug(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Log a debug message
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Log a debug message.
+
+        @param string The message to log.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -692,11 +683,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.disp_print_debug(string, func_name)
 
     def log_info(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Log a info message
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Log an info message.
+
+        @param string The message to log.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -707,11 +698,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.disp_print_info(string, func_name)
 
     def log_warning(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Log a warning message
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Log a warning message.
+
+        @param string The message to log.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -722,11 +713,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.disp_print_warning(string, func_name)
 
     def log_error(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Log a error message
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Log an error message.
+
+        @param string The message to log.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -737,11 +728,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.disp_print_error(string, func_name)
 
     def log_critical(self, string: str = "", func_name: Union[str, None] = None) -> None:
-        """_summary_
-            Log a critical message
-        Args:
-            string (str, optional): _description_. Defaults to "".
-            func_name (str, optional): _description_. Defaults to "Disp".
+        """
+        @brief Log a critical message.
+
+        @param string The message to log.
+        @param func_name The name of the calling function.
         """
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
@@ -752,8 +743,8 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         self.disp_print_critical(string, func_name)
 
     def close_file(self) -> None:
-        """_summary_
-            Close the log file if it was opened
+        """
+        @brief Close the log file if it was opened.
         """
         if self.toml_content[KEY_OUTPUT_MODE] != OUT_FILE:
             return
@@ -761,25 +752,21 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             self.file_descriptor.close()
 
     def get_generated_content(self) -> str:
-        """_summary_
-            Return the generated string
+        """
+        @brief Return the generated string.
 
-        Returns:
-            str: _description_
+        @return The generated content.
         """
         data = self.generated_content
         self.generated_content = ""
         return data
 
     def _calculate_required_spaces(self, string_length: int) -> str:
-        """_summary_
-            This is a function that will generate the required amount of spaces for the padding of the shape.
+        """
+        @brief Generate the required amount of spaces for the padding of the shape.
 
-        Args:
-            string_length (int): _description_: The length of the provided string
-
-        Returns:
-            str: _description_: The number of spaces required for the padding
+        @param string_length The length of the provided string.
+        @return The number of spaces required for the padding.
         """
         if string_length >= self.max_whitespace:
             white_spaces = " "
@@ -796,8 +783,8 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         return white_spaces
 
     def _open_file(self) -> None:
-        """_summary_
-            Open the file if required and add the current date and time
+        """
+        @brief Open the file if required and add the current date and time.
         """
         if self.save_to_file is True and self.file_descriptor is None:
             self.file_descriptor = open(
@@ -810,40 +797,34 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             self.append_run_date()
 
     def _is_safe(self, content: any) -> bool:
-        """_summary_
-            Check if an item is safe to write or not 
-        Args:
-            content (any): _description_
+        """
+        @brief Check if an item is safe to write or not.
 
-        Returns:
-            bool: _description_
+        @param content The item to check.
+        @return True if the item is safe to write, False otherwise.
         """
         if isinstance(content, (str, int, float, tuple, complex, bytes, bytearray, memoryview)) is False:
             return False
         return True
 
     def create_string(self, length, character) -> str:
-        """_summary_
-            Create a string based of a character and a length
+        """
+        @brief Create a string based on a character and a length.
 
-        Args:
-            length (_type_): _description_
-            character (_type_): _description_
-
-        Returns:
-            str: _description_
+        @param length The length of the string.
+        @param character The character to use.
+        @return The created string.
         """
         line = [character for i in range(0, length)]
         string = "".join(line)
         return string
 
     def display_animation(self, message: str = "Hello World!", delay: float = 0.02) -> None:
-        """_summary_
-            Print the message letter by letter while applying a provided delay 
+        """
+        @brief Print the message letter by letter while applying a provided delay.
 
-        Args:
-            message (str, optional): _description_. Defaults to "Hello World!".
-            delay (float, optional): _description_. Defaults to 0.02.
+        @param message The message to display.
+        @param delay The delay between each letter.
         """
         if " " in message and self.toml_content[KEY_PRETTIFY_OUTPUT] is True and self.toml_content[KEY_PRETTIFY_OUTPUT_IN_BLOCKS] is True:
             for letter in message.split(" "):
@@ -861,12 +842,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         print()
 
     def animate_message(self, message: str = "Hello World!", delay: float = 0.02) -> None:
-        """_summary_
-            Display or dump (to file) message
+        """
+        @brief Display or dump (to file) a message.
 
-        Args:
-            message (str, optional): _description_. Defaults to "Hello World!".
-            delay (float, optional): _description_. Defaults to 0.02.
+        @param message The message to display or dump.
+        @param delay The delay between each letter.
         """
         if self._is_safe(message) is False:
             message = f"{message}"
@@ -878,17 +858,17 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             self.display_animation(message, delay)
 
     def disp_message_box(self, msg: str, char: str = "#") -> None:
-        """_summary_
-            Display a message in a box \n
-            The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
-            This is a sample box (characters and dimensions depend on the provided configuration):\n
-            #############################\n
-            #        Sample text        #\n
-            #############################
+        """
+        @brief Display a message in a box.
 
-        Args:
-            msg (str): _description_
-            char (str, optional): _description_. Defaults to "#".
+        @param msg The message to display.
+        @param char The character to use for the box.
+
+        @note The text is displayed in the center of the box, it is just difficult to show that in a function comment.\n
+        @note This is a sample box (characters and dimensions depend on the provided configuration):\n
+        @example #############################\n
+        @example #        Sample text        #\n
+        @example #############################
         """
 
         box_wall = self.create_string(self.nb_chr, char)
@@ -929,17 +909,17 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def disp_round_message_box(self, msg: str = "Sample text") -> None:
-        """_summary_
-            Display a message in a box \n
-            The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
-            This is a sample box (characters and dimensions depend on the provided configuration):\n
-            ╔══════════════════════╗\n
-            ║      Sample Text     ║\n
-            ╚══════════════════════╝
-
-        Args:
-            msg (str, optional): _description_. Defaults to "Sample text".
         """
+        @brief Display a message in a rounded box.
+
+        @param msg The message to display.
+
+        @note The text is displayed in the center of the box, it is just difficult to show that in a function comment.\n
+        @note This is a sample box (characters and dimensions depend on the provided configuration):\n
+        @example ╔══════════════════════╗\n
+        @example ║      Sample text     ║\n
+        @example ╚══════════════════════╝\n
+                """
 
         offset_reset = 2
 
@@ -1026,23 +1006,18 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             self.message_animation_delay
         )
 
-        """
-
-        """
-
     def disp_diff_side_and_top_message_box(self, msg: str) -> None:
-        """_summary_
-            Display a message in a box \n
-            The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
-            This is a sample box (characters and dimensions depend on the provided configuration):\n
-            _____________________________\n
-            |        Sample text        |\n
-            _____________________________
-
-        Args:
-            msg (str): _description_
         """
+        @brief Display a message in a box with different side and top characters.
 
+        @param msg The message to display.
+
+        @note The text is displayed in the center of the box, it is just difficult to show that in a function comment.\n
+        @note This is a sample box (characters and dimensions depend on the provided configuration):\n
+        @example _____________________________\n
+        @example |        Sample text        |\n
+        @example _____________________________
+        """
         ceiling_boxes = ""
         if 'DIFF_BORDER_LINE_CHARACTER_BOX' in self.toml_content:
             ceiling_boxes = self.toml_content['DIFF_BORDER_LINE_CHARACTER_BOX']
@@ -1092,19 +1067,17 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def disp_box_no_vertical(self, message: str, character: str = "@") -> None:
-        """_summary_
-            Print another box format, this time without the internal bars\n
-            The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
-            Here is a sample box:\n
-            #############################\n
-                    Sample text\n
-            #############################
-
-        Args:
-            message (str): _description_
-            character (str, optional): _description_. Defaults to "@".
         """
+        @brief Print a box format without internal vertical bars.
 
+        @param message The message to display.
+        @param character The character to use for the box.
+        @note The text is displayed in the center of the box, it is just difficult to show that in a function comment.\n
+        @note This is a sample box (characters and dimensions depend on the provided configuration):\n
+        @example #############################\n
+        @example          Sample text         \n
+        @example #############################
+        """
         if 'BOX_NO_VERTICAL' in self.toml_content:
             char = self.toml_content['BOX_NO_VERTICAL']
         else:
@@ -1143,25 +1116,22 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def disp_vertical_message_box(self, msg: str, character: str = '') -> None:
-        """_summary_
-            Display a message in a box \n
-            The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
-            The '#' characters a aligned to the first and last '#' character on each line\n
-            But due to the code editor's rendering, it removes spaces, thus, if you want an accurate view, look at the raw comment of the function\n
-            This is a sample box (characters and dimensions depend on the provided configuration):\n
-            ###############\n
-            #             #\n
-            #             #\n
-            #             #\n
-            # Sample text #\n
-            #             #\n
-            #             #\n
-            #             #\n
-            ###############
+        """
+        @brief Display a message in a box with vertical bars.
 
-        Args:
-            msg (str): _description_
-            character (str, optional): _description_. Defaults to ''.
+        @param msg The message to display.
+        @param character The character to use for the box.
+        @note The text is displayed in the center of the box, it is just difficult to show that in a function comment.\n
+        @note This is a sample box (characters and dimensions depend on the provided configuration):\n
+        @example ###############\n
+        @example #             #\n
+        @example #             #\n
+        @example #             #\n
+        @example # Sample text #\n
+        @example #             #\n
+        @example #             #\n
+        @example #             #\n
+        @example ###############
         """
 
         if 'BOX_NO_VERTICAL' in self.toml_content:
@@ -1230,28 +1200,25 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def box_vertical_no_horizontal(self, message: str, character: str = "") -> None:
-        """_summary_
-            Print another box format, this time without the internal bars\n
-            But due to the code editor's rendering, it removes spaces, thus, if you want an accurate view, look at the raw comment of the function\n
-            The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
-            Here is a sample box:\n
-            #                            #\n
-            #                            #\n
-            #                            #\n
-            #                            #\n
-            #                            #\n
-            #       Sample text          #\n
-            #                            #\n
-            #                            #\n
-            #                            #\n
-            #                            #\n
-            #                            #\n
-
-        Args:
-            message (str): _description_
-            character (str, optional): _description_. Defaults to "".
         """
+        @brief Print a box format without internal horizontal bars.
 
+        @param message The message to display.
+        @param character The character to use for the box.
+        @note The text is displayed in the center of the box, it is just difficult to show that in a function comment.\n
+        @note This is a sample box (characters and dimensions depend on the provided configuration):\n
+        @example #                            #\n
+        @example #                            #\n
+        @example #                            #\n
+        @example #                            #\n
+        @example #                            #\n
+        @example #       Sample text          #\n
+        @example #                            #\n
+        @example #                            #\n
+        @example #                            #\n
+        @example #                            #\n
+        @example #                            #\n
+        """
         if 'BOX_VERTICAL_NO_HORIZONTAL' in self.toml_content:
             character = self.toml_content['BOX_VERTICAL_NO_HORIZONTAL']
         elif character == '':
@@ -1318,44 +1285,37 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def title(self, title: str) -> None:
-        """_summary_
-            Print a beautified title \n
-            This function calls the disp_message_box using the title parameters
+        """
+        @brief Print a beautified title.
 
-        Args:
-            title (str): _description_
+        @param title The title to display.
         """
         self.disp_message_box(title, self.title_wall_chr)
 
     def sub_title(self, sub_title: str) -> None:
-        """_summary_
-            Print a beautified sub title\n
-            This function calls the disp_message_box using the sub_title parameters
+        """
+        @brief Print a beautified subtitle.
 
-        Args:
-            sub_title (str): _description_
+        @param sub_title The subtitle to display.
         """
         self.disp_message_box(sub_title, self.sub_title_wall_chr)
 
     def sub_sub_title(self, sub_sub_title: str) -> None:
-        """_summary_
-            Print a beautified sub sub title\n
-            This function calls the disp_message_box using the sub_sub_title parameters
+        """
+        @brief Print a beautified sub-subtitle.
 
-        Args:
-            sub_sub_title (str): _description_
+        @param sub_sub_title The sub-subtitle to display.
         """
         self.disp_message_box(sub_sub_title, self.sub_sub_title_wall_chr)
 
     def message(self, message: str) -> None:
-        """_summary_
-            Print a beautified message\n
-            This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
-            Here is an example for the output (This is determined by the key repeated twice)\n
-            @@ This is an example message @@
+        """
+        @brief Print a beautified message.
 
-        Args:
-            message (str): _description_
+        @param message The message to display.
+        @note This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
+        @note Here is an example for the output (This is determined by the key repeated twice)\n
+        @example @@ This is an example message @@
         """
         msg = f"{self.message_char}{self.message_char} {message} "
         msg += f"{self.message_char}{self.message_char}"
@@ -1365,14 +1325,13 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def error_message(self, message: str) -> None:
-        """_summary_
-            Print a beautified error message\n
-            This function displays the provided message using the 'MESSAGE_ERROR_CHARACTER' key in the toml configuration\n
-            Here is an example for the output (This is determined by the key repeated twice)\n
-            @@ This is an example message @@
+        """
+        @brief Print a beautified error message.
 
-        Args:
-            message (str): _description_
+        @param message The error message to display.
+        @note This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
+        @note Here is an example for the output (This is determined by the key repeated twice)\n
+        @example ## This is an example message ##
         """
         msg = f"{self.message_error_char}{self.message_error_char} Error: "
         msg += f"{message} {self.message_error_char}{self.message_error_char}"
@@ -1382,14 +1341,13 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def success_message(self, message: str) -> None:
-        """_summary_
-            Print a beautified success message\n
-            This function displays the provided message using the 'MESSAGE_SUCCESS_CHARACTER' key in the toml configuration\n
-            Here is an example for the output (This is determined by the key repeated twice)\n
-            @@ This is an example message @@
+        """
+        @brief Print a beautified success message.
 
-        Args:
-            message (str): _description_
+        @param message The success message to display.
+        @note This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
+        @note Here is an example for the output (This is determined by the key repeated twice)\n
+        @example // This is an example message //
         """
         msg = f"{self.message_success_char}{self.message_success_char} Success: "
         msg += f"{message} {self.message_success_char}{self.message_success_char}"
@@ -1399,14 +1357,13 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def warning_message(self, message: str) -> None:
-        """_summary_
-            Print a beautified warning message\n
-            This function displays the provided message using the 'MESSAGE_WARNING_CHARACTER' key in the toml configuration\n
-            Here is an example for the output (This is determined by the key repeated twice)\n
-            @@ This is an example message @@
+        """
+        @brief Print a beautified warning message.
 
-        Args:
-            message (str): _description_
+        @param message The warning message to display.
+        @note This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
+        @note Here is an example for the output (This is determined by the key repeated twice)\n
+        @example !! This is an example message !!
         """
         msg = f"{self.message_warning_char}{self.message_warning_char} Warning: "
         msg += f"{message} {self.message_warning_char}{self.message_warning_char}"
@@ -1416,14 +1373,13 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def question_message(self, message: str) -> None:
-        """_summary_
-            Print a beautified question message\n
-            This function displays the provided message using the 'MESSAGE_QUESTION_CHARACTER' key in the toml configuration\n
-            Here is an example for the output (This is determined by the key repeated twice)\n
-            @@ This is an example message @@
+        """
+        @brief Print a beautified question message.
 
-        Args:
-            message (str): _description_
+        @param message The question message to display.
+        @note This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
+        @note Here is an example for the output (This is determined by the key repeated twice)\n
+        @example ?? This is an example message ??
         """
         msg = f"{self.message_question_char}{self.message_question_char} Question: "
         msg += f"{message} {self.message_question_char}{self.message_question_char}"
@@ -1433,14 +1389,13 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         )
 
     def inform_message(self, message: List) -> None:
-        """_summary_
-            Print a beautified information message\n
-            This function displays the provided message using the 'MESSAGE_INFORM_CHARACTER' key in the toml configuration\n
-            Here is an example for the output (This is determined by the key repeated twice)\n
-            @@ This is an example message @@
+        """
+        @brief Print a beautified information message.
 
-        Args:
-            message (List): _description_
+        @param message The information message to display.
+        @note This function displays the provided message using the 'MESSAGE_CHARACTER' key in the toml configuration\n
+        @note Here is an example for the output (This is determined by the key repeated twice)\n
+        @example ii This is an example message ii
         """
         if isinstance(message, list) is True:
             for msg in message:
@@ -1459,25 +1414,22 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             )
 
     def _tree_node(self, line: str, offset: int, index: int, max_lenght: int) -> str:
-        """_summary_
-            Display a line of the tree\n
-            The characters displayed in this tree function is managed by the following keys:\n
-            * TREE_NODE_CHAR\n
-            * TREE_NODE_END_CHAR\n
-            * TREE_LINE_SEPERATOR_CHAR\n
-            * TREE_COLUMN_SEPERATOR_CHAR\n
-            Here is an example generated by this function:\n
-            ├─── data1\n
-            └─── data2
+        """
+        @brief Display a line of the tree.
 
-        Args:
-            line (str): _description_
-            offset (int): _description_
-            index (int): _description_
-            max_lenght (int): _description_
-
-        Returns:
-            str: _description_
+        @param line The line to display.
+        @param offset The offset for the line.
+        @param index The index of the line.
+        @param max_lenght The maximum length of the tree.
+        @return The processed line.
+        @note The characters displayed in this tree function is managed by the following keys:\n
+        @note     * TREE_NODE_CHAR\n
+        @note     * TREE_NODE_END_CHAR\n
+        @note     * TREE_LINE_SEPERATOR_CHAR\n
+        @note     * TREE_COLUMN_SEPERATOR_CHAR\n
+        @example     Here is an example generated by this function:\n
+        @example     ├─── data1\n
+        @example     └─── data2
         """
         processed_line = str()
         i = 0
@@ -1498,24 +1450,21 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         return processed_line
 
     def tree(self, title: str, data: List[str], offset: int = 0) -> Union[str, None]:
-        """_summary_
-            Print a list under the form of a beautified tree\n
-            The characters displayed in this tree function is managed by the following keys:\n
-            * TREE_NODE_CHAR\n
-            * TREE_NODE_END_CHAR\n
-            * TREE_LINE_SEPERATOR_CHAR\n
-            * TREE_COLUMN_SEPERATOR_CHAR\n
-            Here is an example generated by this function:\n
-            ├─── data1\n
-            └─── data2
+        """
+        @brief Print a list under the form of a beautified tree.
 
-        Args:
-            title (str): _description_
-            data (List[str]): _description_
-            offset (int, optional): _description_. Defaults to 0.
-
-        Returns:
-            str|None: _description_: returns a stringified version of the tree if not set to be displayed.
+        @param title The title of the tree.
+        @param data The data to display in the tree.
+        @param offset The offset for the tree.
+        @note The characters displayed in this tree function is managed by the following keys:\n
+        @note     * TREE_NODE_CHAR\n
+        @note     * TREE_NODE_END_CHAR\n
+        @note     * TREE_LINE_SEPERATOR_CHAR\n
+        @note     * TREE_COLUMN_SEPERATOR_CHAR\n
+        @example     Here is an example generated by this function:\n
+        @example     ├─── data1\n
+        @example     └─── data2
+        @return A stringified version of the tree if not set to be displayed.
         """
         generated_content = ""
         if offset == 0:
@@ -1568,21 +1517,19 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
             return generated_content
 
     def append_run_date(self) -> None:
-        """_summary_
-            Add the date and time at which the program was launched\n
-            The text is displayed in the center of the box, it is just difficult to show that in a function comment\n
-            This is an example of the output (the design is controlled by the title function):\n
-            Example:\n
-            ########################################\n
-            #    Run date: 07/06/2024 22:26:10     #\n
-            ########################################
+        """
+        @brief Add the date and time at which the program was launched.
+        @note The text is displayed in the center of the box, it is just difficult to show that in a function comment.\n
+        @note This is a sample box (characters and dimensions depend on the provided configuration):\n
+        @example ########################################\n
+        @example #    Run date: 07/06/2024 22:26:10     #\n
+        @example ########################################
         """
         self.title(f"Run date: {time.strftime('%d/%m/%Y %H:%M:%S')} ")
 
     def test_the_class(self) -> None:
-        """_summary_
-            This is a test function that you can use to have a template of the class\n
-            It allows you to make sure all the implemented functions work as expected
+        """
+        @brief Test function to ensure all implemented methods work as expected.
         """
         test_data = {
             "test_data1": "test_data1.1",

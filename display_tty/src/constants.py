@@ -5,67 +5,82 @@
 # constants.py
 ##
 
-ERR = 1
-ERROR = ERR
-SUCCESS = 0
+"""
+@file constants.py
+@brief This is the file in charge of containing the constants used in the display_tty library.
+@details This module defines constants and configuration settings used throughout the
+display_tty project. It includes error codes, output modes, animation delays,
+TOML configuration defaults, and forbidden log levels.
+"""
 
-OUT_TTY = "tty"
-OUT_STRING = "string"
-OUT_FILE = "file"
-OUT_DEFAULT = ''
+# Error codes
+ERR = 1  # General error code
+ERROR = ERR  # Alias for ERR
+SUCCESS = 0  # Success code
 
-# OUTPUT modes
-KEY_OUTPUT_MODE = "OUTPUT_MODE"
-KEY_PRETTIFY_OUTPUT = "PRETTIFY_OUTPUT"
+# Output modes
+OUT_TTY = "tty"  # Output to terminal (TTY)
+OUT_STRING = "string"  # Output as a string
+OUT_FILE = "file"  # Output to a file
+OUT_DEFAULT = ''  # Default output mode
+
+# OUTPUT modes keys
+KEY_OUTPUT_MODE = "OUTPUT_MODE"  # Key for selecting output mode
+KEY_PRETTIFY_OUTPUT = "PRETTIFY_OUTPUT"  # Key for enabling prettified output
+# Key for block-based prettified output
 KEY_PRETTIFY_OUTPUT_IN_BLOCKS = "PRETTY_OUTPUT_IN_BLOCS"
 
 # Animation delays
+# Key for animation delay in messages
 KEY_ANIMATION_DELAY = 'MESSAGE_ANIMATION_DELAY'
+# Key for blocky animation delay
 KEY_ANIMATION_DELAY_BLOCKY = 'MESSAGE_ANIMATION_DELAY_BLOCKY'
 
+# TOML configuration defaults
 TOML_CONF = {
-    KEY_OUTPUT_MODE: OUT_TTY,
-    KEY_PRETTIFY_OUTPUT: True,
+    KEY_OUTPUT_MODE: OUT_TTY,  # Default output mode
+    KEY_PRETTIFY_OUTPUT: True,  # Enable prettified output by default
+    # Enable block-based prettified output by default
     KEY_PRETTIFY_OUTPUT_IN_BLOCKS: True,
-    KEY_ANIMATION_DELAY: 0.01,
-    KEY_ANIMATION_DELAY_BLOCKY: 0.01,
-    'MESSAGE_CHARACTER': '@',
-    'MESSAGE_ERROR_CHARACTER': '#',
-    'MESSAGE_INFORM_CHARACTER': 'i',
-    'MESSAGE_QUESTION_CHARACTER': '?',
-    'MESSAGE_SUCCESS_CHARACTER': '/',
-    'MESSAGE_WARNING_CHARACTER': '!',
-    'SUB_SUB_TITLE_WALL_CHARACTER': '*',
-    'SUB_TITLE_WALL_CHARACTER': '@',
-    'TITLE_WALL_CHARACTER': '#',
-    'TREE_COLUMN_SEPERATOR_CHAR': '│',
-    'TREE_LINE_SEPERATOR_CHAR': '─',
-    'TREE_NODE_CHAR': '├',
-    'TREE_NODE_END_CHAR': '└',
-    'BOX_NO_VERTICAL': '#',
-    'BOX_VERTICAL_NO_HORIZONTAL': '#',
-    'ROUND_BOX_CORNER_LEFT': '╔',
-    'ROUND_BOX_CORNER_RIGHT': '╗',
-    'ROUND_BOX_CORNER_BOTTOM_LEFT': '╚',
-    'ROUND_BOX_CORNER_BOTTOM_RIGHT': '╝',
-    'ROUND_BOX_HORIZONTAL': '═',
-    'ROUND_BOX_VERTICAL': '║',
-    'DIFF_BORDER_LINE_CHARACTER_BOX': '-',
-    'DIFF_SIDE_LINE_CHARACTER_BOX': '|',
+    KEY_ANIMATION_DELAY: 0.01,  # Default animation delay
+    KEY_ANIMATION_DELAY_BLOCKY: 0.01,  # Default blocky animation delay
+    'MESSAGE_CHARACTER': '@',  # Default character for messages
+    'MESSAGE_ERROR_CHARACTER': '#',  # Character for error messages
+    'MESSAGE_INFORM_CHARACTER': 'i',  # Character for informational messages
+    'MESSAGE_QUESTION_CHARACTER': '?',  # Character for question messages
+    'MESSAGE_SUCCESS_CHARACTER': '/',  # Character for success messages
+    'MESSAGE_WARNING_CHARACTER': '!',  # Character for warning messages
+    'SUB_SUB_TITLE_WALL_CHARACTER': '*',  # Character for sub-sub-title walls
+    'SUB_TITLE_WALL_CHARACTER': '@',  # Character for sub-title walls
+    'TITLE_WALL_CHARACTER': '#',  # Character for title walls
+    'TREE_COLUMN_SEPERATOR_CHAR': '│',  # Column separator for tree structures
+    'TREE_LINE_SEPERATOR_CHAR': '─',  # Line separator for tree structures
+    'TREE_NODE_CHAR': '├',  # Node character for tree structures
+    'TREE_NODE_END_CHAR': '└',  # End node character for tree structures
+    'BOX_NO_VERTICAL': '#',  # Box character without vertical lines
+    'BOX_VERTICAL_NO_HORIZONTAL': '#',  # Box character without horizontal lines
+    'ROUND_BOX_CORNER_LEFT': '╔',  # Top-left corner of a rounded box
+    'ROUND_BOX_CORNER_RIGHT': '╗',  # Top-right corner of a rounded box
+    'ROUND_BOX_CORNER_BOTTOM_LEFT': '╚',  # Bottom-left corner of a rounded box
+    'ROUND_BOX_CORNER_BOTTOM_RIGHT': '╝',  # Bottom-right corner of a rounded box
+    'ROUND_BOX_HORIZONTAL': '═',  # Horizontal line for rounded boxes
+    'ROUND_BOX_VERTICAL': '║',  # Vertical line for rounded boxes
+    'DIFF_BORDER_LINE_CHARACTER_BOX': '-',  # Border line character for diff boxes
+    'DIFF_SIDE_LINE_CHARACTER_BOX': '|',  # Side line character for diff boxes
 }
 
-# Numbers that can't be used for logging
+# Forbidden log levels
 FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE = {
-    "INFO": 20,
-    "WARN": 30,
-    "DEBUG": 10,
-    "FATAL": 50,
-    "ERROR": 40,
-    "NOTSET": 0,
-    "WARNING": 40,
-    "CRITICAL": 50
+    "INFO": 20,  # Informational messages
+    "WARN": 30,  # Warning messages
+    "DEBUG": 10,  # Debugging messages
+    "FATAL": 50,  # Fatal error messages
+    "ERROR": 40,  # Error messages
+    "NOTSET": 0,  # No specific log level
+    "WARNING": 40,  # Alias for WARN
+    "CRITICAL": 50  # Alias for FATAL
 }
 
 FORBIDDEN_NUMBER_LOG_LEVELS = list(
     FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE.values()
-)
+)  # List of forbidden log level numbers

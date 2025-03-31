@@ -5,16 +5,28 @@
 # log_level_tracker.py
 ##
 
+"""
+@file log_level_tracker.py
+@brief Provides the LogLevelTracker class to manage and track logging levels in the logging library.
+@details This module allows adding custom logging levels, retrieving levels by name or value, 
+and injecting the LogLevelTracker class into the logging library for extended functionality.
+"""
+
 from typing import Union, Dict
 import logging
 
 
 class LogLevelTracker:
     """
-    Class in charge of tracking the logging levels of the logger library.
+    @class LogLevelTracker
+    @brief Class in charge of tracking the logging levels of the logger library.
     """
 
     def __init__(self, bypass_check: bool = False):
+        """
+        @brief Constructor for the LogLevelTracker class.
+        @param bypass_check If True, bypasses the injection of the class into the logging library.
+        """
         self.levels: Dict = {
             "DEBUG": logging.DEBUG,
             "INFO": logging.INFO,
@@ -28,7 +40,8 @@ class LogLevelTracker:
 
     class Levels:
         """
-        This is a class that will be used to patch the small error in the logging library regarding the notset level.
+        @class Levels
+        @brief Class used to patch the small error in the logging library regarding the NOTSET level.
         """
 
         CRITICAL = logging.CRITICAL
@@ -54,7 +67,10 @@ class LogLevelTracker:
 
     def add_level(self, level_name: str, level: int) -> bool:
         """
-        Method in charge of adding a new logging level.
+        @brief Adds a new logging level.
+        @param level_name The name of the new logging level.
+        @param level The integer value of the new logging level.
+        @return True if the level was added successfully, False if the level already exists.
         """
         if level_name in self.levels:
             return False
@@ -63,13 +79,17 @@ class LogLevelTracker:
 
     def get_level(self, level_name: str) -> Union[int, None]:
         """
-        Method in charge of getting the logging level of a given level name.
+        @brief Retrieves the logging level for a given level name.
+        @param level_name The name of the logging level.
+        @return The integer value of the logging level, or None if the level name does not exist.
         """
         return self.levels.get(level_name, None)
 
     def get_level_name(self, level: int) -> Union[str, None]:
         """
-        Method in charge of getting the logging level name of a given level.
+        @brief Retrieves the logging level name for a given level value.
+        @param level The integer value of the logging level.
+        @return The name of the logging level, or None if the level value does not exist.
         """
         for key, value in self.levels.items():
             if value == level:
@@ -78,7 +98,8 @@ class LogLevelTracker:
 
     def check_presence(self) -> bool:
         """
-        Method in charge of checking this class is present in the logging library or not.
+        @brief Checks if this class is already present in the logging library.
+        @return True if the class is present, False otherwise.
         """
         root_logger = logging.getLogger()
         if not hasattr(root_logger, "log_level_tracker"):
@@ -87,7 +108,8 @@ class LogLevelTracker:
 
     def inject_class(self) -> bool:
         """
-        Method in charge of injecting this class in the logging library.
+        @brief Injects this class into the logging library if it is not already present.
+        @return True if the class was successfully injected, False otherwise.
         """
         if not self.check_presence():
             root_logger = logging.getLogger()
