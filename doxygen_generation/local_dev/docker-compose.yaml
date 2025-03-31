@@ -1,0 +1,12 @@
+services:
+  doxygen_documentation:
+    build:
+      context: ../..
+      dockerfile: doxygen_generation/local_dev/Dockerfile
+    image: doxygen_documentation
+    container_name: doxygen_documentation
+    volumes:
+      - ../../results:/app/results:rw
+      - ../../doxygen_generation:/app/doxygen_generation:ro
+      - ../../display_tty:/app/display_tty:ro
+    working_dir: /app
