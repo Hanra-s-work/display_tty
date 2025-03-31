@@ -46,7 +46,6 @@ LOG_LIGHT_BLACK = LoggerColours.LIGHT_BLACK
 LOG_LIGHT_GREEN = LoggerColours.LIGHT_GREEN
 LOG_LIGHT_YELLOW = LoggerColours.LIGHT_YELLOW
 LOG_LIGHT_PURPLE = LoggerColours.LIGHT_PURPLE
-ALLOWED_LOGGING_COLOURS = LoggerColours.ALLOWED_LOGGING_COLOURS
 
 __all__ = [
     # Class
@@ -103,7 +102,7 @@ __all__ = [
     # |- Logging level exceptions
     "FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE",
     "FORBIDDEN_NUMBER_LOG_LEVELS",
-    # |- Logging available colours
+    # \- Logging available colours
     "LOG_BLUE",
     "LOG_RED",
     "LOG_CYAN",
@@ -119,7 +118,5 @@ __all__ = [
     "LOG_LIGHT_BLACK",
     "LOG_LIGHT_GREEN",
     "LOG_LIGHT_YELLOW",
-    "LOG_LIGHT_PURPLE",
-    # \- Authorized logging colours
-    "ALLOWED_LOGGING_COLOURS",
+    "LOG_LIGHT_PURPLE"
 ]
