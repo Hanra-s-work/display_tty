@@ -15,6 +15,10 @@
 
 [![Static Badge](https://img.shields.io/badge/Buy_me_a_tea-Hanra-%235F7FFF?style=flat-square&logo=buymeacoffee&label=Buy%20me%20a%20coffee&labelColor=%235F7FFF&color=%23FFDD00&link=https%3A%2F%2Fwww.buymeacoffee.com%2Fhanra)](https://www.buymeacoffee.com/hanra)
 
+## Take a look
+
+This project now has automated documentation that gets generated, this manually written one will remain for legacy reasons, but you can now take a look at the automatic documentation here: [https://hanra-s-work.github.io/display_tty/](https://hanra-s-work.github.io/display_tty/)
+
 ## Description
 
 This is a python package I created in order to simplify the boiling process for displaying text in a geometrical shape drawn using characters.
