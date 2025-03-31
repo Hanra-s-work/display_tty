@@ -85,7 +85,7 @@ The Preloaded version exists under: `IDISP`, `IDISPLAY`, `IDTTY` and `IDISPTTY`
 ### Using pip
 
 ```sh
-pip install -U display_tty
+pip install -U display-tty
 ```
 
 ### Using python
@@ -93,13 +93,13 @@ pip install -U display_tty
 Under Windows:
 
 ```bat
-py -m pip install -U display_tty
+py -m pip install -U display-tty
 ```
 
 Under Linux/Mac OS:
 
 ```sh
-python3 -m pip install -U display_tty
+python3 -m pip install -U display-tty
 ```
 
 ## Usage
