@@ -1,7 +1,9 @@
 # tests/test_ask_question.py
 
 """
-File in charge of testing the functions contained in the class
+@file test_disp.py
+@brief Unit tests for the display_tty library.
+@details This script contains unit tests for the IDISP class in the display_tty library. It verifies the functionality of various methods, including input validation and string creation.
 """
 
 from sys import stderr

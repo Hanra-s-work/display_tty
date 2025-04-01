@@ -48,7 +48,7 @@ class Disp:
     @details This class provides methods to display messages in different formats, log messages, and manage output configurations.
     """
 
-    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None, success: int = SUCCESS, error: int = ERR) -> None:
+    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None, success: int = SUCCESS, error: int = ERR, log_warning_when_present: bool = True, log_errors_when_present: bool = True) -> None:
         """
         @brief Constructor for the Disp class.
 
@@ -60,6 +60,8 @@ class Disp:
         @param logger Logger instance or name to use for logging.
         @param success Integer representing the success status code.
         @param error Integer representing the error status code.
+        @param log_warning_when_present Boolean indicating whether to log warnings when they arise in one of the function calls.
+        @param log_errors_when_present Boolean indicating whether to log errors when they arise in one of the function calls.
         """
         self.__version__ = "1.0.0"
         self.toml_content = toml_content
@@ -70,6 +72,9 @@ class Disp:
         self.error = error
         self.success = success
         self.nb_side_walls = 2
+        self.log_error_when_present = log_errors_when_present
+        self.log_warning_when_present = log_warning_when_present
+        self.log_level_tracker = LogLevelTracker()
         self.max_whitespace = self.nb_chr - self.nb_side_walls
         self.title_wall_chr = self.toml_content["TITLE_WALL_CHARACTER"]
         self.sub_title_wall_chr = self.toml_content["SUB_TITLE_WALL_CHARACTER"]
@@ -186,6 +191,8 @@ class Disp:
         @brief Update the logger level.
 
         @param level The log importance level. Defaults to NOTSET.
+
+        @return The status code of the operation.
         """
         _func_name = inspect.currentframe().f_code.co_name
 
@@ -195,10 +202,11 @@ class Disp:
                 level = logging.LogLevelTracker.get_level(level)
         if isinstance(level, int) is False or level not in LogLevelTracker.Levels.__all__:
             level = LogLevelTracker.Levels.NOTSET
-            self.log_warning(
-                f"The level is not valid, defaulting to {level}",
-                _func_name
-            )
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    f"The level is not valid, defaulting to {level}",
+                    _func_name
+                )
         self.logger.setLevel(level)
 
     def _check_the_logging_instance(self, logger_instance: logging.Logger = None) -> logging.Logger:
@@ -217,10 +225,11 @@ class Disp:
 
         # Checking the logger instance
         if logger_instance is None or not isinstance(logger_instance, logging.Logger):
-            self.log_warning(
-                "No logger instance provided, using the default logger",
-                _func_name
-            )
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "No logger instance provided, using the default logger",
+                    _func_name
+                )
             logger_instance = self.logger
         return logger_instance
 
@@ -242,10 +251,11 @@ class Disp:
         if isinstance(colour, int):
             colour = LoggerColours.get_colour_string(LoggerColours, colour)
         if LoggerColours.check_if_colour_present(LoggerColours, colour) is False:
-            self.log_error(
-                "The provided colour is not valid",
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    "The provided colour is not valid",
+                    _func_name
+                )
             return self.error
         return colour
 
@@ -265,10 +275,11 @@ class Disp:
 
         # Check if there are any handlers in use.
         if len(logger_instance.handlers) == 0:
-            self.log_error(
-                'No handlers are present in this logging instance',
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'No handlers are present in this logging instance',
+                    _func_name
+                )
             return self.error
 
         # Checking for the presence of the logging level in the logger instance
@@ -277,10 +288,11 @@ class Disp:
         elif isinstance(level_name, int):
             name_string = logging.getLevelName(level_name)
         else:
-            self.log_error(
-                "The level name must be a string or an integer",
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    "The level name must be a string or an integer",
+                    _func_name
+                )
             return self.error
         return name_string
 
@@ -304,31 +316,35 @@ class Disp:
                 colour_handler = i
                 break
         if not colour_handler:
-            self.log_error(
-                'No colour handler is present in this logging instance',
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'No colour handler is present in this logging instance',
+                    _func_name
+                )
             return self.error
 
         # Check if the colour is a string or an integer
         if hasattr(colour_handler, "formatter") is False:
-            self.log_error(
-                'The colour handler has no formatter',
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'The colour handler has no formatter',
+                    _func_name
+                )
             return self.error
         colour_formatter: colorlog.ColoredFormatter = colour_handler.formatter
         if isinstance(colour_formatter, colorlog.ColoredFormatter) is False:
-            self.log_error(
-                'The formatter is not a ColoredFormatter',
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'The formatter is not a ColoredFormatter',
+                    _func_name
+                )
             return self.error
         if hasattr(colour_formatter, "log_colors") is False:
-            self.log_error(
-                'The formatter has no log_colors',
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'The formatter has no log_colors',
+                    _func_name
+                )
             return self.error
         return colour_formatter
 
@@ -350,27 +366,44 @@ class Disp:
             logger_instance
         )
         if name_string == self.error:
+            if self.log_error_when_present is True:
+                self.log_error(
+                    f"The level name {level_name} is not valid",
+                    _func_name
+                )
             return self.error
 
         name_string = name_string.upper()
 
         # Checking if the colour exists
+        colour_input = colour
         colour = self._check_colour_data(
             colour,
             logger_instance
         )
         if colour == self.error:
+            if self.log_error_when_present is True:
+                self.log_error(
+                    f"The colour {colour_input} is not valid",
+                    _func_name
+                )
             return self.error
 
         internal_log_colors = self._get_colour_formatter(logger_instance)
         if internal_log_colors == self.error or internal_log_colors is None:
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'The colour logging library is not valid',
+                    _func_name
+                )
             return self.error
         lib_log_colors = internal_log_colors.log_colors
         if isinstance(lib_log_colors, dict) is False:
-            self.log_error(
-                'The log_colors is not a dictionary',
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'The log_colors is not a dictionary',
+                    _func_name
+                )
             return self.error
         for i in lib_log_colors:
             if i.upper() == name_string:
@@ -397,15 +430,26 @@ class Disp:
             logger_instance
         )
         if name_string == self.error:
+            if self.log_error_when_present is True:
+                self.log_error(
+                    f"The level name {level_name} is not valid",
+                    _func_name
+                )
             return self.error
         name_string = name_string.upper()
 
         # Checking if the colour exists
+        colour_input = colour
         colour = self._check_colour_data(
             colour,
             logger_instance
         )
         if colour == self.error:
+            if self.log_error_when_present is True:
+                self.log_error(
+                    f"The colour {colour_input} is not valid",
+                    _func_name
+                )
             return self.error
 
         # Checking if the colour is a background colour
@@ -414,13 +458,19 @@ class Disp:
 
         secondary_log_colors = self._get_colour_formatter(logger_instance)
         if secondary_log_colors == self.error:
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'The secondary_log_colors is not valid',
+                    _func_name
+                )
             return self.error
         secondary_log_colors = secondary_log_colors.secondary_log_colors
         if isinstance(secondary_log_colors, dict) is False:
-            self.log_error(
-                'The secondary_log_colors is not a dictionary',
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    'The secondary_log_colors is not a dictionary',
+                    _func_name
+                )
             return self.error
 
         # Add the level and colour to the secondary log colours
@@ -453,30 +503,36 @@ class Disp:
         logger = self._check_the_logging_instance(self.logger)
         # Check if the level is already taken
         if (level in FORBIDDEN_NUMBER_LOG_LEVELS):
-            self.disp_print_error(
-                f"The provided level  is forbidden because already taken '{level}'",
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    f"The provided level  is forbidden because already taken '{level}'",
+                    _func_name
+                )
             return self.error
         if (name in FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE):
-            self.disp_print_error(
-                f"The provided name is forbidden because already taken '{name}'",
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_error(
+                    f"The provided name is forbidden because already taken '{name}'",
+                    _func_name
+                )
             return self.error
         # Add the level to the logger
         logging.addLevelName(level, name.upper())
         if hasattr(logging.getLogger(), "log_level_tracker") is False:
-            self.log_warning(
-                "The log level tracker is not present, adding",
-                _func_name
-            )
-            logging.getLogger().log_level_tracker = LogLevelTracker()
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The log level tracker is not present, adding",
+                    _func_name
+                )
+            logging.getLogger().log_level_tracker = self.log_level_tracker
+        else:
+            self.log_level_tracker = logging.getLogger().log_level_tracker
         if logging.getLogger().log_level_tracker.add_level(name, level) is False:
-            self.log_warning(
-                "The level could not be added to the log level tracker",
-                _func_name
-            )
+            if self.log_error_when_present is True:
+                self.log_warning(
+                    "The level could not be added to the log level tracker",
+                    _func_name
+                )
             return self.error
         # Check the colours
         if colour_text != "" or colour_text < 0:
@@ -486,10 +542,11 @@ class Disp:
                 logger
             )
             if colour_text_status == self.error:
-                self.log_warning(
-                    "The colour for the text could not be set",
-                    _func_name
-                )
+                if self.log_error_when_present is True:
+                    self.log_warning(
+                        "The colour for the text could not be set",
+                        _func_name
+                    )
         if colour_bg != "" or colour_bg < 0:
             colour_bg_status = self.update_logging_colour_background(
                 colour_bg,
@@ -497,10 +554,11 @@ class Disp:
                 logger
             )
             if colour_bg_status == self.error:
-                self.log_warning(
-                    "The colour for the background could not be set",
-                    _func_name
-                )
+                if self.log_error_when_present is True:
+                    self.log_warning(
+                        "The colour for the background could not be set",
+                        _func_name
+                    )
 
         # generate the function name
         func_name = name.lower()
@@ -747,6 +805,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @brief Close the log file if it was opened.
         """
         if self.toml_content[KEY_OUTPUT_MODE] != OUT_FILE:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The file was not opened, no need to close it",
+                    inspect.currentframe().f_code.co_name
+                )
             return
         if self.file_descriptor is not None:
             self.file_descriptor.close()
@@ -919,7 +982,7 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @example ╔══════════════════════╗\n
         @example ║      Sample text     ║\n
         @example ╚══════════════════════╝\n
-                """
+        """
 
         offset_reset = 2
 
@@ -928,6 +991,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'ROUND_BOX_CORNER_LEFT' in self.toml_content:
             top_wall += self.toml_content['ROUND_BOX_CORNER_LEFT']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The top left corner is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             top_wall += "╔"
         if 'ROUND_BOX_HORIZONTAL' in self.toml_content:
             top_wall += self.create_string(
@@ -935,6 +1003,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
                 self.toml_content['ROUND_BOX_HORIZONTAL']
             )
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The horizontal line is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             top_wall += self.create_string(
                 self.nb_chr-offset_reset,
                 "═"
@@ -942,6 +1015,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'ROUND_BOX_CORNER_RIGHT' in self.toml_content:
             top_wall += self.toml_content['ROUND_BOX_CORNER_RIGHT']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The top right corner is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             top_wall += "╗"
 
         # Generate the bottom line
@@ -949,6 +1027,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'ROUND_BOX_CORNER_BOTTOM_LEFT' in self.toml_content:
             bottom_wall += self.toml_content['ROUND_BOX_CORNER_BOTTOM_LEFT']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The bottom left corner is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             bottom_wall += "╚"
 
         if 'ROUND_BOX_HORIZONTAL' in self.toml_content:
@@ -957,6 +1040,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
                 self.toml_content['ROUND_BOX_HORIZONTAL']
             )
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The horizontal line is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             bottom_wall += self.create_string(
                 self.nb_chr-offset_reset,
                 "═"
@@ -964,12 +1052,22 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'ROUND_BOX_CORNER_BOTTOM_RIGHT' in self.toml_content:
             bottom_wall += self.toml_content['ROUND_BOX_CORNER_BOTTOM_RIGHT']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The bottom right corner is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             bottom_wall += "╝"
 
         border_character = ""
         if 'ROUND_BOX_VERTICAL' in self.toml_content:
             border_character = self.toml_content['ROUND_BOX_VERTICAL']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The vertical line is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             border_character = "║"
 
         center_content = ""
@@ -1022,12 +1120,22 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'DIFF_BORDER_LINE_CHARACTER_BOX' in self.toml_content:
             ceiling_boxes = self.toml_content['DIFF_BORDER_LINE_CHARACTER_BOX']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The ceiling boxes are not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             ceiling_boxes = "-"
 
         border_character = ""
         if 'DIFF_SIDE_LINE_CHARACTER_BOX' in self.toml_content:
             border_character = self.toml_content['DIFF_SIDE_LINE_CHARACTER_BOX']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The border character is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             border_character = "|"
 
         box_wall = self.create_string(self.nb_chr, ceiling_boxes)
@@ -1081,6 +1189,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'BOX_NO_VERTICAL' in self.toml_content:
             char = self.toml_content['BOX_NO_VERTICAL']
         else:
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The box character is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             char = character
 
         box_wall = self.create_string(self.nb_chr, char)
@@ -1137,6 +1250,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'BOX_NO_VERTICAL' in self.toml_content:
             character = self.toml_content['BOX_NO_VERTICAL']
         elif character == '':
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The box character is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             character = "#"
 
         box_wall = self.create_string(self.nb_chr, character)
@@ -1222,6 +1340,11 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if 'BOX_VERTICAL_NO_HORIZONTAL' in self.toml_content:
             character = self.toml_content['BOX_VERTICAL_NO_HORIZONTAL']
         elif character == '':
+            if self.log_warning_when_present is True:
+                self.log_warning(
+                    "The box character is not defined, using the default one",
+                    inspect.currentframe().f_code.co_name
+                )
             character = "#"
 
         title_content = ""
@@ -1308,7 +1431,7 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         """
         self.disp_message_box(sub_sub_title, self.sub_sub_title_wall_chr)
 
-    def message(self, message: str) -> None:
+    def message(self, message: Union[str, list]) -> None:
         """
         @brief Print a beautified message.
 
@@ -1317,14 +1440,23 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @note Here is an example for the output (This is determined by the key repeated twice)\n
         @example @@ This is an example message @@
         """
-        msg = f"{self.message_char}{self.message_char} {message} "
-        msg += f"{self.message_char}{self.message_char}"
-        self.animate_message(
-            msg,
-            self.message_animation_delay
-        )
+        if isinstance(message, list) is True:
+            for msg in message:
+                m_msg = f"{self.message_char}{self.message_char} {msg} "
+                m_msg += f"{self.message_char}{self.message_char}"
+                self.animate_message(
+                    m_msg,
+                    self.message_animation_delay
+                )
+        else:
+            msg = f"{self.message_char}{self.message_char} "
+            msg += f" {message} {self.message_char}{self.message_char}"
+            self.animate_message(
+                msg,
+                self.message_animation_delay
+            )
 
-    def error_message(self, message: str) -> None:
+    def error_message(self, message: Union[str, list]) -> None:
         """
         @brief Print a beautified error message.
 
@@ -1333,14 +1465,25 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @note Here is an example for the output (This is determined by the key repeated twice)\n
         @example ## This is an example message ##
         """
-        msg = f"{self.message_error_char}{self.message_error_char} Error: "
-        msg += f"{message} {self.message_error_char}{self.message_error_char}"
-        self.animate_message(
-            msg,
-            self.message_animation_delay
-        )
+        if isinstance(message, list) is True:
+            m_msg = f"{self.message_error_char}{self.message_error_char} Error: "
+            m_msg += f"{self.message_error_char}{self.message_error_char}"
+            for msg in message:
+                m_msg = f"{self.message_error_char}{self.message_error_char} {msg} "
+                m_msg += f"{self.message_error_char}{self.message_error_char}"
+                self.animate_message(
+                    m_msg,
+                    self.message_animation_delay
+                )
+        else:
+            msg = f"{self.message_error_char}{self.message_error_char} Error:"
+            msg += f" {message} {self.message_error_char}{self.message_error_char}"
+            self.animate_message(
+                msg,
+                self.message_animation_delay
+            )
 
-    def success_message(self, message: str) -> None:
+    def success_message(self, message: Union[str, list]) -> None:
         """
         @brief Print a beautified success message.
 
@@ -1349,14 +1492,25 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @note Here is an example for the output (This is determined by the key repeated twice)\n
         @example // This is an example message //
         """
-        msg = f"{self.message_success_char}{self.message_success_char} Success: "
-        msg += f"{message} {self.message_success_char}{self.message_success_char}"
-        self.animate_message(
-            msg,
-            self.message_animation_delay
-        )
+        if isinstance(message, list) is True:
+            m_msg = f"{self.message_success_char}{self.message_success_char} Success: "
+            m_msg += f"{self.message_success_char}{self.message_success_char}"
+            for msg in message:
+                m_msg = f"{self.message_success_char}{self.message_success_char} {msg} "
+                m_msg += f"{self.message_success_char}{self.message_success_char}"
+                self.animate_message(
+                    m_msg,
+                    self.message_animation_delay
+                )
+        else:
+            msg = f"{self.message_success_char}{self.message_success_char} Success:"
+            msg += f" {message} {self.message_success_char}{self.message_success_char}"
+            self.animate_message(
+                msg,
+                self.message_animation_delay
+            )
 
-    def warning_message(self, message: str) -> None:
+    def warning_message(self, message: Union[str, list]) -> None:
         """
         @brief Print a beautified warning message.
 
@@ -1365,14 +1519,25 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @note Here is an example for the output (This is determined by the key repeated twice)\n
         @example !! This is an example message !!
         """
-        msg = f"{self.message_warning_char}{self.message_warning_char} Warning: "
-        msg += f"{message} {self.message_warning_char}{self.message_warning_char}"
-        self.animate_message(
-            msg,
-            self.message_animation_delay
-        )
+        if isinstance(message, list) is True:
+            m_msg = f"{self.message_warning_char}{self.message_warning_char} Warning: "
+            m_msg += f"{self.message_warning_char}{self.message_warning_char}"
+            for msg in message:
+                m_msg = f"{self.message_warning_char}{self.message_warning_char} {msg} "
+                m_msg += f"{self.message_warning_char}{self.message_warning_char}"
+                self.animate_message(
+                    m_msg,
+                    self.message_animation_delay
+                )
+        else:
+            msg = f"{self.message_warning_char}{self.message_warning_char} Warning:"
+            msg += f" {message} {self.message_warning_char}{self.message_warning_char}"
+            self.animate_message(
+                msg,
+                self.message_animation_delay
+            )
 
-    def question_message(self, message: str) -> None:
+    def question_message(self, message: Union[str, list]) -> None:
         """
         @brief Print a beautified question message.
 
@@ -1381,14 +1546,25 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @note Here is an example for the output (This is determined by the key repeated twice)\n
         @example ?? This is an example message ??
         """
-        msg = f"{self.message_question_char}{self.message_question_char} Question: "
-        msg += f"{message} {self.message_question_char}{self.message_question_char}"
-        self.animate_message(
-            msg,
-            self.message_animation_delay
-        )
+        if isinstance(message, list) is True:
+            m_msg = f"{self.message_question_char}{self.message_question_char} Question: "
+            m_msg += f"{self.message_question_char}{self.message_question_char}"
+            for msg in message:
+                m_msg = f"{self.message_question_char}{self.message_question_char} {msg} "
+                m_msg += f"{self.message_question_char}{self.message_question_char}"
+                self.animate_message(
+                    m_msg,
+                    self.message_animation_delay
+                )
+        else:
+            msg = f"{self.message_question_char}{self.message_question_char} Question:"
+            msg += f" {message} {self.message_question_char}{self.message_question_char}"
+            self.animate_message(
+                msg,
+                self.message_animation_delay
+            )
 
-    def inform_message(self, message: List) -> None:
+    def inform_message(self, message: Union[str, List]) -> None:
         """
         @brief Print a beautified information message.
 
