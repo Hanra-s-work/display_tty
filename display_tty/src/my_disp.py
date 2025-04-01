@@ -502,14 +502,14 @@ class Disp:
         _func_name = inspect.currentframe().f_code.co_name
         logger = self._check_the_logging_instance(self.logger)
         # Check if the level is already taken
-        if (level in FORBIDDEN_NUMBER_LOG_LEVELS):
+        if level in FORBIDDEN_NUMBER_LOG_LEVELS:
             if self.log_error_when_present is True:
                 self.log_error(
                     f"The provided level  is forbidden because already taken '{level}'",
                     _func_name
                 )
             return self.error
-        if (name in FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE):
+        if name in FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE:
             if self.log_error_when_present is True:
                 self.log_error(
                     f"The provided name is forbidden because already taken '{name}'",
