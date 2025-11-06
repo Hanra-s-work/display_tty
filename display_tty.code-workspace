@@ -9,11 +9,33 @@
 		"asperheader.extensionIgnore": [
 			"*.code-workspace",
 			"python.version",
-			"settings.json"
+			"settings.json",
+			"*.txt"
 		],
-		"asperheader.extensionName": "rotary_logger",
+		"asperheader.extensionName": "display_tty",
 		"asperheader.promptToCreateIfMissing": true,
 		"asperheader.useWorkspaceNameWhenAvailable": true,
+		"asperheader.projectCopyright": "(c) Henry Letellier",
+		"asperheader.headerLogo": [
+			"..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@",
+			".@...........................#@",
+			"@############################.@",
+			"@...........................@.@",
+			"@..#######################..@.@",
+			"@.#########################.@.@",
+			"@.##>_#####################.@.@",
+			"@.#########################.@.@",
+			"@.#########################.@.@",
+			"@.#########################.@.@",
+			"@.#########################.@.@",
+			"@..#######################..@.@",
+			"@...........................@.@",
+			"@..+----+______________.....@.@",
+			"@..+....+______________+....@.@",
+			"@..+----+...................@.@",
+			"@...........................@.#",
+			"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#."
+		],
 		"asperheader.projectDescription": "A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.",
 		"files.associations": {
 			"*.cnf": "nginx" // This is for linting purposes, the comments in both file types are the same.
