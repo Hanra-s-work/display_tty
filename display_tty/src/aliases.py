@@ -1,3 +1,37 @@
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: aliases.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:34:1 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of containing shorter names of the variables to ease the call.
+# // AR
+# +==== END display_tty =================+
+"""
 from .constants import OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY
 
 from .initialiser import initialise_logger

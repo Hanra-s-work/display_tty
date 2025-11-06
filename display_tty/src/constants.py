@@ -1,16 +1,39 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# constants.py
-##
-
-"""
-@file constants.py
-@brief This is the file in charge of containing the constants used in the display_tty library.
-@details This module defines constants and configuration settings used throughout the
-display_tty project. It includes error codes, output modes, animation delays,
-TOML configuration defaults, and forbidden log levels.
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: constants.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:29:5 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file constants.py
+# @brief This is the file in charge of containing the constants used in the display_tty library.
+# @details This module defines constants and configuration settings used throughout the display_tty project. It includes error codes, output modes, animation delays,TOML configuration defaults, and forbidden log levels.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of containing the constants of the program.
+# // AR
+# +==== END display_tty =================+
 """
 
 # Error codes

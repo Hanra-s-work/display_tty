@@ -1,38 +1,61 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# __init__.py
-##
-
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: __init__.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:21:33 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file __init__.py
+# @brief This file initializes the `display_tty` library, making its components accessible for external use.
+# 
+# This module serves as the entry point for the `display_tty` library. It imports and rebinds various classes, constants, 
+# and configurations from the `src` submodule, allowing users to easily access and utilize them in their programs.
+# 
+# The file also defines aliases for certain classes and constants to provide flexibility in naming conventions. 
+# Additionally, it exposes a comprehensive list of public symbols via the `__all__` variable, ensuring proper encapsulation 
+# and controlled access to the library's components.
+# 
+# @details
+# - Rebinds the `Disp` class to multiple aliases for convenience.
+# - Provides a set of predefined color constants for logging purposes.
+# - Exposes configuration keys and default settings for output modes and animations.
+# - Includes constants for logging statuses and forbidden log levels.
+# 
+# @note This file is automatically imported when the `display_tty` library is used in another Python program.
+# 
+# @see src/Disp
+# @see src/LoggerColours
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of allowing the module to be easily imported into other programs.
+# // AR
+# +==== END display_tty =================+
 """
-@file __init__.py
-@brief This file initializes the `display_tty` library, making its components accessible for external use.
 
-This module serves as the entry point for the `display_tty` library. It imports and rebinds various classes, constants, 
-and configurations from the `src` submodule, allowing users to easily access and utilize them in their programs.
-
-The file also defines aliases for certain classes and constants to provide flexibility in naming conventions. 
-Additionally, it exposes a comprehensive list of public symbols via the `__all__` variable, ensuring proper encapsulation 
-and controlled access to the library's components.
-
-@details
-- Rebinds the `Disp` class to multiple aliases for convenience.
-- Provides a set of predefined color constants for logging purposes.
-- Exposes configuration keys and default settings for output modes and animations.
-- Includes constants for logging statuses and forbidden log levels.
-
-@note This file is automatically imported when the `display_tty` library is used in another Python program.
-
-@see src/Disp
-@see src/LoggerColours
-"""
-
-from .src import Disp
 from .src import LoggerColours
-
+from .src import Disp
 from .src import init, initialise, initialise_logger
-
 from .src import TOML_CONF
 from .src import ERR, ERROR, SUCCESS
 from .src import OSTRING, ODEFAULT, OFILE, OTTY
@@ -40,8 +63,9 @@ from .src import IDISP, IDISPLAY, IDISPTTY, IDTTY
 from .src import SAVE_TO_FILE, FILE_NAME, FILE_DESCRIPTOR
 from .src import OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT
 from .src import FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
-from .src import KOUTPUT_MODE, KPRETTIFY_OUTPUT, KANIMATION_DELAY, KANIMATION_DELAY_BLOCKY, KPRETTIFY_OUTPUT_IN_BLOCKS
 from .src import KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY
+from .src import KOUTPUT_MODE, KPRETTIFY_OUTPUT, KANIMATION_DELAY, KANIMATION_DELAY_BLOCKY, KPRETTIFY_OUTPUT_IN_BLOCKS
+
 
 # class rebinds
 # @var Display
@@ -191,6 +215,6 @@ __all__ = [
     # @var LOG_LIGHT_PURPLE Predefined color constant for light purple.
     "LOG_LIGHT_PURPLE",
     "init",
-    "initialiser",
+    "initialise",
     "initialise_logger"
 ]

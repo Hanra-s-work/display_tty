@@ -1,15 +1,39 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# log_level_tracker.py
-##
-
-"""
-@file log_level_tracker.py
-@brief Provides the LogLevelTracker class to manage and track logging levels in the logging library.
-@details This module allows adding custom logging levels, retrieving levels by name or value, 
-and injecting the LogLevelTracker class into the logging library for extended functionality.
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: log_level_tracker.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:24:3 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file log_level_tracker.py
+# @brief Provides the LogLevelTracker class to manage and track logging levels in the logging library.
+# @details This module allows adding custom logging levels, retrieving levels by name or value, and injecting the LogLevelTracker class into the logging library for extended functionality.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of containing the child that class in charge of tracking the available levels.
+# // AR
+# +==== END display_tty =================+
 """
 
 from typing import Union, Dict

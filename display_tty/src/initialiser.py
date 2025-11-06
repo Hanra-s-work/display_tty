@@ -1,3 +1,37 @@
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: initialiser.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:28:7 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of containing a helper function that will initialising the disp class with the user provided arguments.
+# // AR
+# +==== END display_tty =================+
+"""
 from typing import Dict, Any, Optional, Union
 from .constants import TOML_CONF, SAVE_TO_FILE, FILE_NAME
 from .my_disp import Disp, Logging

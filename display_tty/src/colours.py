@@ -1,9 +1,38 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# colours.py
-##
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: colours.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:31:22 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of containing the class that will track logger colours that can be used by the class.
+# // AR
+# +==== END display_tty =================+
+"""
+
 
 from typing import Union
 

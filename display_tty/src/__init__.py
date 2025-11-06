@@ -1,30 +1,44 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# __init__.py
-##
-
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: __init__.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:35:36 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file __init__.py
+# @brief This file links the disp file to the module, enabling it to be imported as a module.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of containing the imports to easily use the internal elements from the module.
+# // AR
+# +==== END display_tty =================+
 """
-@file __init__.py
-@brief This file links the disp file to the module, enabling it to be imported as a module.
-"""
 
-from .constants import \
-    ERR, ERROR, SUCCESS, \
-    OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, \
-    KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY, \
-    TOML_CONF, \
-    FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS, \
-    SAVE_TO_FILE, FILE_NAME, FILE_DESCRIPTOR
-from .aliases import \
-    OSTRING, ODEFAULT, OFILE, OTTY, \
-    KOUTPUT_MODE, KPRETTIFY_OUTPUT, KANIMATION_DELAY, KANIMATION_DELAY_BLOCKY, KPRETTIFY_OUTPUT_IN_BLOCKS, \
-    initialise, init
+from .initialiser import initialise_logger
+from .colours import LoggerColours
 from .instances import IDISP, IDISPLAY, IDISPTTY, IDTTY
 from .my_disp import Disp
-from .colours import LoggerColours
-from .initialiser import initialise_logger
 
 TMP = None  # linter bypass for a false positive of statement has no effect
 
