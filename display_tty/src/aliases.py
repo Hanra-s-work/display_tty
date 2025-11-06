@@ -62,5 +62,5 @@ KANIMATION_DELAY_BLOCKY = KEY_ANIMATION_DELAY_BLOCKY
 KPRETTIFY_OUTPUT_IN_BLOCKS = KEY_PRETTIFY_OUTPUT_IN_BLOCKS
 
 # Initialiser function
-initialiser = initialise_logger
+initialise = initialise_logger
 init = initialise_logger

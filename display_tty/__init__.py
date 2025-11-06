@@ -31,6 +31,8 @@ and controlled access to the library's components.
 from .src import Disp
 from .src import LoggerColours
 
+from .src import init, initialise, initialise_logger
+
 from .src import TOML_CONF
 from .src import ERR, ERROR, SUCCESS
 from .src import OSTRING, ODEFAULT, OFILE, OTTY
@@ -188,4 +190,7 @@ __all__ = [
     "LOG_LIGHT_YELLOW",
     # @var LOG_LIGHT_PURPLE Predefined color constant for light purple.
     "LOG_LIGHT_PURPLE",
+    "init",
+    "initialiser",
+    "initialise_logger"
 ]

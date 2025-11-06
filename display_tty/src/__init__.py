@@ -20,7 +20,7 @@ from .constants import \
 from .aliases import \
     OSTRING, ODEFAULT, OFILE, OTTY, \
     KOUTPUT_MODE, KPRETTIFY_OUTPUT, KANIMATION_DELAY, KANIMATION_DELAY_BLOCKY, KPRETTIFY_OUTPUT_IN_BLOCKS, \
-    initialiser, init
+    initialise, init
 from .instances import IDISP, IDISPLAY, IDISPTTY, IDTTY
 from .my_disp import Disp
 from .colours import LoggerColours
@@ -87,6 +87,6 @@ __all__ = [
     "FORBIDDEN_NUMBER_LOG_LEVELS",
     # |- Constructor functions for ease of initialisation
     "init",
-    "initialiser",
+    "initialise",
     "initialise_logger",
 ]
