@@ -1,3 +1,37 @@
+<!-- 
+-- +==== BEGIN display_tty =================+
+-- LOGO: 
+-- ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+-- .@...........................#@
+-- @############################.@
+-- @...........................@.@
+-- @..#######################..@.@
+-- @.#########################.@.@
+-- @.##>_#####################.@.@
+-- @.#########################.@.@
+-- @.#########################.@.@
+-- @.#########################.@.@
+-- @.#########################.@.@
+-- @..#######################..@.@
+-- @...........................@.@
+-- @..+----+______________.....@.@
+-- @..+....+______________+....@.@
+-- @..+----+...................@.@
+-- @...........................@.#
+-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+-- /STOP
+-- PROJECT: display_tty
+-- FILE: README.md
+-- CREATION DATE: 06-11-2025
+-- LAST Modified: 12:42:25 06-11-2025
+-- DESCRIPTION: 
+-- A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+-- /STOP
+-- COPYRIGHT: (c) Henry Letellier
+-- PURPOSE: The reamde file in charge of explaining how to use the module.
+-- // AR
+-- +==== END display_tty =================+
+-->
 # Display tty
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/display_tty)
@@ -61,7 +95,13 @@ The Preloaded version exists under: `IDISP`, `IDISPLAY`, `IDTTY` and `IDISPTTY`
         14. [Displaying a box with different side and top characters](#displaying-a-box-with-different-side-and-top-characters)
         15. [Displaying a box without vertical bars](#displaying-a-box-without-vertical-bars)
         16. [Displaying a vertical box without horizontal bars](#displaying-a-vertical-box-without-horizontal-bars)
-7. [Change the initialisation content](#change-the-initialisation-content)
+7. [Additional features (recent additions)](#additional-features-recent-additions)
+    1. [Logger integration / convenience initialiser](#logger-integration--convenience-initialiser)
+    2. [Custom log levels](#custom-log-levels)
+    3. [Update log colours](#update-log-colours)
+    4. [Output modes and file/string output](#output-modes-and-filestring-output)
+    5. [Runtime tweaks](#runtime-tweaks)
+8. [Change the initialisation content](#change-the-initialisation-content)
     1. [TOML configuration breakdown](#toml-configuration-breakdown)
         1. [line 1](#line-1)
         2. [line 2](#line-2)
@@ -81,8 +121,8 @@ The Preloaded version exists under: `IDISP`, `IDISPLAY`, `IDTTY` and `IDISPTTY`
         16. [line 16](#line-16)
         17. [line 17](#line-17)
     2. [Update the configuration of an initialised class](#update-the-configuration-of-an-initialised-class)
-8. [Author](#author)
-9. [Version](#version)
+9. [Author](#author)
+10. [Version](#version)
 
 ## Installation
 
@@ -356,15 +396,92 @@ The generic function to display a message in a box without horizontal bars is (I
 IDTTY.box_vertical_no_horizontal("Hello World!")
 ```
 
+## Additional features (recent additions)
+
+Since the last README update, a few logging and output features were added. They keep full backward compatibility but make integration and testing easier — short summary and examples below.
+
+### Logger integration / convenience initialiser
+
+Use `initialise_logger` from `display_tty` to create a `Disp` bound to an existing logger (or a name):
+
+```py
+from display_tty import initialise_logger
+
+# returns a Disp instance using the calling module name as logger label
+DI = initialise_logger(__name__, debug=True)
+
+DI.log_info("This is an informational message")
+DI.disp_print_debug("This is a debug message")
+```
+
+### Custom log levels
+
+You can add custom logging levels at runtime and the library will create helper functions for both logging and display:
+
+```py
+# add a new level with integer value 45 and name 'DARLING'
+DI.add_custom_level(45, 'DARLING', colour_text='purple', colour_bg='black')
+
+# call the generated helpers
+DI.log_darling("Message using the custom log level")
+DI.disp_print_darling("Display helper for the same level")
+```
+
+### Update log colours
+
+If you use colored logging (the default handler uses `colorlog`) you can change the text or background colour for any level at runtime:
+
+```py
+# change text colour for INFO and background for WARNING
+DI.update_logging_colour_text('cyan', 'INFO')
+DI.update_logging_colour_background('yellow', 'WARNING')
+```
+
+### Output modes and file/string output
+
+The package supports different output modes via `display_tty.TOML_CONF`:
+
+- `OUT_TTY` (default) — print to terminal
+- `OUT_STRING` — capture output into an internal buffer (use `get_generated_content()` to fetch it)
+- `OUT_FILE` — write output to a file (the class will open the file when configured)
+
+Example: capture a message as a string:
+
+```py
+from display_tty import TOML_CONF, OUT_STRING
+cfg = dict(TOML_CONF)
+cfg['OUTPUT_MODE'] = OUT_STRING
+DI = initialise_logger(__name__, toml_content=cfg)
+DI.message('Hello captured')
+content = DI.get_generated_content()
+print('Captured:', repr(content))
+```
+
+### Runtime tweaks
+
+A few small runtime helpers were added:
+
+- `update_disp_debug(bool)` — toggle the `Disp` instance debug mode at runtime.
+- `update_logger_level(level)` — update the active logger level for the instance (accepts numeric or named level).
+
+Example:
+
+```py
+DI.update_disp_debug(True)
+DI.update_logger_level('DEBUG')
+```
+
+These additions are backwards compatible: high-level calls such as `title`, `message`, `success_message` etc. continue to work while the new logging and output modes give more control for integrations and automated tests.
+
 ## Change the initialisation content
 
 When initialising the class it is possible to change the animation behaviour by editing the `TOML_CONF` that you must provide when initialising the class.
 
 During the initialisation it is also possible to redirect the output to a file instead of displaying it on the terminal. For this, please set the `save_to_file` to `True` and either:
 
-* provide a file name in `file_name`
+- provide a file name in `file_name`
 
-* provide a file descriptor in `file_descriptor`
+- provide a file descriptor in `file_descriptor`
 
 If you provided a `file_name`, the file will automatically be opened
 However, in both cases, you will need to close the file by calling the function `close_file` (i.e. at the end of your program)
@@ -407,8 +524,8 @@ This option is a crucial pivot for the program.
 
 If:
 
-* `True`: The program will output the content letter by letter while waiting a specified delay
-* `False`: It will print out all of your messages at once without waiting any delay
+- `True`: The program will output the content letter by letter while waiting a specified delay
+- `False`: It will print out all of your messages at once without waiting any delay
 
 #### line 2
 
@@ -420,10 +537,10 @@ This option is an optimisation for the program.
 
 If:
 
-* `True`: The program will:
-  * Extract the words from the input
-  * output the content word by word while waiting a specified delay and respecting spacing
-* `False`: It will print out all of your messages at once without waiting any delay
+- `True`: The program will:
+  - Extract the words from the input
+  - output the content word by word while waiting a specified delay and respecting spacing
+- `False`: It will print out all of your messages at once without waiting any delay
 
 #### line 3
 
