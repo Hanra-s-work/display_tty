@@ -1,5 +1,5 @@
 name: display_tty-pypi
-# version: 1.0.9
+# version: 1.0.10
 # Version log:
 # 1.0.0: Initial version
 # 1.0.1: Add the xvfb library to the actions for any graphical environments
@@ -11,6 +11,7 @@ name: display_tty-pypi
 # 1.0.7: Update the code to only update the version of the files based on the present ones.
 # 1.0.8: Update the code to install the package before running the unit tests
 # 1.0.9: Update code to use python slim containers instead of full fledged ubuntu containers.
+# 1.0.10: Update the flow to try and import the dependency after the build.
 
 on:
   push:
@@ -28,6 +29,7 @@ env:
   MATRIX_VERSION_PUBLISHING: "3.10"
   SOURCE_CODE_PATH: display_tty/__init__.py
   LATEST_TAG: ""
+  MODULE_NAME: "display_tty"
 
 jobs:
   build:
@@ -136,6 +138,36 @@ jobs:
           echo "Package found: $PIP_PACKAGE"
           echo -e "\n\n\n\n\n\n\n"
           pip install "$PIP_PACKAGE"
+
+      - name: Packaging sanity — import installed package
+        run: |
+          cd ${{env.CWD}}
+          DESTINATION_DIR="/tmp/temporary_import_test"
+          TMP_FILE="${DESTINATION_DIR}/tester.py"
+          mkdir -p ${DESTINATION_DIR}
+          cd ${DESTINATION_DIR}
+          echo "" > ${TMP_FILE}
+          echo "import os" >> ${TMP_FILE}
+          echo "import sys" >> ${TMP_FILE}
+          echo "import pkgutil" >> ${TMP_FILE}
+          echo "import importlib" >> ${TMP_FILE}
+          echo "workspace = os.path.abspath(os.getcwd())" >> ${TMP_FILE}
+          echo "tmp_path = []" >> ${TMP_FILE}
+          echo "for p in sys.path:" >> ${TMP_FILE}
+          echo "    try:" >> ${TMP_FILE}
+          echo "        if p and os.path.abspath(p) != workspace:" >> ${TMP_FILE}
+          echo "            tmp_path.append(p)" >> ${TMP_FILE}
+          echo "    except Exception:" >> ${TMP_FILE}
+          echo "        pass" >> ${TMP_FILE}
+          echo "sys.path = tmp_path" >> ${TMP_FILE}
+          echo "m = importlib.import_module('${{env.MODULE_NAME}}')" >> ${TMP_FILE}
+          echo "print('${{env.MODULE_NAME}} loaded from', getattr(m,'__file__',None))" >> ${TMP_FILE}
+          echo "names = []" >> ${TMP_FILE}
+          echo "for _, name, _ in pkgutil.walk_packages(m.__path__, prefix=m.__name__+'.'):" >> ${TMP_FILE}
+          echo "    names.append(name)" >> ${TMP_FILE}
+          echo "print('discovered submodules:', names)" >> ${TMP_FILE}
+          echo "print('Packaging sanity import check passed.')" >> ${TMP_FILE}
+          python ${TMP_FILE}
 
       - name: Test with pytest
         run: |
