@@ -1,14 +1,39 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# test_output_functions.py
-##
-
-"""
-@file test_output_functions.py
-@brief Unit tests for the Disp class in the display_tty library.
-@details This file contains unit tests for various methods of the Disp class, including logging, message display, and custom level handling.
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: test_output_functions.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:47:43 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file test_output_functions.py
+# @brief Unit tests for the Disp class in the display_tty library.
+# @details This file contains unit tests for various methods of the Disp class, including logging, message display, and custom level handling.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: Function in charge of testing the output functions of the display_tty library.
+# // AR
+# +==== END display_tty =================+
 """
 
 import pytest

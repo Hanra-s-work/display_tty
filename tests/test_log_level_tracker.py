@@ -1,13 +1,38 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# test_log_level_tracker.py
-##
-
-"""
-@file test_log_level_tracker.py
-@brief Unit tests for the LogLevelTracker class.
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: test_log_level_tracker.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:46:41 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file test_log_level_tracker.py
+# @brief Unit tests for the LogLevelTracker class.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of testing the log level tracking class.
+# // AR
+# +==== END display_tty =================+
 """
 
 import logging

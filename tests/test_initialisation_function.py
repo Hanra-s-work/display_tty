@@ -1,8 +1,42 @@
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: test_initialisation_function.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:45:58 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: FIle in charge of testing the initialisation function.
+# // AR
+# +==== END display_tty =================+
+"""
 import io
-from display_tty.src.my_disp import TOML_CONF as DEFAULT_TOML, Logging
-from display_tty.src.initialiser import initialise_logger
-from display_tty.src.constants import SAVE_TO_FILE as DEFAULT_SAVE, FILE_NAME as DEFAULT_FILE
 import logging
+from display_tty.src.initialiser import initialise_logger
+from display_tty.src.my_disp import TOML_CONF as DEFAULT_TOML, Logging
+from display_tty.src.constants import SAVE_TO_FILE as DEFAULT_SAVE, FILE_NAME as DEFAULT_FILE
 
 
 def test_initialise_logger_accepts_falsy_overrides() -> None:

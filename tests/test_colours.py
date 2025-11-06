@@ -1,14 +1,40 @@
-##
-# EPITECH PROJECT, 2024
-# display_tty
-# File description:
-# test_colours.py
-##
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: test_colours.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:44:10 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file test_colours.py
+# @brief Unit tests for the LoggerColours utilities.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of testing the colour class.
+# // AR
+# +==== END display_tty =================+
+"""
 
-"""
-@file test_colours.py
-@brief Unit tests for the LoggerColours utilities.
-"""
 
 from display_tty.src.colours import LoggerColours
 

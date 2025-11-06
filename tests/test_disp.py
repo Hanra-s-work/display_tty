@@ -1,9 +1,39 @@
-# tests/test_ask_question.py
-
-"""
-@file test_disp.py
-@brief Unit tests for the display_tty library.
-@details This script contains unit tests for the IDISP class in the display_tty library. It verifies the functionality of various methods, including input validation and string creation.
+""" 
+# +==== BEGIN display_tty =================+
+# LOGO: 
+# ..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# .@...........................#@
+# @############################.@
+# @...........................@.@
+# @..#######################..@.@
+# @.#########################.@.@
+# @.##>_#####################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @.#########################.@.@
+# @..#######################..@.@
+# @...........................@.@
+# @..+----+______________.....@.@
+# @..+....+______________+....@.@
+# @..+----+...................@.@
+# @...........................@.#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@#.
+# /STOP
+# PROJECT: display_tty
+# FILE: test_disp.py
+# CREATION DATE: 06-11-2025
+# LAST Modified: 12:44:46 06-11-2025
+# DESCRIPTION: 
+# A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
+# @file test_disp.py
+# @brief Unit tests for the display_tty library.
+# @details This script contains unit tests for the IDISP class in the display_tty library. It verifies the functionality of various methods, including input validation and string creation.
+# /STOP
+# COPYRIGHT: (c) Henry Letellier
+# PURPOSE: File in charge of testing the disp class.
+# // AR
+# +==== END display_tty =================+
 """
 
 from sys import stderr
