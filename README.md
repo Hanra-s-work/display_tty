@@ -23,7 +23,7 @@
 -- PROJECT: display_tty
 -- FILE: README.md
 -- CREATION DATE: 06-11-2025
--- LAST Modified: 12:42:25 06-11-2025
+-- LAST Modified: 13:56:34 06-11-2025
 -- DESCRIPTION: 
 -- A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
 -- /STOP
@@ -46,6 +46,7 @@
 ![GitHub Repo stars](https://img.shields.io/github/stars/Hanra-s-work/display_tty)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/Hanra-s-work/display_tty)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/Hanra-s-work/display_tty/main)
+[![doxygen_generator](https://github.com/Hanra-s-work/display_tty/actions/workflows/document_generator.yaml/badge.svg)](https://hanra-s-work.github.io/display_tty/)
 
 [![Static Badge](https://img.shields.io/badge/Buy_me_a_tea-Hanra-%235F7FFF?style=flat-square&logo=buymeacoffee&label=Buy%20me%20a%20coffee&labelColor=%235F7FFF&color=%23FFDD00&link=https%3A%2F%2Fwww.buymeacoffee.com%2Fhanra)](https://www.buymeacoffee.com/hanra)
 
