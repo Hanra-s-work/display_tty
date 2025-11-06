@@ -1,25 +1,28 @@
 name: doxygen_generator
 
-# version: 1.0.0.commando
-#          1.0.1 - Commented out the sections in charge of releasing and cleaning the generated cache so that it can be collected by the 3rd workflow
+# version: 1.0.0
+#          1.0.1 # Removed the need of secrets for the user e-mail and name.
+#          1.0.2 # Change the tag to only trigger when a -doc is appended to it.
+#          1.0.3 # Update the way the tag is processed in the flow.
+#          1.0.4 # The page is now published from the main branch regardless of the branch having triggered the flow.
+#          1.0.5 # The flow will only run specific parts of itself depending on the trigger method.
+#          1.0.6 # The flow will trigger the push method after the initial trigger if it had been triggered by a tag.
+#          1.0.7 # The flow does not need to trigger the push method due to how tags work.
 
 on:
   push:
-      tags:
-          - "v*.*.*"
-      branches:
-          - main
-  pull_request:
-      branches:
-          - main
+    tags:
+      - "v*.*.*-doc"
+    branches:
+      - main
+      - dev-workflow-doxygen
   workflow_dispatch:
-
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
-    contents: write
-    pages: write
-    id-token: write
+  contents: write
+  pages: write
+  id-token: write
 
 # The environment variables used for generation and upload
 env:
@@ -28,12 +31,12 @@ env:
   # variables managing name publishing
   COMMIT_TITLE: "There is no title"
   COMMIT_MESSAGE: "There is no message"
-  COMMIT_MESSAGE_FILE: commit_message.txt
   #Variables for the extras scripts
   DOXYFILE: doxygen_generation/Doxyfile
   MAN_INSTALL_PATH: doxygen_generation/man/installer.sh
   HTML_SRC_PATH: doxygen_generation/html
   HTML_SERVER_SPAWNER_NAME: launch_server.sh
+  HTML_ICON_PATH: doxygen_generation/favicon/
   # Variables for specifying build locations
   HTML_GENERATION: html
   TEMPORARY_FOLDER: tmp_documentation
@@ -42,15 +45,10 @@ env:
   SETUP_FILE: setup.py
   TAG_FILE: version.txt
   IS_RELEASE: is_release.txt
-  LATEST_TAG: ""
+  LATEST_TAG: "${{ github.ref_name }}"
   # Variable containing the reference key for the cache of each main section
   CACHE_KEY: doxygen-cache-key
   CACHE_KEY_CLEANED: doxygen-cache-key-cleaned
-  # The final output folder (if you do not wish to immediately publish the content)
-  FINAL_OUTPUT: final_output
-  FINAL_OUTPUT_CONTENT: content
-  CACHE_NAME: final_documentation_output
-
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -64,18 +62,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
-
       - name: Fetch doxygen docker
         run: |
           docker pull ${{env.DOCKER_NAME}}
-
       - name: Create required folders
         run: |
-          mkdir -p ${{env.OUTPUT_GENERATION}} ${{env.OUTPUT_GENERATION}}/${{env.HTML_GENERATION}}
-
+          mkdir -p ${{ env.OUTPUT_GENERATION }}/${{ env.HTML_GENERATION }}
       - name: Create dummy page for html renders
         run: |
           HTML_CONTENT='<!DOCTYPE html><html lang="en"><head>'
@@ -99,57 +94,52 @@ jobs:
           HTML_CONTENT+=" </div>"
           HTML_CONTENT+="</body></html>"
           echo -e "$HTML_CONTENT" > ${{env.OUTPUT_GENERATION}}/${{env.HTML_GENERATION}}/index.html
-
       - name: Run doxygen docker
         run: |
-          RUN_COMMAND="cd /app && cp -v ${{env.DOXYFILE}} ./Doxyfile && doxygen ; exit $?"
-          docker run -t -v "$(pwd)":"/app" -v "$(pwd)/${{env.OUTPUT_GENERATION}}":"/${{env.OUTPUT_GENERATION}}" ${{env.DOCKER_NAME}} /bin/bash -c "$RUN_COMMAND"
-          if [ $? -ne 0 ]
-          then
-            exit 1
-          fi
-
+          RUN_COMMAND="cd /app && cp -v ${{ env.DOXYFILE }} ./Doxyfile && doxygen ; exit $?"
+          docker run -t -v "$(pwd)":"/app" -v "$(pwd)/${{ env.OUTPUT_GENERATION }}":"/${{ env.OUTPUT_GENERATION }}" ${{ env.DOCKER_NAME }} /bin/bash -c "$RUN_COMMAND"
       - name: Reclaim ownership
         run: |
           echo "Owning the generated content (replacing root by the current user account)"
-          sudo chown $USER:$USER -Rv ${{env.OUTPUT_GENERATION}}
+          sudo chown -Rv $USER:$USER ${{ env.OUTPUT_GENERATION }}
           echo "Granting all users read-write rights on the files"
-          chmod a+rw -Rv ${{env.OUTPUT_GENERATION}}
+          chmod -Rv a+rw ${{ env.OUTPUT_GENERATION }}
 
       - name: Display generated content
         run: |
-          ls -a
           echo "Displaying the content of: ${{env.OUTPUT_GENERATION}}"
-          ls -a ${{env.OUTPUT_GENERATION}}
+          ls -a ${{ env.OUTPUT_GENERATION }}
           echo "Displaying the content of: ${{env.OUTPUT_GENERATION}}/${{env.HTML_GENERATION}}"
-          ls -a ${{env.OUTPUT_GENERATION}}/${{env.HTML_GENERATION}}
-
+          ls -a ${{ env.OUTPUT_GENERATION }}/${{ env.HTML_GENERATION }}
       - name: Save cache
         id: cache-save
-        uses: actions/upload-artifact@v4
+        uses: actions/cache@v4
         with:
-          name: ${{env.CACHE_KEY}}
-          path: "${{env.OUTPUT_GENERATION}}"
-          retention-days: 1
-          overwrite: true
+          key: ${{ env.CACHE_KEY }}
+          path: ${{ env.OUTPUT_GENERATION }}
+          enableCrossOsArchive: true
 
   clean_up_generation:
     runs-on: ubuntu-latest
     needs: build_doxygen
     if: success()
-    env:
-      ICON_PATH: doxygen_generation/favicon/
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Get generated documentation
         id: cache-documentation-restore
-        uses: actions/download-artifact@v4
+        uses: actions/cache@v4
         with:
-          name: ${{env.CACHE_KEY}}
-          path: "${{env.OUTPUT_GENERATION}}"
+          key: ${{ env.CACHE_KEY }}
+          path: ${{ env.OUTPUT_GENERATION }}
+          enableCrossOsArchive: true
+          restore-keys: |
+            doxygen-cache-key
+            cache-key-doxygen
+            doxygen_cache_key
+            cache_key_doxygen
 
       - name: Making temporary folder permanent
         run: |
@@ -186,7 +176,7 @@ jobs:
             FINAL_PATH="$i/files/icon"
             echo "Final path = $FINAL_PATH"
             mkdir -p "$FINAL_PATH"
-            cp -rv ${{env.ICON_PATH}}/* "$FINAL_PATH"
+            cp -rv ${{env.HTML_ICON_PATH}}/* "$FINAL_PATH"
             ls -a -ls --color=auto "$FINAL_PATH"
           done
 
@@ -204,7 +194,7 @@ jobs:
             else
               echo "No Makefile found, not generating anything"
             fi
-            cd $CWDxs
+            cd $CWD
           else
             echo "No latex folder found, not generating anything"
           fi
@@ -224,7 +214,7 @@ jobs:
 
       - name: Inject external html ressources if html is present
         run: |
-          if [ -e "${{env.TEMPORARY_FOLDER}}/${{env.OUTPUT_GENERATION}}/html" ]; then
+          if [ -e "${{env.TEMPORARY_FOLDER}}/${{ env.OUTPUT_GENERATION }}/html" ]; then
             CWD=$(pwd)
             cd "${{env.TEMPORARY_FOLDER}}/${{ env.OUTPUT_GENERATION }}/html"
             if [ -e "$CWD/${{env.HTML_SRC_PATH}}/files" ]; then
@@ -281,16 +271,13 @@ jobs:
 
       - name: Save cache
         id: cache-save
-        uses: actions/upload-artifact@v4
+        uses: actions/cache@v4
         with:
-          name: ${{env.CACHE_KEY_CLEANED}}
-          path: "${{env.TEMPORARY_FOLDER}}"
-          # path: "${{env.TEMPORARY_FOLDER}}/${{env.OUTPUT_GENERATION}}" # If the html issue was not fixed, try the following
-          retention-days: 1
-          overwrite: true
+          key: ${{ env.CACHE_KEY_CLEANED }}
+          path: ${{ env.TEMPORARY_FOLDER }}
+          enableCrossOsArchive: true
 
-
-  publish_html:
+  publish_html: # The critical steps will only be run if the flow was triggered by a push on the main branch
     # environment variables that are for the github pages
     environment:
       name: github-pages
@@ -298,19 +285,27 @@ jobs:
     # The system on which we are running the actions
     runs-on: ubuntu-latest
     needs: clean_up_generation
-    if: success() && github.ref == 'refs/heads/main'
+    if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/heads/main')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Get generated documentation
         id: html-cache-restore
-        uses: actions/download-artifact@v4
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/main')
+        uses: actions/cache@v4
         with:
-          name: ${{env.CACHE_KEY_CLEANED}}
-          path: "${{env.OUTPUT_GENERATION}}"
+          key: ${{ env.CACHE_KEY_CLEANED }}
+          path: ${{ env.OUTPUT_GENERATION }}
+          enableCrossOsArchive: true
+          restore-keys: |
+            doxygen-cache-key
+            cache-key-doxygen
+            doxygen_cache_key
+            cache_key_doxygen
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -321,132 +316,72 @@ jobs:
           ls -aR ${{env.OUTPUT_GENERATION}}
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload selected content
-          path: ${{env.OUTPUT_GENERATION}}/documentation/${{env.HTML_GENERATION}}
-          name: "github-pages"
+          path: ${{ env.OUTPUT_GENERATION }}/${{ env.HTML_GENERATION }}
 
       - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
         id: deployment
         uses: actions/deploy-pages@v4
 
-  export_other_formats_when_present:
+  export_other_formats_when_present: # The critical steps will only be run if the flow was triggered by a tag.
     runs-on: ubuntu-latest
-    needs: [clean_up_generation]
+    needs: clean_up_generation
     if: success()
     env:
       DOCUMENTATION_ZIP_NAME: documentation.zip
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Get generated documentation
         id: cache-documentation-restore
-        uses: actions/download-artifact@v4
+        uses: actions/cache@v4
         with:
-          name: ${{env.CACHE_KEY_CLEANED}}
-          path: "${{env.TEMPORARY_FOLDER}}"
+          key: ${{ env.CACHE_KEY_CLEANED }}
+          path: ${{ env.TEMPORARY_FOLDER }}
+          enableCrossOsArchive: true
+          restore-keys: |
+            doxygen-cache-key
+            cache-key-doxygen
+            doxygen_cache_key
+            cache_key_doxygen
 
-      - name: Create the final destinations
-        run: |
-          mkdir -p ${{env.FINAL_OUTPUT}} ${{env.FINAL_OUTPUT}}/${{env.FINAL_OUTPUT_CONTENT}}
-          echo "Final output folder created at ${{env.FINAL_OUTPUT}}"
-          echo "Content of the final output folder:"
-          ls -a ${{env.FINAL_OUTPUT}} 
-      
       - name: List directory content
         run: |
           ls -a
 
-      - name: Get Latest Tag
-        id: get_latest_tag
+      - name: determine e-mail
+        id: get-email
         run: |
-          echo "Getting tags"
-          # git fetch --tags # Make sure to fetch the tags first
-          echo "Updated the list"
-          latest_tag=$(git tag --list "v*" | sort -rV | head -n 1)
-          echo "Latest tag = $latest_tag"
-          if [ "$latest_tag" == "" ]; then
-            echo "No tags found matching 'v*'."
-            latest_tag="v1.0.0"
-            echo "Using a default tag: $latest_tag"
-          else
-            echo "Latest Tag: $latest_tag"
+          #Check if it's a push event
+          email="${{ github.event.pusher.email || '' }}"
+          if [ -z "$email" ]; then
+            email="${{ github.event.head_commit.author.email || '' }}"
           fi
-          echo "$latest_tag" > ${{env.TAG_FILE}}
-          echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
-          echo -e "\n\n\n\n\n\n\n\n\n"
-          echo "new_tag = $latest_tag"
-          echo "env.new_tag = ${{env.TAG_FILE}}"
-          echo "cat env.new_tag = $(cat ${{env.TAG_FILE}})"
-          echo "env.LATEST_TAG = ${{env.LATEST_TAG}}"
-          echo -e "\n\n\n\n\n\n\n\n\n"
-
-      - name: Check if Latest Tag is a Release
-        id: is_release
-        run: |
-          latest_tag="$(cat ${{env.TAG_FILE}})"
-          is_release="false"
-          latest_updated_tag=$(git tag --list "v*" | sort -rV | head -n 1)
-          if [[ $latest_updated_tag == $latest_tag ]]; then
-            is_release="true"
+          # Check if it's in a commit
+          if [ -z "$email" ]; then
+            email=$(git log -1 --pretty=format:%ae || true)
           fi
-          echo "$is_release" > ${{env.IS_RELEASE}}
-          echo -e "\n\n\n\n\n\n\n\n\n"
-          echo "Is_release = $is_release"
-          echo "env.Is_release = ${{env.is_release}}"
-          echo "cat env.Is_release = $(cat ${{env.is_release}})"
-          echo -e "\n\n\n\n\n\n\n\n\n"
-
-      - name: Increment Tag Version
-        id: increment_tag
-        run: |
-          is_release="$(cat ${{env.IS_RELEASE}})"
-          latest_tag="$(cat ${{env.TAG_FILE}})"
-          echo "ls = '$(ls)'"
-          echo "is_release = $is_release"
-          echo "latest_tag = $latest_tag"
-          if [[ $is_release == "true" ]]; then
-            # Parse the latest tag and increment the version component you want
-            # Example: Convert "v1.2.3" to "v1.2.4"
-            new_tag="${latest_tag/v/}"  # Remove the leading "v"
-            echo "new_tag = $new_tag"
-            IFS='.' read -ra version <<< "$new_tag"
-            echo "declare -p version = $(declare -p $version)"
-            echo "declare -p version[0] = $(declare -p ${version[0]})"
-            echo "declare -p version[1] = $(declare -p ${version[1]})"
-            echo "declare -p version[2] = $(declare -p ${version[2]})"
-            echo "version[2]+1 = $(expr "${version[2]}" + 1)"
-            echo "version[*] = ${version[*]}"
-            echo "version = ${version}"
-            echo "#version = ${#version}"
-            echo "version[0] = ${version[0]}"
-            echo "version[1] = ${version[1]}"
-            echo "version[2] = ${version[2]}"
-            version[2]=$(expr "${version[2]}" + 1)  # Increment the third version component
-            echo "Version = ${version[*]}"
-            new_tag="v${version[0]}.${version[1]}.${version[2]}"
-            echo "New Tag: $new_tag"
-            echo "$new_tag" > ${{env.TAG_FILE}}
-            echo "NEW_TAG=$new_tag" >> $GITHUB_ENV
-          else
-            echo "Latest tag is not a release. Skipping tag increment."
+          # Last resort, is the e-mail of the actor in the public API?
+          if [ -z "$email" ]; then
+            email=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/users/${{ github.actor }}" \
+              | jq -r '.email')
+            [ "$email" = "null" ] && email=""
           fi
-          echo -e "\n\n\n\n\n\n\n\n\n"
-          echo "new_tag = $new_tag"
-          echo "env.is_release = $(cat ${{env.IS_RELEASE}})"
-          echo "cat env.new_tag = $(cat ${{env.TAG_FILE}})"
-          echo "cat env.is_release = $(cat ${{env.IS_RELEASE}})"
-          echo -e "\n\n\n\n\n\n\n\n\n"
+          # If all above fail, setting e-mail to null
+          [ -z "$email" ] && email="null"
+          echo "Resolved email: $email"
+          echo "trigger_email=$email" >> $GITHUB_OUTPUT
 
       - name: Update author
         run: |
-          git config --local user.name "${{secrets.USER_NAME_E}}"
-          git config --local user.email "${{secrets.USER_EMAIL_E}}"
+          git config --local user.name "${GITHUB_ACTOR}"
+          git config --local user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Get tag title
         run: |
@@ -492,8 +427,6 @@ jobs:
             echo -e "$COMMIT_MESSAGE"
             echo EOH
           } >> $GITHUB_ENV
-          echo "Saving the commit message to a file"
-          echo -e "$COMMIT_MESSAGE" > "${{env.FINAL_OUTPUT}}/${{env.COMMIT_MESSAGE_FILE}}"
 
       - name: Restore the documentation to it's original directory
         run: |
@@ -506,19 +439,19 @@ jobs:
           ls -a ${{env.TEMPORARY_FOLDER}}
           echo "content of ${{env.OUTPUT_GENERATION}}"
           ls -a ${{env.OUTPUT_GENERATION}}
-      
+
       - name: Create archives
         run: |
           echo "Listing the source"
           ls -a .
           echo "Listing the content of the folders at the source"
           ls -a ./*
-      
+
       - name: Install the zip binary if not present
         run: |
           sudo apt update
           sudo apt install -y zip unzip
-      
+
       - name: Compressing the folders into archives
         run: |
           COMMAND_OPTIONS="-0 -r"
@@ -554,7 +487,6 @@ jobs:
           echo "Final file list='$FILE_LIST'"
           echo "FOI=$(echo $FILE_LIST | tr '\n' ' ')" >> "$GITHUB_OUTPUT" # Files of interest
 
-
       - name: Create a temporary load point
         id: anchor-point
         env:
@@ -567,7 +499,6 @@ jobs:
           mkdir -p $TEMPORARY_FOLDER
           for FILE in $FILES_OF_INTEREST; do
             cp -v "./$FILE" "$TEMPORARY_FOLDER"
-            cp -rvf "./$FILE" "${{env.FINAL_OUTPUT}}/${{env.FINAL_OUTPUT_CONTENT}}"
           done
           echo "Loop finished"
           echo "Content of TEMPORARY_FOLDER:"
@@ -578,19 +509,6 @@ jobs:
             find ./$TEMPORARY_FOLDER -maxdepth 1 -type f
             echo EOF
           } >> "$GITHUB_OUTPUT" # anchor point
-
-      - name: Save the commit title
-        run: |
-          echo "Saving the commit title"
-          printf "%s" "${{env.COMMIT_TITLE}}" > "${{env.FINAL_OUTPUT}}/commit_title.txt"
-
-      - name: Uploading the cache so that the 3rd workflow can access it
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{env.CACHE_NAME}}
-          path: "${{env.FINAL_OUTPUT}}"
-          retention-days: 1
-          overwrite: true
 
       - name: Publish binary as GitHub release
         uses: softprops/action-gh-release@v2
@@ -603,3 +521,20 @@ jobs:
           prerelease: false
           make_latest: true
           token: ${{ secrets.GITHUB_TOKEN }}
+
+  clean_created_cache:
+    name: Clear the cache generated during the build time
+    permissions: write-all
+    runs-on: ubuntu-latest
+    needs: export_other_formats_when_present
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Delete Created cache
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh cache list
+          gh cache delete --all
