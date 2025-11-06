@@ -84,3 +84,22 @@ FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE = {
 FORBIDDEN_NUMBER_LOG_LEVELS = list(
     FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE.values()
 )  # List of forbidden log level numbers
+
+
+"""
+@var SAVE_TO_FILE
+@brief Boolean flag to indicate whether to save output to a file.
+"""
+SAVE_TO_FILE = False
+
+"""
+@var FILE_NAME
+@brief Name of the file where results will be saved if SAVE_TO_FILE is True.
+"""
+FILE_NAME = "run_results.txt"
+
+"""
+@var FILE_DESCRIPTOR
+@brief File descriptor for the output file.
+"""
+FILE_DESCRIPTOR = None
