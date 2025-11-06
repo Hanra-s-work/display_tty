@@ -23,7 +23,7 @@
 # PROJECT: display_tty
 # FILE: __init__.py
 # CREATION DATE: 06-11-2025
-# LAST Modified: 12:21:33 06-11-2025
+# LAST Modified: 13:48:5 06-11-2025
 # DESCRIPTION: 
 # A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
 # @file __init__.py
@@ -53,8 +53,8 @@
 # +==== END display_tty =================+
 """
 
-from .src import LoggerColours
 from .src import Disp
+from .src import LoggerColours
 from .src import init, initialise, initialise_logger
 from .src import TOML_CONF
 from .src import ERR, ERROR, SUCCESS
