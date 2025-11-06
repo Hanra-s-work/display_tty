@@ -23,7 +23,7 @@
 # PROJECT: display_tty
 # FILE: __init__.py
 # CREATION DATE: 06-11-2025
-# LAST Modified: 12:35:36 06-11-2025
+# LAST Modified: 13:8:51 06-11-2025
 # DESCRIPTION: 
 # A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
 # @file __init__.py
@@ -35,10 +35,19 @@
 # +==== END display_tty =================+
 """
 
+from .my_disp import Disp
 from .initialiser import initialise_logger
+from .aliases import init, initialise
+from .aliases import OSTRING, ODEFAULT, OFILE, OTTY
+from .aliases import KOUTPUT_MODE, KPRETTIFY_OUTPUT, KANIMATION_DELAY, KANIMATION_DELAY_BLOCKY, KPRETTIFY_OUTPUT_IN_BLOCKS
 from .colours import LoggerColours
 from .instances import IDISP, IDISPLAY, IDISPTTY, IDTTY
-from .my_disp import Disp
+from .constants import TOML_CONF
+from .constants import ERR, ERROR, SUCCESS
+from .constants import SAVE_TO_FILE, FILE_NAME, FILE_DESCRIPTOR
+from .constants import OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT
+from .constants import FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
+from .constants import KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY
 
 TMP = None  # linter bypass for a false positive of statement has no effect
 
