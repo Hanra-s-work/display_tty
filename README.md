@@ -23,7 +23,7 @@
 -- PROJECT: display_tty
 -- FILE: README.md
 -- CREATION DATE: 06-11-2025
--- LAST Modified: 13:56:34 06-11-2025
+-- LAST Modified: 14:2:46 06-11-2025
 -- DESCRIPTION: 
 -- A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
 -- /STOP
@@ -732,7 +732,7 @@ Attributions are appreciated.
 Quick way:
 
 ```py
-print(f"AskQuestion is written by {IDTTY.author}")
+print(f"Display_tty is written by {IDTTY.author}")
 ```
 
 ## Version
