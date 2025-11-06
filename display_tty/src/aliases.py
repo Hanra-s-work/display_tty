@@ -1,5 +1,7 @@
 from .constants import OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY
 
+from .initialiser import initialise_logger
+
 TMP = None  # linter bypass for a false positive of statement has no effect
 
 
@@ -58,3 +60,7 @@ KANIMATION_DELAY_BLOCKY = KEY_ANIMATION_DELAY_BLOCKY
 @brief Alias for KEY_PRETTIFY_OUTPUT_IN_BLOCKS constant.
 """
 KPRETTIFY_OUTPUT_IN_BLOCKS = KEY_PRETTIFY_OUTPUT_IN_BLOCKS
+
+# Initialiser function
+initialiser = initialise_logger
+init = initialise_logger
