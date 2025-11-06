@@ -14,20 +14,25 @@ import sys
 import time
 import inspect
 
-from typing import List, Dict, Union
+from typing import List, Dict, Union, Any
 
 import logging
 import colorlog
 
 # Check if the script is being run directly or imported
-if __name__ == "__main__":
+try:
     from colours import LoggerColours
     from constants import ERR, SUCCESS, OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY, TOML_CONF, FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
     from log_level_tracker import LogLevelTracker
-else:
-    from .colours import LoggerColours
-    from .constants import ERR, SUCCESS, OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY, TOML_CONF, FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
-    from .log_level_tracker import LogLevelTracker
+except ImportError:
+    try:
+        from .colours import LoggerColours
+        from .constants import ERR, SUCCESS, OUT_TTY, OUT_STRING, OUT_FILE, OUT_DEFAULT, KEY_OUTPUT_MODE, KEY_PRETTIFY_OUTPUT, KEY_PRETTIFY_OUTPUT_IN_BLOCKS, KEY_ANIMATION_DELAY, KEY_ANIMATION_DELAY_BLOCKY, TOML_CONF, FORBIDDEN_NUMBER_LOG_LEVELS_CORRESPONDANCE, FORBIDDEN_NUMBER_LOG_LEVELS
+        from .log_level_tracker import LogLevelTracker
+    except ImportError as e:
+        raise RuntimeError(
+            "Display TTY: Failed to import required dependencies"
+        ) from e
 
 
 class Logging:
@@ -48,7 +53,7 @@ class Disp:
     @details This class provides methods to display messages in different formats, log messages, and manage output configurations.
     """
 
-    def __init__(self, toml_content: Dict[str, any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: any = None, debug: bool = False, logger: Union[Logging, str, None] = None, success: int = SUCCESS, error: int = ERR, log_warning_when_present: bool = True, log_errors_when_present: bool = True) -> None:
+    def __init__(self, toml_content: Dict[str, Any], save_to_file: bool = False, file_name: str = "text_output_run.txt", file_descriptor: Any = None, debug: bool = False, logger: Union[Logging, str, None] = None, success: int = SUCCESS, error: int = ERR, log_warning_when_present: bool = True, log_errors_when_present: bool = True) -> None:
         """
         @brief Constructor for the Disp class.
 
@@ -859,7 +864,7 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         if self.file_descriptor is not None:
             self.append_run_date()
 
-    def _is_safe(self, content: any) -> bool:
+    def _is_safe(self, content: Any) -> bool:
         """
         @brief Check if an item is safe to write or not.
 
