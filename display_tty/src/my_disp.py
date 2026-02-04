@@ -23,7 +23,7 @@
 # PROJECT: display_tty
 # FILE: my_disp.py
 # CREATION DATE: 06-11-2025
-# LAST Modified: 12:22:40 06-11-2025
+# LAST Modified: 0:54:12 05-02-2026
 # DESCRIPTION: 
 # A module that allows you to display text with a few boilers (i.e. put your text in a square for titles). It also allows to log to the terminal by wrapping around the logging library.
 # @file my_disp.py
@@ -35,12 +35,13 @@
 # +==== END display_tty =================+
 """
 
-import time
 import sys
+import time
 import inspect
-from typing import List, Dict, Union, Any
-import colorlog
 import logging
+from typing import List, Dict, Union, Any
+
+import colorlog
 
 
 # Check if the script is being run directly or imported
@@ -669,14 +670,15 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @param string The message to print.
         @param func_name The name of the calling function.
         """
+        if self.debug is False:
+            return
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
             if _func_name.f_back is not None:
                 func_name = _func_name.f_back.f_code.co_name
             else:
                 func_name = _func_name.f_code.co_name
-        if self.debug is True:
-            self.logger.debug("(%s) %s", func_name, string)
+        self.logger.debug("(%s) %s", func_name, string)
 
     def disp_print_info(self, string: str = "", func_name: Union[str, None] = None) -> None:
         """
@@ -761,6 +763,8 @@ def {func_log_name}(self, string: str = "", func_name: Union[str, None] = None) 
         @param string The message to log.
         @param func_name The name of the calling function.
         """
+        if self.debug is False:
+            return
         if isinstance(func_name, str) is False or func_name is None:
             _func_name = inspect.currentframe()
             if _func_name.f_back is not None:
