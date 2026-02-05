@@ -16,6 +16,7 @@ name: display_tty-gh-packages
 # 1.0.11: Update code to use python slim containers when terminal graphic interfaces where not required, otherwise fallback on the full fledged containers
 # 1.0.12: Update code to use non-root containers if required.
 # 1.0.13: Update the flow to try and import the dependency after the build.
+# 1.0.14: Update the flow to avoid picking up -doc tags for documentation
 
 on:
   push:
@@ -64,7 +65,7 @@ jobs:
           echo "Getting tags"
           git fetch --tags || echo "⚠️ git fetch --tags failed, continuing anyway" # Make sure to fetch the tags first
           echo "Updated the list"
-          latest_tag=$(git tag --list "v*" | sort -rV | head -n 1)
+          latest_tag=$(git tag --list "v*" | grep -v "-doc" | sort -rV | head -n 1)
           echo "Tag list: $(git tag -l)"
           echo "Latest tag = $latest_tag"
           if [ "$latest_tag" == "" ]; then
