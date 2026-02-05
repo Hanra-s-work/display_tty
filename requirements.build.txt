@@ -33,7 +33,7 @@
 # +==== END display_tty =================+
 # 
 build ==1.4.0
-pytest ==9.0.1
+pytest ==9.0.2
 
 # display_tty runtime dependencies
 -r ./requirements.txt
