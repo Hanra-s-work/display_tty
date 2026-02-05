@@ -56,7 +56,7 @@ jobs:
           echo "Getting tags"
           git fetch --tags || echo "⚠️ git fetch --tags failed, continuing anyway" # Make sure to fetch the tags first
           echo "Updated the list"
-          latest_tag=$(git tag --list "v*" | grep -v "-doc" | sort -rV | head -n 1)
+          latest_tag=$(git tag --list 'v*' | grep -v '\-doc' | sort -rV | head -n 1)
           echo "Tag list: $(git tag -l)"
           echo "Latest tag = $latest_tag"
           if [ "$latest_tag" == "" ]; then
