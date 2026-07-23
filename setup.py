@@ -44,7 +44,7 @@ setuptools.setup(
     version='1.0.0',
     packages=setuptools.find_packages(),
     install_requires=[
-        "colorlog==6.10.1"
+        "colorlog==6.12.0"
     ],
     author="Henry Letellier",
     author_email="henrysoftwarehouse@protonmail.com",
