@@ -32,7 +32,7 @@
 # // AR
 # +==== END display_tty =================+
 # 
-build ==1.4.0
+build ==1.6.1
 pytest ==9.0.2
 
 # display_tty runtime dependencies
